@@ -1,23 +1,46 @@
+{% import "macros.html" as macros %}
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <title>{% if content %}{{title}} - {% endif %}TramshedTech</title>
+    <title>
+      {% if title %}{{ title }} -{% endif %}
+    TramshedTech</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="{{url_for('static',filename='build.css')}}" />
+    <link rel="stylesheet" href="{{ url_for('static',filename='build.css')}}" />
     <!-- realfavicongenerator.net -->
-    <link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32x32.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16x16.png" />
-    <link rel="manifest" href="/static/site.webmanifest" />
-    <link rel="mask-icon" href="/static/safari-pinned-tab.svg" color="#171717" />
-    <link rel="shortcut icon" href="/static/favicon.ico" />
+    <link rel="apple-touch-icon"
+          sizes="180x180"
+          href="{{ url_for('static',filename='apple-touch-icon.png')}}"/>
+    <link rel="icon"
+          type="image/png"
+          sizes="32x32"
+          href="{{ url_for('static',filename='favicon-32x32.png')}}"/>
+    <link rel="icon"
+          type="image/png"
+          sizes="16x16"
+          href="{{ url_for('static',filename='favicon-16x16.png')}}"/>
+    <link rel="manifest"
+          href="{{ url_for('static',filename='site.webmanifest')}}"/>
+    <link rel="mask-icon"
+          href="{{ url_for('static',filename='safari-pinned-tab.svg')}}"
+          color="#171717"/>
+    <link rel="shortcut icon"
+          href="{{ url_for('static',filename='favicon.ico')}}"/>
     <meta name="msapplication-TileColor" content="#ffffff" />
-    <meta name="msapplication-config" content="/static/browserconfig.xml" />
+    <meta name="msapplication-config"
+          content="{{ url_for('static',filename='browserconfig.xml')}}"/>
     <meta name="theme-color" content="#ffffff" />
+    <!-- Google fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;600;700&display=swap"
+          rel="stylesheet"/>
   </head>
-
   <body>
-    <main>{% block content %}{% endblock %}</main>
+    {% block content %}
+    {% endblock content %}
+    {% block scripts %}
+    {% endblock scripts %}
   </body>
 </html>

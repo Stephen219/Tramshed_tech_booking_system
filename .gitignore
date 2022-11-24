@@ -1,6 +1,9 @@
 # Created by https://www.toptal.com/developers/gitignore/api/macos,windows,flask,node
 # Edit at https://www.toptal.com/developers/gitignore?templates=macos,windows,flask,node
 
+# Tailwind build file
+static/build.css
+
 ### Flask ###
 instance/*
 !instance/.gitignore

@@ -1,0 +1,16 @@
+{% macro textInput() -%}
+  <input type="{{ kwargs.type | default('text', true) }}"
+         {% if kwargs.id %} id="{{ kwargs.id }}"{% endif %}
+         {% if kwargs.placeholder %} placeholder="{{ kwargs.placeholder }}"{% endif %}
+         {% if kwargs.name %} name="{{ kwargs.name }}"{% endif %}
+         {% if kwargs.value %} value="{{ kwargs.value }}"{% endif %}
+         {% if kwargs.required %} required="{{ kwargs.required }}"{% endif %}
+         class="h-12 px-4 border rounded border-dark-300 placeholder:font-light placeholder:text-dark-200 placeholder:text-sm focus-ring {{ kwargs.class }}"/>
+{%- endmacro %}
+{% macro button(text) -%}
+  <button {% if kwargs.type %}type="{{ kwargs.type }}"{% endif %}
+          {% if kwargs.id %} id="{{ kwargs.id }}"{% endif %}
+          class="flex items-center justify-center w-full h-12 font-light text-white rounded bg-dark focus-ring {{ kwargs.class }}">
+    {{ text }}
+  </button>
+{%- endmacro %}

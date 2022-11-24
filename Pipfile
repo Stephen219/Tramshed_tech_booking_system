@@ -5,10 +5,17 @@ name = "pypi"
 
 [packages]
 flask = "*"
+flask-sqlalchemy = "*"
+flask-migrate = "*"
+nanoid = "*"
+bcrypt = "*"
+marshmallow = "*"
+flask-session = "*"
 
 [dev-packages]
 black = "*"
 pylint = "*"
+djlint = "*"
 
 [requires]
 python_version = "3.11"
