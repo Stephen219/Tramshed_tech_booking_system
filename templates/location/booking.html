@@ -1,0 +1,201 @@
+{% extends "base.html" %}
+{% block head_scripts %}
+  <style>
+      body {
+        background-image: url("{{ url_for('static', filename='logo-black.png') }}");
+      }
+      
+      .form {
+        max-width: 350px;
+        max-height: 600px;
+        margin: 3px auto;
+        padding: 20px;
+        
+        border-radius: 14px;
+        
+        text-align: center;
+        background-color: rgb(231, 237, 237);
+        
+        
+        
+      }
+      .image{
+        width: 90%;
+        height: 90%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0;
+        margin: 0px auto;
+      
+        
+    
+      }
+      .date{font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        font-size: medium;
+        
+    
+      }
+      .comments{
+        font-size: medium;
+        font-family: Georgia, 'Times New Roman', Times, serif;
+        text-align: left;
+        padding: 1em;
+        resize: none;
+      }
+      .form data{
+        border-bottom: 33px solid double red ;
+        border: #cccccc;
+        background-color: antiquewhite;
+      }
+    
+    
+    
+      
+    
+        
+    
+      
+      .button {
+      background-color: rgb(70, 70, 126);
+      
+      border: 2px solid double #cccccc;
+      border-radius: 4px;
+      display: inline-block;
+        
+      
+        
+      color: #eeeeee;
+      text-align: center;
+      font-size: 17px;
+      padding: 14px;
+      width: 100px;
+      transition: all 0.5s;
+      cursor: pointer;
+      margin: 5px;
+      }
+      button span {
+        cursor: pointer;
+        display: inline-block;
+        position: relative;
+        transition: 0.5s;
+      }
+      button span:after {
+        content: '\00bb';
+        position: absolute;
+        opacity: 0;
+        top: 0;
+        right: -20px;
+        transition: 0.5s;
+      }
+      .form data{font-family: italics;
+      }
+      .comments{
+        background-color:rgba(255, 255, 255, 0.663);
+      }
+    
+    
+
+  </style>
+{% endblock head_scripts %}
+{% block content %}
+  <div class="form">
+    <form onsubmit="return loadName()" class="form" id="myForm">
+      <img class="image"
+           src="{{ url_for('static', filename='logo-black.png') }}"
+           alt=""
+           Image
+           width="45"
+           height="46"
+           altr />
+      <div class="form data" id="formdata ">
+        <hr>
+        Check-in Date:
+        <br>
+        <input type="date"
+               id="indate"
+               name="datein"
+               class="date"
+               data-date-inline-picker="true"/>
+        <br>
+        <br>
+        Check-out Date:
+        <br>
+        <input type="date"
+               name="dateout"
+               id="outdate"
+               class="date"
+               data-date-inline-picker="true"/>
+        <br>
+        <br>
+        Enter any other consideration needed:
+        <br>
+        <textarea id="comments" class="comments" placeholder="Enter a consideration needed." name="textbox" rows="4" cols="30"></textarea>
+        <br>
+      </div>
+      <input type="button"
+             value="Close"
+             id="bookgo"
+             class="button"
+             onclick="closeForm()">
+      <!--<input type="submit" value="submit"<li class="active"><a href="/Student/AddStudent">AddStudent</a></li> id="book" class="button" pattern="dd/mm/yyy" alt="time" >-->
+    <input type="submit"
+           value="submit"
+           id="book"
+           class="button"
+           pattern="dd/mm/yyy"
+           alt="time"
+           a
+           href="thank.html"></a>
+  </form>
+</div>
+<span id='txt'></span>
+{% endblock content %}
+{% block scripts %}
+  <script>
+      function closeForm(){
+        document.getElementById("myForm").style.display = "none";
+      }
+      function loadName() {
+        var datein = document.forms["myForm"]["datein"].value;
+        var dateout = document.forms["myForm"]["dateout"].value;
+        var comments = document.forms["myForm"]["comments"].value;
+        
+        params = 'datein'+datein+'&dateout='+dateout+'&comments='+comments;
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("POST", '/location/{{ id }}/booking', true); // true is asynchronous
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.onload = function() {
+          if (xhttp.readyState === 4 && xhttp.status === 200) {
+            console.log(xhttp.responseText);
+            document.getElementById("txt").innerHTML = xhttp.responseText;
+          } else {
+            console.error(xhttp.statusText);
+          }
+        };
+        xhttp.send(params);
+        return false;
+      }
+    
+  </script>
+{% endblock scripts %}
+<!--<script>
+    function validate(){
+      var pass = true; 
+      var checkindate = document.getElementById('indate').value;
+      var checkoutdate = document.getElementById('outdate').value;
+      var comments = document.getElementById('comments').value;
+      if (checkindate.value === ' ' || checkindate.value == null){
+        alert("the space is empty");
+        pass = false
+      }
+    
+    
+    
+    
+    return pass}
+
+
+    
+  
+</script>-->

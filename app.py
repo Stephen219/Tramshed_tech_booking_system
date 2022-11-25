@@ -1,7 +1,8 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from flask_migrate import Migrate
 from flask_session import Session
-from db import db
+from db import db, Booking
+import datetime
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///data.db"
@@ -24,6 +25,21 @@ def homepage():
 
     return render_template("index.html")
 
+@app.route("/location/<id>/booking", methods = ['POST','GET'])
+def location_booking(id):
+    if request.method == "GET":
+        return render_template("location/booking.html", id=id, title="Book now")
+    if request.method == "POST":
+        datein = request.form.get('datein', default="Error")#rem: args for get form for post
+        dateout = request.form.get('$dateout', default="Error")
+        comments = request.form.get('$comments', default="Error")
+		
+        data = Booking(checkin_date=datetime.datetime.now(), checkout_date=datetime.datetime.now())
+        db.session.add(data)
+        db.session.commit()
+  
+        print("making bookings")
+        return "Post"
 
 import user
 
