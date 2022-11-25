@@ -10,8 +10,7 @@ I also recommend having **`pipenv`** installed
 ### Database
 I propose we use sqlalchemy due to its superiority over sqlite3.
 - First go into `app.py` and comment all the imports above `if __name__ == "__main__":` e.g `import user`
-- Then from the root of the project run `flask db init` to create the database
-- Then run `flask db upgrade` to apply the latest migration to the database
+- Then run `python -m flask db upgrade` to apply the latest migration to the database
 - Finally uncomment the commented lines you commented above
 
 _If you do not comment out the imports you will receive an ImportError_
@@ -27,8 +26,8 @@ _If you do not have pipenv installed or are unable to install it just manually i
 The database's tables are generated from the classes in `db.py`
 After adding any new models to the database in `db.py` and making sure they are correct you may do the following:
 - Comment out all the imports above `if __name__ == "__main__":` e.g `import user`
-- Run `flask db migrate -m "<A comment stating what you have changed>"` to create the migration
-- Run `flask db upgrade` to apply the migration
+- Run `python3 -m flask db migrate -m "<A comment stating what you have changed>"` to create the migration
+- Run `python3 -m flask db upgrade` to apply the migration
 - Finally uncomment the commented lines you commented above
 
 If you wish to write your own styles you can do so by just writing them in the `app.css` file at the root of the project. Just ensure that tailwindcss is running as it will compile the css and add it to the app
