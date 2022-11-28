@@ -12,7 +12,7 @@
         >
         <button
           class="z-40 p-1 border rounded lg:hidden border-black-300 focus-ring"
-          aria-label="Open Sidebar"
+          aria-label="Close Sidebar"
           onclick="toggleNavbar()"
         >
           <svg
@@ -208,7 +208,8 @@
   </button>
   {% block _content %} {% endblock _content %}
 </div>
-{% endblock %} {% block scripts %}
+{% endblock %} 
+{% block scripts %}
 <script>
   const hamburgerBtn = document.querySelector("#navbar-toggle-btn");
   const sideNavbar = document.querySelector("#side-navbar");
@@ -261,7 +262,4 @@
     if (e.key === "Escape") toggleNavbar();
   });
 </script>
-{% endblock %} {% block head_scripts %}
-<script src="https://unpkg.com/tabbable/dist/index.umd.js"></script>
-<script src="https://unpkg.com/focus-trap/dist/focus-trap.umd.js"></script>
 {% endblock %}
