@@ -16,6 +16,12 @@
     {{ content|safe }}
   </button>
 {%- endmacro %}
+{% macro tooltip(content) -%}
+<div class="relative flex-col items-center group">
+  <span class="absolute font-light z-10 bg-[rgba(0,0,0,0.3)] text-white group-hover:block hidden whitespace-nowrap -top-8 px-3 py-1 text-sm">{{ kwargs.label }}</span>
+    {{ content|safe }}
+</div>
+{%- endmacro %}
 {% macro logo() -%}
   <svg class="w-auto {{ kwargs.class }}"
        viewbox="0 0 262 87"
