@@ -18,15 +18,10 @@
         margin: 3px auto;
         padding: 10px;
         
-        
-        ;
-        
         border-radius: 14px;
         
         text-align: center;
         background-color: rgb(231, 237, 237);
-        
-        
         
       }
       .image{
@@ -38,15 +33,9 @@
         padding: 10;
         margin: 0px auto;
         /*background: #3c5077;*/
-        
-      
-        
-    
       }
       .date{font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
         font-size: medium;
-        
-    
       }
       .comments{
         font-size: medium;
@@ -61,24 +50,13 @@
         border: #cccccc;
         background-color: antiquewhite;
       }
-    
-    
-    
-      
-    
-        
-    
-      
       .button {
       background-color: rgb(70, 70, 126);
       
       border: 2px solid double #cccccc;
       border-radius: 4px;
       display: inline-block;
-        
-      
-        
-      color: #eeeeee;
+       color: #eeeeee;
       text-align: center;
       font-size: 17px;
       padding: 14px;
@@ -106,10 +84,7 @@
       .comments{
         background-color:rgba(255, 255, 255, 0.663);
       }
-    
-    
-
-  </style>
+    </style>
 {% endblock head_scripts %}
 {% block content %}
   <div class="form">
@@ -152,7 +127,7 @@
       </div>
       <a href="base.html"><input type="submit" value="Exit" id="book" class="button"/></a>
       
-      <!--<input type.....<button type="button" class="button" onclick="goBack()">Back</button>.....="submit" value="submit"<li class="active"><a href="/Student/AddStudent">AddStudent</a></li> id="book" class="button" pattern="dd/mm/yyy" alt="time" >-->
+      
       <button type="submit" class="button">Submit</button>
     </form>
     <span id="txt"></span>
@@ -164,13 +139,11 @@
     window.onload = function(){
 
       var d = new Date();
-    
-      // Build ISO 8601 format date string
       var s = d.getFullYear() + '-' + 
               ('0' + (d.getMonth()+1)).slice(-2) + '-' +
               ('0' + d.getDate()).slice(-2);
     
-      // Set the value of the value and midaten attributes
+      
       var node = document.querySelector('input');
       if (node) {
         node.setAttribute('min', s);
@@ -182,8 +155,7 @@
         node.setAttribute('value', s);
       }
     }
-
-      function submitForm() {
+    function submitForm() {
         var datein = document.forms["myForm"]["datein"].value;
         var dateout = document.forms["myForm"]["dateout"].value;
         var comments = document.forms["myForm"]["comments"].value;
@@ -201,8 +173,5 @@
         xhttp.send(params);
         }
 
-        //return false;
-      
-    
   </script>
 {% endblock scripts %}
