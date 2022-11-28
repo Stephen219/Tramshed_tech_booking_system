@@ -19,10 +19,11 @@ app.config["SESSION_SQLALCHEMY"] = db
 
 sess = Session(app)
 
-@app.get("/")
-def homepage():
 
-    return render_template("index.html")
+@app.get("/footer")
+def footer():
+
+    return render_template("footer.html")
 
 
 import user
