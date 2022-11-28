@@ -1,0 +1,119 @@
+{% macro navItems() -%}
+<a class="flex items-center justify-center h-10 transition-opacity focus-ring hover:opacity-80" href="/locations">Locations</a>
+{% if user == None %}
+<a class="flex items-center justify-center h-10 transition-opacity focus-ring hover:opacity-80" href="/get-in-touch">Get in touch</a>
+<a
+  class="flex items-center justify-center order-first h-10 px-8 mb-2 text-white transition-opacity bg-black rounded hover:opacity-80 md:mb-0 md:order-none focus-ring"
+  href="/member/join"
+  >Become a member</a
+>
+<a class="flex items-center justify-center h-10 transition-opacity focus-ring hover:opacity-80" href="/auth/login">Login</a>
+{% else %}
+<a href="/account" class="flex items-center justify-center space-x-3 transition-opacity hover:opacity-80">
+  <img alt="user profile picture" src="{{ user.avatar }}" class="w-auto h-12" />
+  <div class="flex items-center space-x-2">
+    <span>Account</span>
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M9.96004 4.47501L6.70004 7.73501C6.31504 8.12001 5.68504 8.12001 5.30004 7.73501L2.04004 4.47501"
+        stroke="black"
+        stroke-miterlimit="10"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  </div>
+</a>
+{% endif %} {%- endmacro %} {% extends "base.html" %} {% block content %}
+<div class="h-screen absolute w-full bg-[rgba(0,0,0,0.25)] hidden" id="bg-overlay"></div>
+<aside
+  class="absolute pt-8 bg-[#F3F1EF] flex flex-col space-y-8 items-center w-[16rem] -left-[16rem] transition-transform ease-in h-screen"
+  id="side-navbar"
+>
+  <a class="focus-ring" href="/"> {{ macros.logo(class="h-12") }} </a>
+  <div class="grid grid-cols-1 text-center {% if user == None %}divide-y{% else %}gap-3{% endif %} divide-black-200 w-full max-w-[12.5rem]">
+    {{ navItems() }}
+  </div>
+</aside>
+<header class="flex justify-center">
+  <div class="w-full max-w-[1366px] flex items-center justify-between py-7 mx-8">
+    <a class="focus-ring" href="/"> {{ macros.logo(class="h-12") }} </a>
+    <div class="items-center hidden space-x-8 md:flex">{{ navItems() }}</div>
+    <button
+      class="p-1 border rounded md:hidden border-black-300 focus-ring"
+      aria-label="Open Sidebar"
+      id="navbar-toggle-btn"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+      >
+        <path
+          d="M3 7h18M3 12h18M3 17h18"
+          stroke="black"
+          stroke-width="1.5"
+          stroke-linecap="round"
+        />
+      </svg>
+    </button>
+  </div>
+</header>
+<main class="min-h-screen">{% block _content %} {% endblock _content %}</main>
+{% endblock content %} {% block scripts %}
+<script>
+  const hamburgerBtn = document.querySelector("#navbar-toggle-btn");
+  const sideNavbar = document.querySelector("#side-navbar");
+  const bgOverlay = document.querySelector("#bg-overlay");
+  let navbarOpen = false;
+  const toggleNavbar = () => {
+    navbarOpen = !navbarOpen;
+    sideNavbar.classList.toggle("translate-x-[16rem]");
+    bgOverlay.classList.toggle("hidden");
+    document.body.classList.toggle("overflow-y-hidden");
+  };
+  hamburgerBtn.addEventListener("click", () => {
+    toggleNavbar();
+  });
+  // Trap focus in modal - Inspired by https://hidde.blog/using-javascript-to-trap-focus-in-an-element/
+  const focusableEls = sideNavbar.querySelectorAll(
+    'a[href]:not([disabled]), button:not([disabled]), textarea:not([disabled]), input[type="text"]:not([disabled]), input[type="radio"]:not([disabled]), input[type="checkbox"]:not([disabled]), select:not([disabled])'
+  );
+  const firstFocusableEl = focusableEls[0];
+  const lastFocusableEl = focusableEls[focusableEls.length - 1];
+  const KEYCODE_TAB = 9;
+  sideNavbar.addEventListener("keydown", (e) => {
+    if (!navbarOpen) return;
+    var isTabPressed = e.key === "Tab" || e.keyCode === KEYCODE_TAB;
+    if (!isTabPressed) {
+      return;
+    }
+    if (e.shiftKey) {
+      /* shift + tab */ if (document.activeElement === firstFocusableEl) {
+        lastFocusableEl.focus();
+        e.preventDefault();
+      }
+    } /* tab */ else {
+      if (document.activeElement === lastFocusableEl) {
+        firstFocusableEl.focus();
+        e.preventDefault();
+      }
+    }
+  });
+  // Prevent sidebar focus when closed
+  sideNavbar.addEventListener("focusin", (e) => {
+    if (!navbarOpen) return hamburgerBtn.focus();
+  });
+  // Close side bar on escape and click outside
+  window.addEventListener("click", (e) => {
+    if (!navbarOpen) return;
+    if (!sideNavbar.contains(e.target) && !hamburgerBtn.contains(e.target)) toggleNavbar();
+  });
+  window.addEventListener("keydown", (e) => {
+    if (!navbarOpen) return;
+    if (e.key === "Escape") toggleNavbar();
+  });
+</script>
+{% endblock %}
