@@ -1,3 +1,76 @@
-{% extends "layout.html" %} {% block _content %}
-<h1 class="text-3xl font-bold underline">Hello world!</h1>
-{% endblock _content %}
+{% macro RatingStar(type) -%}
+  <svg width="19"
+       height="19"
+       viewBox="0 0 19 19"
+       fill="none"
+       xmlns="http://www.w3.org/2000/svg">
+    {% if type == 'empty' %}
+      <path
+      d="M10.8821 2.15534L12.29 4.9943C12.4819 5.3895 12.9939 5.76856 13.4258 5.84115L15.9775 6.2686C17.6094 6.54282 17.9933 7.73647 16.8175 8.914L14.8337 10.9142C14.4977 11.2529 14.3137 11.9062 14.4177 12.374L14.9857 14.85C15.4336 16.8098 14.4017 17.568 12.6819 16.5437L10.2902 15.1162C9.85822 14.8581 9.1463 14.8581 8.70635 15.1162L6.31461 16.5437C4.6028 17.568 3.56292 16.8018 4.01087 14.85L4.57881 12.374C4.68279 11.9062 4.49881 11.2529 4.16285 10.9142L2.17907 8.914C1.0112 7.73647 1.38716 6.54282 3.01898 6.2686L5.5707 5.84115C5.99465 5.76856 6.50659 5.3895 6.69857 4.9943L8.10642 2.15534C8.87433 0.614886 10.1222 0.614886 10.8821 2.15534V2.15534Z"
+      stroke="black"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      />
+    {% elif type == 'filled' %}
+      <path
+      d="M10.8821 2.15534L12.29 4.9943C12.4819 5.3895 12.9939 5.76856 13.4258 5.84115L15.9775 6.2686C17.6094 6.54282 17.9933 7.73647 16.8175 8.914L14.8337 10.9142C14.4977 11.2529 14.3137 11.9062 14.4177 12.374L14.9857 14.85C15.4336 16.8098 14.4017 17.568 12.6819 16.5437L10.2902 15.1162C9.85822 14.8581 9.1463 14.8581 8.70635 15.1162L6.31461 16.5437C4.6028 17.568 3.56292 16.8018 4.01087 14.85L4.57881 12.374C4.68279 11.9062 4.49881 11.2529 4.16285 10.9142L2.17907 8.914C1.0112 7.73647 1.38716 6.54282 3.01898 6.2686L5.5707 5.84115C5.99465 5.76856 6.50659 5.3895 6.69857 4.9943L8.10642 2.15534C8.87433 0.614886 10.1222 0.614886 10.8821 2.15534Z"
+      fill="black"
+      stroke="black"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      />
+    {% elif type == 'half' %}
+      <path
+      fill-rule="evenodd"
+      clip-rule="evenodd"
+      d="M8.70635 15.1162C8.926 14.9873 9.21345 14.9228 9.5 14.9226V1C8.99615 0.998604 8.49107 1.38372 8.10642 2.15534L6.69857 4.9943C6.50659 5.3895 5.99465 5.76856 5.5707 5.84115L3.01898 6.2686C1.38716 6.54282 1.0112 7.73647 2.17907 8.914L4.16285 10.9142C4.49881 11.2529 4.68279 11.9062 4.57881 12.374L4.01087 14.85C3.56292 16.8018 4.6028 17.568 6.31461 16.5437L8.70635 15.1162Z"
+      fill="black"
+      />
+      <path
+      d="M9.5 1C8.99615 0.998604 8.49107 1.38372 8.10642 2.15534L6.69857 4.9943C6.50659 5.3895 5.99465 5.76856 5.5707 5.84115L3.01898 6.2686C1.38716 6.54282 1.0112 7.73647 2.17907 8.914L4.16285 10.9142C4.49881 11.2529 4.68279 11.9062 4.57881 12.374L4.01087 14.85C3.56292 16.8018 4.6028 17.568 6.31461 16.5437L8.70635 15.1162C8.926 14.9873 9.21345 14.9228 9.5 14.9226M9.5 1C10.002 1.0014 10.5028 1.38651 10.8821 2.15534L12.29 4.9943C12.4819 5.3895 12.9939 5.76856 13.4258 5.84115L15.9775 6.2686C17.6094 6.54282 17.9933 7.73647 16.8175 8.914L14.8337 10.9142C14.4977 11.2529 14.3137 11.9062 14.4177 12.374L14.9857 14.85C15.4336 16.8098 14.4017 17.568 12.6819 16.5437L10.2902 15.1162C10.0739 14.9869 9.78739 14.9224 9.5 14.9226M9.5 1V14.9226"
+      stroke="black"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      />
+    {% endif %}
+  </svg>
+{%- endmacro %} {% extends "layout.html" %}
+{% block _content %}
+  <div class="flex items-center justify-between w-full pt-16 space-x-8">
+    <div class="flex flex-col items-center w-full space-y-8">
+      <div class="flex flex-col space-y-3">
+        <h1 class="text-5xl font-bold text-center">{{ location.name }}</h1>
+        <div class="flex items-center space-x-2 font-light">
+          <span>({{ '%0.1f'| format(location.rating|float) }})</span>
+          <div class="flex items-center space-x-2">
+            {% for _ in range(location.rating|round(0,'floor')|int) %}
+              {{ RatingStar('filled') }}
+            {% endfor %}
+            {% if location.rating|round(1) >= 0.5 and not ".0" in location.rating|round(1)|string %}
+              {{ RatingStar('half') }}
+            {% else %}
+              {{ RatingStar('empty') }}
+            {% endif %}
+            {% for _ in range(4 - location.rating|round(0,'floor')|int) %}
+              {{ RatingStar('empty') }}
+            {% endfor %}
+          </div>
+          <span>|</span>
+          <span>{{ location.total_spaces }} spaces</span>
+          <span>|</span>
+          <span>{{ location.opening_hours }}</span>
+        </div>
+        <span class="text-sm font-light text-center">[sample review will go here]</span>
+      </div>
+      <a href="/location/{{ location.id }}/booking"
+         class="flex items-center justify-center h-10 font-light text-white bg-black rounded w-80">Book now</a
+        >
+      </div>
+      <img alt="location main image"
+           src="{{ location.main_photo }}"
+           class="aspect-[4/3] h-full w-auto max-h-[33.75rem]"/>
+    </div>
+  {% endblock _content %}

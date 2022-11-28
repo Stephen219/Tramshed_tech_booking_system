@@ -40,8 +40,17 @@ def use_user(func):
 @app.get("/")
 @use_user
 def homepage(user):
-
-    return render_template("index.html", user=user)
+    locations = [
+        {
+            "id": "test-id",
+            "name": "Stafion F",
+            "opening_hours": "6am - 10pm",
+            "total_spaces": 12,
+            "rating": 1.1,
+            "main_photo": "https://stationf.co/img/misc/create-zone.jpg"
+        }
+    ]
+    return render_template("index.html", user=user, location=locations[0])
 
 
 import user
