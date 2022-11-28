@@ -1,0 +1,177 @@
+{% extends "base.html" %}
+{% block head_scripts %}
+  <style>
+      body {
+        text-align:center;
+        
+        top: 1%;
+        left:4%;
+        right: 4%;
+        bottom:3%%
+      }
+        
+      
+      
+      .form {
+        max-width: 500px;
+        max-height: 700px;
+        margin: 3px auto;
+        padding: 10px;
+        
+        border-radius: 14px;
+        
+        text-align: center;
+        background-color: rgb(231, 237, 237);
+        
+      }
+      .image{
+        width: 80%;
+        height: 80%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 10;
+        margin: 0px auto;
+        /*background: #3c5077;*/
+      }
+      .date{font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        font-size: medium;
+      }
+      .comments{
+        font-size: medium;
+        font-family: Georgia, 'Times New Roman', Times, serif;
+        text-align: left;
+        padding: 1em;
+        resize: none;
+        
+      }
+      .form data{
+        
+        border: #cccccc;
+        background-color: antiquewhite;
+      }
+      .button {
+      background-color: rgb(70, 70, 126);
+      
+      border: 2px solid double #cccccc;
+      border-radius: 4px;
+      display: inline-block;
+       color: #eeeeee;
+      text-align: center;
+      font-size: 17px;
+      padding: 14px;
+      width: 100px;
+      transition: all 0.5s;
+      cursor: pointer;
+      margin: 3px;
+      }
+      button span {
+        cursor: pointer;
+        display: inline-block;
+        position: relative;
+        transition: 0.5s;
+      }
+      button span:after {
+        content: '\00bb';
+        position: absolute;
+        opacity: 0;
+        top: 0;
+        right: -20px;
+        transition: 0.5s;
+      }
+      .form data{font-family: italics;
+      }
+      .comments{
+        background-color:rgba(255, 255, 255, 0.663);
+      }
+    </style>
+{% endblock head_scripts %}
+{% block content %}
+  <div class="form">
+    <form onsubmit="submitForm(); return false" class="form" id="myForm">
+      <img class="image"
+           src="{{ url_for('static', filename='logo-black.png') }}"
+           alt=""
+           Image
+           width="45"
+           height="46"
+           altr/>
+      <div class="form data" id="formdata ">
+        <h1>Fill in the spaces to book:</h1>
+        <hr/>
+        Check-in Date:
+        <br/>
+        <input type="date"
+               id="indate"
+               name="datein"
+               class="date"
+               data-date-inline-picker="true"
+               required/>
+        <br/>
+        <br/>
+        Check-out Date:
+        <br/>
+        <input type="date"
+               max="3000-12-12"
+               name="dateout"
+               id="outdate"
+               class="date"
+               data-date-inline-picker="true"
+               required/>
+        <br/>
+        <br/>
+        Enter any other consideration needed:
+        <br/>
+        <textarea id="comments" class="comments" placeholder="Enter a consideration needed." name="textbox" rows="4" cols="39"></textarea>
+        <br/>
+      </div>
+      <a href="base.html"><input type="submit" value="Exit" id="book" class="button"/></a>
+      
+      
+      <button type="submit" class="button">Submit</button>
+    </form>
+    <span id="txt"></span>
+  </div>
+{% endblock content %}
+{% block scripts %}
+  <script>
+    //https://stackoverflow.com/questions/54551549/js-set-minimum-date-for-html-input-date-with-an-if#:~:text=You%20can%20set%20the%20minimum%20value%20using%20the,built%E2%80%93in%20ECMAScript%20parser%20will%20be%20treated%20as%20UTC.
+    window.onload = function(){
+
+      var d = new Date();
+      var s = d.getFullYear() + '-' + 
+              ('0' + (d.getMonth()+1)).slice(-2) + '-' +
+              ('0' + d.getDate()).slice(-2);
+    
+      
+      var node = document.querySelector('input');
+      if (node) {
+        node.setAttribute('min', s);
+        node.setAttribute('value', s);
+      }
+      var node = document.getElementById('outdate');
+      if (node) {
+        node.setAttribute('min', s);
+        node.setAttribute('value', s);
+      }
+    }
+    function submitForm() {
+        var datein = document.forms["myForm"]["datein"].value;
+        var dateout = document.forms["myForm"]["dateout"].value;
+        var comments = document.forms["myForm"]["comments"].value;
+        
+          params = 'datein='+datein+'&dateout='+dateout+'&comments='+comments;
+          var xhttp = new XMLHttpRequest();
+          xhttp.open("POST", '/location/{{ id }}/booking', true); //synchronous
+          xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+          xhttp.onload = function() {
+            if (xhttp.status === 200) {
+              window.location.href = xhttp.responseText;
+              return;
+            }
+        };
+        xhttp.send(params);
+        }
+
+  </script>
+{% endblock scripts %}

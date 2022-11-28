@@ -18,7 +18,6 @@ app.config["PERMANENT_SESSION_LIFETIME"] = 60 * 60 * 12  # Session valid for 12 
 app.config["SESSION_TYPE"] = "sqlalchemy"
 app.config["SESSION_SQLALCHEMY_TABLE"] = "sessions"
 app.config["SESSION_SQLALCHEMY"] = db
-
 sess = Session(app)
 
 
@@ -43,7 +42,26 @@ def homepage(user):
 
     return render_template("index.html", user=user)
 
-
+@app.route("/location/<id>/booking", methods = ['POST','GET'])
+def location_booking(id):
+    if request.method == "GET":
+        return render_template("location/booking.html", id=id, title="Book now")
+    if request.method == "POST":
+        datein= request.form.get('datein')#rem: args for get form for post
+        dateout = request.form.get('dateout')
+        comments = request.form.get('comments')
+        indate =datetime.strptime(datein,'%Y-%m-%d')
+        outdate =datetime.strptime(dateout,'%Y-%m-%d')
+        data = Booking(checkin_date=indate, checkout_date=outdate, special_requests=comments)
+        db.session.add(data)
+        db.session.commit()
+        return '/booking/'+ data.id + '/confirmation'
+@app.route("/booking/<id>/confirmation", methods = ['POST','GET'])
+def booking_confirmation(id):
+    db_booking = Booking.query.get(id)
+    if db_booking == None:
+        return 'Not found', 404
+    return render_template('booking/confirmation.html')
 import user
 
 if __name__ == "__main__":
