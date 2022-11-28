@@ -1,8 +1,8 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect
 from flask_migrate import Migrate
 from flask_session import Session
 from db import db, Booking
-import datetime
+from datetime import datetime
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///data.db"
@@ -30,16 +30,36 @@ def location_booking(id):
     if request.method == "GET":
         return render_template("location/booking.html", id=id, title="Book now")
     if request.method == "POST":
-        datein = request.form.get('datein', default="Error")#rem: args for get form for post
-        dateout = request.form.get('$dateout', default="Error")
-        comments = request.form.get('$comments', default="Error")
-		
-        data = Booking(checkin_date=datetime.datetime.now(), checkout_date=datetime.datetime.now())
+        datein= request.form.get('datein')#rem: args for get form for post
+        dateout = request.form.get('dateout')
+        comments = request.form.get('comments')
+        
+        
+        
+        
+        #datetime.strptime(dt_obj, format)
+        
+        
+        indate =datetime.strptime(datein,'%Y-%m-%d')
+        outdate =datetime.strptime(dateout,'%Y-%m-%d')
+        
+        
+        data = Booking(checkin_date=indate, checkout_date=outdate, special_requests=comments)
         db.session.add(data)
         db.session.commit()
-  
-        print("making bookings")
-        return "Post"
+        
+        return '/booking/'+ data.id + '/confirmation'
+    
+
+@app.route("/booking/<id>/confirmation", methods = ['POST','GET'])
+def booking_confirmation(id):
+    db_booking = Booking.query.get(id)
+    if db_booking == None:
+        return 'Not found', 404
+    return render_template('booking/confirmation.html')
+
+# /location/<id>/booking
+# /booking/<id>/status - no_auth_required
 
 import user
 
