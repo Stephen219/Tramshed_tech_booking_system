@@ -37,6 +37,21 @@ class NewMemberSchema(Schema):
         # Strip unknown values from output
         unknown = EXCLUDE
 
+
+class UpdateMemberSchema(Schema):
+    first_name = fields.String(
+        validate=validate.Length(min=1, error="can't be empty"),
+    )
+    last_name = fields.String(
+        validate=validate.Length(min=1, error="can't be empty"),
+    )
+    email = fields.Email(error_messages={"invalid": "invalid"})
+
+    class Meta:
+        # Strip unknown values from output
+        unknown = EXCLUDE
+
+
 class LoginSchema(Schema):
     email = fields.Email(
         required=True, error_messages={"required": "required", "invalid": "invalid"}
@@ -50,25 +65,60 @@ class LoginSchema(Schema):
         # Strip unknown values from output
         unknown = EXCLUDE
 
+
 def ensure_login(func):
     @functools.wraps(func)
     def check_login(*args, **kwargs):
         logged_in = False
-        if not session.get('user_id') == None:
+        sess = session.get("user_id")
+        if not sess == None:
             logged_in = True
-        if not logged_in and not '/auth/login' in request.path:
+        if not logged_in and not "/auth/login" in request.path:
             return redirect(url_for("user_login"))
-        if logged_in and '/auth/login' in request.path:
-            return redirect(url_for('user_homepage'))
-
-        return func(*args, **kwargs)
+        if logged_in and "/auth/login" in request.path:
+            return redirect(url_for("user_homepage"))
+        db_user = User.query.get(sess)
+        if db_user == None and logged_in:
+            session.clear()
+            return redirect("/")
+        return func(db_user, *args, **kwargs)
 
     return check_login
 
-@app.get("/account")
+
+@app.route("/account", methods=["GET", "PATCH", "DELETE"])
 @ensure_login
-def user_homepage():
-    return render_template('account/index.html')
+def user_homepage(user):
+    if request.method == "DELETE":
+        db_user = User.query.get(user.id)
+        db.session.delete(db_user)
+        db.session.commit()
+
+        session.clear()
+        return redirect("/")
+    if request.method == "PATCH":
+        schema = UpdateMemberSchema()
+        try:
+            body = schema.load(request.json)
+        except ValidationError as err:
+            return jsonify(err.messages), 400  # Return errors in json
+        db_user = User.query.get(user.id)
+        db_user.first_name = body["first_name"]
+        db_user.last_name = body["last_name"]
+        db_user.email = body["email"]
+        db.session.commit()
+
+        return jsonify({"status": "success"})
+    return render_template("account/index.html", user=user, page="/")
+
+
+@app.get("/account/<page>")
+@ensure_login
+def user_pages(user, page):
+    if page == "help":
+        return redirect("/support")
+    return render_template("account/" + page + ".html", user=user, page="/" + page)
+
 
 @app.get("/auth/logout")
 def user_logout():
@@ -79,7 +129,7 @@ def user_logout():
 
 @app.route("/auth/login", methods=["GET", "POST"])
 @ensure_login
-def user_login():
+def user_login(user):
     if request.method == "GET":
         return render_template("account/login.html")
     if request.method == "POST":
@@ -122,7 +172,7 @@ def user_join():
         db.session.add(data)
         db.session.commit()
 
-        session["user_id"] = data.id # log user in after create account
+        session["user_id"] = data.id  # log user in after create account
 
         # TODO: Send account confirmation email
 

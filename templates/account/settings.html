@@ -1,0 +1,68 @@
+{% extends "account/layout.html" %} {% block _content %}
+<main class="flex flex-col items-center w-full p-10 pt-20 space-y-10 sm:space-y-16 md:space-y-32 sm:p-16 md:pt-16">
+  <div class="flex flex-col items-center justify-between w-full space-y-4 md:space-y-0 md:flex-row">
+    <h1 class="text-3xl font-bold text-center md:text-4xl md:text-left">Account Settings</h1>
+    {{ macros.button('
+    <div class="flex items-center space-x-3">
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 16 16"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M14 3.98671C11.78 3.76671 9.54667 3.65337 7.32 3.65337C6 3.65337 4.68 3.72004 3.36 3.85337L2 3.98671M5.66667 3.31337L5.81333 2.44004C5.92 1.80671 6 1.33337 7.12667 1.33337H8.87333C10 1.33337 10.0867 1.83337 10.1867 2.44671L10.3333 3.31337M12.5667 6.09337L12.1333 12.8067C12.06 13.8534 12 14.6667 10.14 14.6667H5.86C4 14.6667 3.94 13.8534 3.86667 12.8067L3.43333 6.09337M6.88667 11H9.10667M6.33333 8.33337H9.66667"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+      <span>Delete account</span>
+    </div>
+    ', variant='outline', type='submit', class='text-red-500 w-max px-7', onclick='deleteAccount()') }}
+  </div>
+  <div class="flex flex-col items-center w-full max-w-2xl space-y-8">
+    <img alt="user profile picture" src="{{ user.avatar }}" class="w-auto h-40" />
+    <form id="update-data-form" class="flex flex-col w-full space-y-4" onsubmit="submitForm(); return false">
+      <div class="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 auto-rows-auto">
+      {{ macros.textInput(placeholder='First Name', name="first_name", id="first_name", value=user.first_name, required=true) }}
+      {{ macros.textInput(placeholder='Last Name', name="last_name", id="last_name", value=user.last_name, required=true) }}
+      {{ macros.textInput(type='email', placeholder='Email', name="email", id="email", value=user.email, required=true) }}
+      {{ macros.textInput(type='password', placeholder='Password', name="password", id="password", value='password123', disabled=True, required=true) }}
+    </div>
+      {{ macros.button("Save", type='submit', class='px-10 mx-auto w-max') }}
+    </form>
+  </div>
+</main>
+{% endblock _content %}
+{% block scripts %}
+  <script>
+    const form = document.getElementById("update-data-form");
+    const submitForm = async () => {
+      const first_name = form["first_name"].value;
+      const last_name = form["last_name"].value;
+      const email = form["email"].value;
+      const payload = JSON.stringify({ first_name, last_name, email })
+      if (first_name == "{{user.first_name}}" && last_name == "{{user.last_name}}" && email == "{{user.email}}") return
+      const res = await fetch('/account', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: payload
+      })
+      if (res.ok) {
+        return window.location.href = "/account";
+      }
+    }
+    const deleteAccount = async () => {
+      const res = await fetch('/account', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+      })
+    }
+  </script>
+{% endblock scripts %}
