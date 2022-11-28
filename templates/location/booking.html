@@ -2,14 +2,24 @@
 {% block head_scripts %}
   <style>
       body {
-        background-image: url("{{ url_for('static', filename='logo-black.png') }}");
+        text-align:center;
+        
+        top: 1%;
+        left:4%;
+        right: 4%;
+        bottom:3%%
       }
+        
+      
       
       .form {
-        max-width: 350px;
-        max-height: 600px;
+        max-width: 500px;
+        max-height: 700px;
         margin: 3px auto;
-        padding: 20px;
+        padding: 10px;
+        
+        
+        ;
         
         border-radius: 14px;
         
@@ -20,13 +30,15 @@
         
       }
       .image{
-        width: 90%;
-        height: 90%;
+        width: 80%;
+        height: 80%;
         display: flex;
         justify-content: center;
         align-items: center;
-        padding: 0;
+        padding: 10;
         margin: 0px auto;
+        /*background: #3c5077;*/
+        
       
         
     
@@ -42,9 +54,10 @@
         text-align: left;
         padding: 1em;
         resize: none;
+        
       }
       .form data{
-        border-bottom: 33px solid double red ;
+        
         border: #cccccc;
         background-color: antiquewhite;
       }
@@ -72,7 +85,7 @@
       width: 100px;
       transition: all 0.5s;
       cursor: pointer;
-      margin: 5px;
+      margin: 3px;
       }
       button span {
         cursor: pointer;
@@ -100,102 +113,96 @@
 {% endblock head_scripts %}
 {% block content %}
   <div class="form">
-    <form onsubmit="return loadName()" class="form" id="myForm">
+    <form onsubmit="submitForm(); return false" class="form" id="myForm">
       <img class="image"
            src="{{ url_for('static', filename='logo-black.png') }}"
            alt=""
            Image
            width="45"
            height="46"
-           altr />
+           altr/>
       <div class="form data" id="formdata ">
-        <hr>
+        <h1>Fill in the spaces to book:</h1>
+        <hr/>
         Check-in Date:
-        <br>
+        <br/>
         <input type="date"
                id="indate"
                name="datein"
                class="date"
-               data-date-inline-picker="true"/>
-        <br>
-        <br>
+               data-date-inline-picker="true"
+               required/>
+        <br/>
+        <br/>
         Check-out Date:
-        <br>
+        <br/>
         <input type="date"
+               max="3000-12-12"
                name="dateout"
                id="outdate"
                class="date"
-               data-date-inline-picker="true"/>
-        <br>
-        <br>
+               data-date-inline-picker="true"
+               required/>
+        <br/>
+        <br/>
         Enter any other consideration needed:
-        <br>
-        <textarea id="comments" class="comments" placeholder="Enter a consideration needed." name="textbox" rows="4" cols="30"></textarea>
-        <br>
+        <br/>
+        <textarea id="comments" class="comments" placeholder="Enter a consideration needed." name="textbox" rows="4" cols="39"></textarea>
+        <br/>
       </div>
-      <input type="button"
-             value="Close"
-             id="bookgo"
-             class="button"
-             onclick="closeForm()">
-      <!--<input type="submit" value="submit"<li class="active"><a href="/Student/AddStudent">AddStudent</a></li> id="book" class="button" pattern="dd/mm/yyy" alt="time" >-->
-    <input type="submit"
-           value="submit"
-           id="book"
-           class="button"
-           pattern="dd/mm/yyy"
-           alt="time"
-           a
-           href="thank.html"></a>
-  </form>
-</div>
-<span id='txt'></span>
+      <a href="base.html"><input type="submit" value="Exit" id="book" class="button"/></a>
+      
+      <!--<input type.....<button type="button" class="button" onclick="goBack()">Back</button>.....="submit" value="submit"<li class="active"><a href="/Student/AddStudent">AddStudent</a></li> id="book" class="button" pattern="dd/mm/yyy" alt="time" >-->
+      <button type="submit" class="button">Submit</button>
+    </form>
+    <span id="txt"></span>
+  </div>
 {% endblock content %}
 {% block scripts %}
   <script>
-      function closeForm(){
-        document.getElementById("myForm").style.display = "none";
+    //https://stackoverflow.com/questions/54551549/js-set-minimum-date-for-html-input-date-with-an-if#:~:text=You%20can%20set%20the%20minimum%20value%20using%20the,built%E2%80%93in%20ECMAScript%20parser%20will%20be%20treated%20as%20UTC.
+    window.onload = function(){
+
+      var d = new Date();
+    
+      // Build ISO 8601 format date string
+      var s = d.getFullYear() + '-' + 
+              ('0' + (d.getMonth()+1)).slice(-2) + '-' +
+              ('0' + d.getDate()).slice(-2);
+    
+      // Set the value of the value and midaten attributes
+      var node = document.querySelector('input');
+      if (node) {
+        node.setAttribute('min', s);
+        node.setAttribute('value', s);
       }
-      function loadName() {
+      var node = document.getElementById('outdate');
+      if (node) {
+        node.setAttribute('min', s);
+        node.setAttribute('value', s);
+      }
+    }
+
+      function submitForm() {
         var datein = document.forms["myForm"]["datein"].value;
         var dateout = document.forms["myForm"]["dateout"].value;
         var comments = document.forms["myForm"]["comments"].value;
         
-        params = 'datein'+datein+'&dateout='+dateout+'&comments='+comments;
-        var xhttp = new XMLHttpRequest();
-        xhttp.open("POST", '/location/{{ id }}/booking', true); // true is asynchronous
-        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xhttp.onload = function() {
-          if (xhttp.readyState === 4 && xhttp.status === 200) {
-            console.log(xhttp.responseText);
-            document.getElementById("txt").innerHTML = xhttp.responseText;
-          } else {
-            console.error(xhttp.statusText);
-          }
+          params = 'datein='+datein+'&dateout='+dateout+'&comments='+comments;
+          var xhttp = new XMLHttpRequest();
+          xhttp.open("POST", '/location/{{ id }}/booking', true); //synchronous
+          xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+          xhttp.onload = function() {
+            if (xhttp.status === 200) {
+              window.location.href = xhttp.responseText;
+              return;
+            }
         };
         xhttp.send(params);
-        return false;
-      }
+        }
+
+        //return false;
+      
     
   </script>
 {% endblock scripts %}
-<!--<script>
-    function validate(){
-      var pass = true; 
-      var checkindate = document.getElementById('indate').value;
-      var checkoutdate = document.getElementById('outdate').value;
-      var comments = document.getElementById('comments').value;
-      if (checkindate.value === ' ' || checkindate.value == null){
-        alert("the space is empty");
-        pass = false
-      }
-    
-    
-    
-    
-    return pass}
-
-
-    
-  
-</script>-->
