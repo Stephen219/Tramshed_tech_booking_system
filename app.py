@@ -13,6 +13,7 @@ Migrate(app, db)
 
 app.config["SECRET_KEY"] = '<super secret key used for sessions>'
 app.config["PERMANENT_SESSION_LIFETIME"] = 60 * 60 * 12  # Session valid for 12 hrs
+# TODO: Work on clearing session from db
 app.config['SESSION_TYPE'] = 'sqlalchemy'
 app.config["SESSION_SQLALCHEMY_TABLE"] = 'sessions'
 app.config["SESSION_SQLALCHEMY"] = db
