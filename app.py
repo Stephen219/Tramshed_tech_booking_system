@@ -1,9 +1,9 @@
 import functools
-from flask import Flask, render_template, session
+from flask import Flask, request,render_template, session 
 from flask_migrate import Migrate
 from flask_session import Session
-from db import db, User
-
+from db import db, User, Booking
+from datetime import datetime
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///data.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
