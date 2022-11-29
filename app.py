@@ -2,6 +2,7 @@ from flask import Flask, render_template
 from flask_migrate import Migrate
 from flask_session import Session
 from db import db, Location
+ALLOWED_EXTENXIONS= set(['txt','pdf','png','jpg','jpeg','gif'])
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///data.db"
