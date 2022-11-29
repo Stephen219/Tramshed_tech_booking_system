@@ -1,11 +1,10 @@
 import functools
-from flask import Flask, render_template, session
+from flask import Flask, request,render_template, session 
 from flask_migrate import Migrate
 from flask_session import Session
-from db import db, User, Location
-
+from db import db, User, Location, Booking
+from datetime import datetime
 ALLOWED_EXTENXIONS= set(['txt','pdf','png','jpg','jpeg','gif'])
-
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///data.db"
