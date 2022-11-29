@@ -1,0 +1,265 @@
+{% extends "base.html" %} {% block content %}
+<div class="flex w-full">
+  <div class="h-screen absolute w-full bg-[rgba(0,0,0,0.25)] hidden" id="bg-overlay"></div>
+  <aside
+    class="absolute lg:relative z-50 transition-transform ease-in -translate-x-[16rem] lg:translate-x-0 h-screen bg-[#F3F1EF] flex flex-col justify-between w-full max-w-[16rem] py-16 rounded-r-2xl"
+    id="side-navbar"
+  >
+    <div class="flex flex-col space-y-16">
+      <div class="flex items-center justify-between w-full max-w-[12rem] mx-auto">
+        <a href="/" class="flex justify-center hover:opacity-75 focus-ring"
+          >{{ macros.logo(class="h-12 lg:h-14") }}</a
+        >
+        <button
+          class="z-40 p-1 border rounded lg:hidden border-black-300 focus-ring"
+          aria-label="Close Sidebar"
+          onclick="toggleNavbar()"
+        >
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 12 12"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M9.64219 9.10781C9.71261 9.17891 9.75211 9.27493 9.75211 9.375C9.75211 9.47507 9.71261 9.57109 9.64219 9.64219C9.57051 9.7115 9.47471 9.75024 9.375 9.75024C9.2753 9.75024 9.17949 9.7115 9.10782 9.64219L6 6.52969L2.89219 9.64219C2.82051 9.7115 2.72471 9.75024 2.625 9.75024C2.5253 9.75024 2.42949 9.7115 2.35782 9.64219C2.2874 9.57109 2.24789 9.47507 2.24789 9.375C2.24789 9.27493 2.2874 9.17891 2.35782 9.10781L5.47032 6L2.35782 2.89219C2.29802 2.81933 2.26746 2.72683 2.27208 2.63268C2.27671 2.53854 2.31618 2.44948 2.38283 2.38283C2.44948 2.31618 2.53854 2.2767 2.63269 2.27208C2.72683 2.26746 2.81933 2.29801 2.89219 2.35781L6 5.47031L9.10782 2.35781C9.18068 2.29801 9.27318 2.26746 9.36732 2.27208C9.46146 2.2767 9.55052 2.31618 9.61717 2.38283C9.68383 2.44948 9.7233 2.53854 9.72793 2.63268C9.73255 2.72683 9.70199 2.81933 9.64219 2.89219L6.52969 6L9.64219 9.10781Z"
+              fill="black"
+            />
+          </svg>
+        </button>
+      </div>
+      <div class="flex flex-col items-center space-y-3">
+        <img alt="user profile picture" src="{{ user.avatar }}" class="w-auto h-28" />
+        <span class="text-xl font-semibold">{{ user.first_name }} {{ user.last_name }}</span>
+      </div>
+      <div class="flex flex-col w-48 mx-auto space-y-3 transition-colors">
+        <a
+          href="/account"
+          class="flex items-center w-full px-4 py-2 space-x-3 {% if page == '/' %}bg-white{% endif %} hover:bg-white rounded focus-ring"
+        >
+          <svg
+            width="12"
+            height="12"
+            viewBox="0 0 12 12"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <g clip-path="url(#clip0_8_520)">
+              <path
+                d="M6 8.99502V7.49502M4.51 1.42002L1.815 3.52002C1.365 3.87002 1 4.61502 1 5.18002V8.88502C1 10.045 1.945 10.995 3.105 10.995H8.895C10.055 10.995 11 10.045 11 8.89002V5.25002C11 4.64502 10.595 3.87002 10.1 3.52502L7.01 1.36002C6.31 0.87002 5.185 0.89502 4.51 1.42002Z"
+                stroke="black"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </g>
+            <defs>
+              <clipPath id="clip0_8_520">
+                <rect width="12" height="12" fill="white" />
+              </clipPath>
+            </defs>
+          </svg>
+          <span class="font-light">Dashboard</span>
+        </a>
+        <a
+          href="/account/bookings"
+          class="flex items-center w-full px-4 py-2 space-x-3 {% if page == '/bookings' %}bg-white{% endif %} hover:bg-white rounded focus-ring"
+        >
+          <svg
+            width="12"
+            height="12"
+            viewBox="0 0 12 12"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <g clip-path="url(#clip0_8_524)">
+              <path
+                d="M11 6C11 8.76 8.76 11 6 11C3.24 11 1 8.76 1 6C1 3.24 3.24 1 6 1C8.76 1 11 3.24 11 6Z"
+                stroke="black"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M7.855 7.59001L6.305 6.66501C6.035 6.50501 5.815 6.12 5.815 5.805V3.755"
+                stroke="black"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </g>
+            <defs>
+              <clipPath id="clip0_8_524">
+                <rect width="12" height="12" fill="white" />
+              </clipPath>
+            </defs>
+          </svg>
+          <span class="font-light">Bookings</span>
+        </a>
+        <a
+          href="/account/help"
+          class="flex items-center w-full px-4 py-2 space-x-3 {% if page == '/help' %}bg-white{% endif %} hover:bg-white rounded focus-ring"
+        >
+          <svg
+            width="12"
+            height="12"
+            viewBox="0 0 12 12"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <g clip-path="url(#clip0_8_529)">
+              <path
+                d="M5.985 11C8.7465 11 10.985 8.7615 10.985 6C10.985 3.2385 8.7465 1 5.985 1C3.2235 1 0.985001 3.2385 0.985001 6C0.985001 8.7615 3.2235 11 5.985 11V11Z"
+                stroke="black"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M2.45 2.46503L4.22 4.23003M2.45 9.53503L4.22 7.77003M9.525 9.53503L7.755 7.77003M9.525 2.46503L7.755 4.23003M6 8.25003C6.59673 8.25003 7.16903 8.01297 7.59099 7.59102C8.01294 7.16906 8.25 6.59676 8.25 6.00003C8.25 5.40329 8.01294 4.83099 7.59099 4.40904C7.16903 3.98708 6.59673 3.75003 6 3.75003C5.40326 3.75003 4.83096 3.98708 4.40901 4.40904C3.98705 4.83099 3.75 5.40329 3.75 6.00003C3.75 6.59676 3.98705 7.16906 4.40901 7.59102C4.83096 8.01297 5.40326 8.25003 6 8.25003V8.25003Z"
+                stroke="black"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </g>
+            <defs>
+              <clipPath id="clip0_8_529">
+                <rect width="12" height="12" fill="white" />
+              </clipPath>
+            </defs>
+          </svg>
+          <span class="font-light">Help</span>
+        </a>
+        <a
+          href="/account/settings"
+          class="flex items-center w-full px-4 py-2 space-x-3 {% if page == '/settings' %}bg-white{% endif %} hover:bg-white rounded focus-ring"
+        >
+          <svg
+            width="12"
+            height="12"
+            viewBox="0 0 12 12"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <g clip-path="url(#clip0_8_534)">
+              <path
+                d="M6 7.5C6.39782 7.5 6.77936 7.34196 7.06066 7.06066C7.34196 6.77936 7.5 6.39782 7.5 6C7.5 5.60218 7.34196 5.22064 7.06066 4.93934C6.77936 4.65804 6.39782 4.5 6 4.5C5.60218 4.5 5.22064 4.65804 4.93934 4.93934C4.65804 5.22064 4.5 5.60218 4.5 6C4.5 6.39782 4.65804 6.77936 4.93934 7.06066C5.22064 7.34196 5.60218 7.5 6 7.5V7.5Z"
+                stroke="black"
+                stroke-miterlimit="10"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M1 6.44003V5.56003C1 5.04003 1.425 4.61003 1.95 4.61003C2.855 4.61003 3.225 3.97003 2.77 3.18503C2.51 2.73503 2.665 2.15003 3.12 1.89003L3.985 1.39503C4.38 1.16003 4.89 1.30003 5.125 1.69503L5.18 1.79003C5.63 2.57503 6.37 2.57503 6.825 1.79003L6.88 1.69503C7.115 1.30003 7.625 1.16003 8.02 1.39503L8.885 1.89003C9.34 2.15003 9.495 2.73503 9.235 3.18503C8.78 3.97003 9.15 4.61003 10.055 4.61003C10.575 4.61003 11.005 5.03503 11.005 5.56003V6.44003C11.005 6.96003 10.58 7.39003 10.055 7.39003C9.15 7.39003 8.78 8.03003 9.235 8.81503C9.495 9.27003 9.34 9.85003 8.885 10.11L8.02 10.605C7.625 10.84 7.115 10.7 6.88 10.305L6.825 10.21C6.375 9.42503 5.635 9.42503 5.18 10.21L5.125 10.305C4.89 10.7 4.38 10.84 3.985 10.605L3.12 10.11C2.90205 9.98454 2.74279 9.7777 2.67717 9.53491C2.61155 9.29213 2.64494 9.03323 2.77 8.81503C3.225 8.03003 2.855 7.39003 1.95 7.39003C1.425 7.39003 1 6.96003 1 6.44003V6.44003Z"
+                stroke="black"
+                stroke-miterlimit="10"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </g>
+            <defs>
+              <clipPath id="clip0_8_534">
+                <rect width="12" height="12" fill="white" />
+              </clipPath>
+            </defs>
+          </svg>
+          <span class="font-light">Account Settings</span>
+        </a>
+      </div>
+    </div>
+    <a
+      href="/auth/logout"
+      class="flex items-center w-48 px-4 py-2 mx-auto space-x-3 rounded hover:opacity-80 focus-ring"
+    >
+      <svg
+        width="12"
+        height="12"
+        viewBox="0 0 12 12"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <g clip-path="url(#clip0_8_539)">
+          <path
+            d="M4.45 3.77999C4.605 1.98 5.53 1.245 7.555 1.245H7.62C9.855 1.245 10.75 2.14 10.75 4.375V7.635C10.75 9.87 9.855 10.765 7.62 10.765H7.555C5.545 10.765 4.62 10.04 4.455 8.27M7.5 6H1.81M2.925 4.325L1.25 6L2.925 7.675"
+            stroke="#2C2C2C"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </g>
+        <defs>
+          <clipPath id="clip0_8_539">
+            <rect width="12" height="12" fill="white" />
+          </clipPath>
+        </defs>
+      </svg>
+      <span class="font-light">Logout</span>
+    </a>
+  </aside>
+  <button
+    class="absolute p-1 border rounded lg:hidden border-black-300 top-6 left-6 focus-ring"
+    aria-label="Open Sidebar"
+    id="navbar-toggle-btn"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none">
+      <path
+        d="M3 7h18M3 12h18M3 17h18"
+        stroke="black"
+        stroke-width="1.5"
+        stroke-linecap="round"
+      ></path>
+    </svg>
+  </button>
+  {% block _content %} {% endblock _content %}
+</div>
+{% endblock %} 
+{% block scripts %}
+<script>
+  const hamburgerBtn = document.querySelector("#navbar-toggle-btn");
+  const sideNavbar = document.querySelector("#side-navbar");
+  const bgOverlay = document.querySelector("#bg-overlay");
+  let navbarOpen = false;
+  const toggleNavbar = () => {
+    navbarOpen = !navbarOpen;
+    sideNavbar.classList.toggle("-translate-x-[16rem]");
+    bgOverlay.classList.toggle("hidden");
+  };
+  hamburgerBtn.addEventListener("click", () => {
+    toggleNavbar();
+  });
+  // Trap focus in modal - Inspired by https://hidde.blog/using-javascript-to-trap-focus-in-an-element/
+  const focusableEls = sideNavbar.querySelectorAll(
+    'a[href]:not([disabled]), button:not([disabled]), textarea:not([disabled]), input[type="text"]:not([disabled]), input[type="radio"]:not([disabled]), input[type="checkbox"]:not([disabled]), select:not([disabled])'
+  );
+  const firstFocusableEl = focusableEls[0];
+  const lastFocusableEl = focusableEls[focusableEls.length - 1];
+  const KEYCODE_TAB = 9;
+  sideNavbar.addEventListener("keydown", (e) => {
+    if (!navbarOpen) return;
+    var isTabPressed = e.key === "Tab" || e.keyCode === KEYCODE_TAB;
+    if (!isTabPressed) {
+      return;
+    }
+    if (e.shiftKey) {
+      /* shift + tab */ if (document.activeElement === firstFocusableEl) {
+        lastFocusableEl.focus();
+        e.preventDefault();
+      }
+    } /* tab */ else {
+      if (document.activeElement === lastFocusableEl) {
+        firstFocusableEl.focus();
+        e.preventDefault();
+      }
+    }
+  });
+  // Prevent sidebar focus when closed
+  sideNavbar.addEventListener("focusin", (e) => {
+    if (!navbarOpen) return hamburgerBtn.focus();
+  });
+  // Close side bar on escape and click outside
+  window.addEventListener("click", (e) => {
+    if (!navbarOpen) return;
+    if (!sideNavbar.contains(e.target) && !hamburgerBtn.contains(e.target)) toggleNavbar();
+  });
+  window.addEventListener("keydown", (e) => {
+    if (!navbarOpen) return;
+    if (e.key === "Escape") toggleNavbar();
+  });
+</script>
+{% endblock %}

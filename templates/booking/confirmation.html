@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    <title>thank you</title>
+    <style>
+        .container{
+            width: 100%;
+            height: 100vh;
+            background: #3c5077;
+            position: fixed;
+            
+            align-items: center;
+            justify-content: center;
+        }
+        .popup{width: 400px; height: 450px;
+          text-align: center;
+          
+
+          background: rgba(255, 255, 255, 0.898);
+          border-radius: 6px;
+          position: fixed;
+          top: 12%;
+          left:30%;
+          right: 20%;
+          bottom: 10%;
+          
+         
+          text-align: center;
+          padding: 0 30px 30px;
+          color: #333;
+          display: block;
+          visibility: visible;
+          
+
+
+        }
+        
+
+        
+        .image{
+           margin-top: -48px;
+           width: 31%;
+           height: 27%;
+           border-radius: 50%;
+           display: flex;
+           justify-content: right;
+           align-items: center;
+           border-radius: 50%;
+           box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+           margin-left: 35%
+
+        }
+        .bon{
+          
+            padding: 10px 150px;
+            display: flexbox;
+            background: rgb(59, 247, 103);
+            border: 0;
+            cursor: pointer;
+            font-size: 22px;
+            font-weight: 550;
+            border-radius: 15px;
+            margin-bottom: 8px;
+            margin-top: 57px;
+
+        }
+        h3{font-size: 22px;
+          font-weight: 550;
+
+
+        }
+    </style>
+  </head>
+  <body>
+	<div class="container">
+    
+    
+
+  </div>
+    <div class="popup" id="popup">
+      <img class="image" src="{{ url_for('static', filename='thanks.png') }}" alt=""/>
+          
+           
+      <hr/>
+      
+        <h2>Thank You!</h2>
+        <h3>Your booking has been made.</h3>
+        <h3>A confirmation Email will be sent subject to approval</h3>
+        <h4>You can also view the status of the booking in the account dashboard</h4>
+        
+      <a href="pac.html"><input type="submit" value="Exit" id="book" class="bon"/></a>
+
+
+    </div>
+    <script>
+      
+    </script>
+  </body>
+</html>

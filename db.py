@@ -21,6 +21,7 @@ class User(db.Model):
     password = db.Column(db.String, nullable=False)
     created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
     updated_at = db.Column(db.DateTime(timezone=True), onupdate=func.now())
+
 class Location(db.Model):
     id = db.Column(db.String, primary_key=True, default=nanoid.generate)
     name= db.Column(db.String, nullable=False)
@@ -34,5 +35,13 @@ class Location(db.Model):
     phone_number= db.Column(db.String, nullable=True)
     opening_hours= db.Column(db.String, nullable=False)
     checkin_instructions = db.Column(db.String, nullable=False)
+    created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
+    updated_at = db.Column(db.DateTime(timezone=True), onupdate=func.now())
+
+class Booking(db.Model):
+    id = db.Column(db.String, primary_key=True, default=nanoid.generate)
+    checkin_date = db.Column(db.DateTime(timezone=True), nullable=False)
+    checkout_date = db.Column(db.DateTime(timezone=True), nullable=False)
+    special_requests = db.Column(db.String, nullable=True)
     created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
     updated_at = db.Column(db.DateTime(timezone=True), onupdate=func.now())
