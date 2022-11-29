@@ -1,6 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import func
 import nanoid
+ALLOWED_EXTENXIONS= set(['txt','pdf','png','jpg','jpeg','gif'])
 
 db = SQLAlchemy()
 # !Migration steps!
