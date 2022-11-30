@@ -21,6 +21,10 @@ class User(db.Model):
     password = db.Column(db.String, nullable=False)
     created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
     updated_at = db.Column(db.DateTime(timezone=True), onupdate=func.now())
+    comments= db.relationship('Booking', backref = 'post')
+    def __repr__(self):
+        return f'<User"{self.title}">'
+
 
 class Location(db.Model):
     id = db.Column(db.String, primary_key=True, default=nanoid.generate)
@@ -37,6 +41,9 @@ class Location(db.Model):
     checkin_instructions = db.Column(db.String, nullable=False)
     created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
     updated_at = db.Column(db.DateTime(timezone=True), onupdate=func.now())
+    comments= db.relationship('Booking', backref='post')
+    def __repr__(self):
+        return f'<Location "{self.title}">'
 
 class Booking(db.Model):
     id = db.Column(db.String, primary_key=True, default=nanoid.generate)
@@ -45,3 +52,7 @@ class Booking(db.Model):
     special_requests = db.Column(db.String, nullable=True)
     created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
     updated_at = db.Column(db.DateTime(timezone=True), onupdate=func.now())
+    location_id = db.Column(db.Integer, db.ForeignKey('Location.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('User.id'))
+    def __repr__(self):
+        return f'<Booking "{self.title}">'
