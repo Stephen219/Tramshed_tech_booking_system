@@ -41,7 +41,25 @@ def use_user(func):
 @app.get("/")
 @use_user
 def homepage(user):
-    return render_template("index.html", user=user)
+    locations = [
+        {
+            "id": "test-id",
+            "name": "Stafion F",
+            "opening_hours": "6am - 10pm",
+            "total_spaces": 12,
+            "rating": 1.1,
+            "main_photo": "https://stationf.co/img/misc/create-zone.jpg"
+        },
+        {
+            "id": "test-id-2",
+            "name": "Dogpatch Labs",
+            "opening_hours": "6am - 6pm",
+            "total_spaces": 12,
+            "rating": 3.4,
+            "main_photo": "https://dogpatchlabs.wpenginepowered.com/wp-content/uploads/2022/09/ian_browne.jpg"
+        },
+    ]
+    return render_template("index.html", user=user, locations=locations)
 
 @app.get("/locations")
 def location_page():

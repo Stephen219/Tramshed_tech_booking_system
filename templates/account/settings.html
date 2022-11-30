@@ -37,6 +37,7 @@
 </main>
 {% endblock _content %}
 {% block scripts %}
+{{ super() }}
   <script>
     const form = document.getElementById("update-data-form");
     const submitForm = async () => {
