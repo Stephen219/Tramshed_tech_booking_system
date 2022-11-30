@@ -1,7 +1,8 @@
 import functools
-from flask import Flask, request,render_template, session 
+from flask import Flask, request,render_template, session
 from flask_migrate import Migrate
 from flask_session import Session
+from flask_sqlalchemy import SQLAlchemy
 from db import db, User, Location, Booking
 from datetime import datetime
 ALLOWED_EXTENXIONS= set(['txt','pdf','png','jpg','jpeg','gif'])
@@ -87,6 +88,12 @@ def booking_confirmation(id):
     if db_booking == None:
         return 'Not found', 404
     return render_template('booking/confirmation.html')
+@app.get("/My bookings/")
+def My_bookings(id):
+    db_bookings = Booking.query.filter_by(user_id=["user_id"]).first()
+    return render_template
+
+
 import user
 
 if __name__ == "__main__":
