@@ -48,9 +48,17 @@ def homepage(user):
             "total_spaces": 12,
             "rating": 1.1,
             "main_photo": "https://stationf.co/img/misc/create-zone.jpg"
-        }
+        },
+        {
+            "id": "test-id-2",
+            "name": "Dogpatch Labs",
+            "opening_hours": "6am - 6pm",
+            "total_spaces": 12,
+            "rating": 3.4,
+            "main_photo": "https://dogpatchlabs.wpenginepowered.com/wp-content/uploads/2022/09/ian_browne.jpg"
+        },
     ]
-    return render_template("index.html", user=user, location=locations[0])
+    return render_template("index.html", user=user, locations=locations)
 
 
 import user
