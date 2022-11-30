@@ -105,7 +105,9 @@ def booking_confirmation(id):
     if db_booking == None:
         return 'Not found', 404
     return render_template('booking/confirmation.html')
+
 import user
+import admin
 
 if __name__ == "__main__":
     with app.app_context():
