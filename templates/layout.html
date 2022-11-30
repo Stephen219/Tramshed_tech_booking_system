@@ -25,9 +25,8 @@
   </div>
 </a>
 {% endif %} {%- endmacro %} {% extends "base.html" %} {% block content %}
-<div class="h-screen absolute w-full bg-[rgba(0,0,0,0.25)] hidden" id="bg-overlay"></div>
 <aside
-  class="absolute pt-8 bg-[#F3F1EF] flex flex-col space-y-8 items-center w-[16rem] -left-[16rem] transition-transform ease-in h-screen"
+  class="absolute pt-8 z-50 bg-white flex flex-col space-y-8 items-center w-[16rem] -left-[16rem] transition-transform ease-in h-screen"
   id="side-navbar"
 >
   <a class="focus-ring" href="/"> {{ macros.logo(class="h-12") }} </a>
@@ -35,6 +34,7 @@
     {{ navItems() }}
   </div>
 </aside>
+<div class="h-screen absolute w-full bg-[rgba(0,0,0,0.25)] hidden" id="bg-overlay"></div>
 <header class="flex justify-center">
   <div class="w-full max-w-[1366px] flex items-center justify-between py-7 mx-8">
     <a class="focus-ring" href="/"> {{ macros.logo(class="h-12") }} </a>
@@ -61,7 +61,7 @@
     </button>
   </div>
 </header>
-<main class="min-h-screen">{% block _content %} {% endblock _content %}</main>
+<main class="min-h-screen max-w-[1366px] w-full mx-auto">{% block _content %} {% endblock _content %}</main>
 {% endblock content %} {% block scripts %}
 <script>
   const hamburgerBtn = document.querySelector("#navbar-toggle-btn");
