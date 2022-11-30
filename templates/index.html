@@ -51,6 +51,16 @@
     {% endfor %}
   </div>
 </div>
+<div class="flex flex-col items-center mt-[5vh] lg:mt-[10vh] space-y-6">
+  <h2 class="text-2xl font-light lg:text-3xl">Trusted by</h2>
+  <div class="flex flex-wrap items-center justify-center w-full h-6 max-w-5xl gap-10 sm:h-8 lg:flex-nowrap lg:justify-between">
+    <img alt="microsoft logo" src="{{url_for('static', filename='microsoft.png')}}" class="w-auto h-full" />
+    <img alt="eagle labs logo" src="{{url_for('static', filename='eagle.png')}}" class="w-auto h-full" />
+    <img alt="welsh government logo" src="{{url_for('static', filename='welsh-gov.png')}}" class="w-auto h-full" />
+    <img alt="geovation logo" src="{{url_for('static', filename='geovation.png')}}" class="w-auto h-full" />
+    <img alt="google logo" src="{{url_for('static', filename='google.png')}}" class="w-auto h-full" />
+  </div>
+</div>
 {% endblock _content %} {% block scripts %}
 {{ super() }}
 <script>
