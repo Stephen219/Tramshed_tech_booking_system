@@ -2,7 +2,8 @@ from __main__ import app
 from flask import render_template, jsonify, request, session, redirect, url_for
 import functools
 from marshmallow import Schema, fields, validate, EXCLUDE, ValidationError
-from db import db, User
+from db import db, User , Booking
+from datetime import datetime
 import bcrypt
 
 # https://stackoverflow.com/a/21456918
@@ -119,6 +120,35 @@ def user_pages(user, page):
         return redirect("/support")
     return render_template("account/" + page + ".html", user=user, page="/" + page)
 
+@app.route("/location/<id>/booking", methods = ['POST','GET'])
+@ensure_login
+def location_booking(user,id):
+    if request.method == "GET":
+        return render_template("location/booking.html", id=id, title="Book now")
+    if request.method == "POST":
+        datein= request.form.get('datein')#rem: args for get form for post
+        dateout = request.form.get('dateout')
+        comments = request.form.get('comments')
+        indate =datetime.strptime(datein,'%Y-%m-%d')
+        outdate =datetime.strptime(dateout,'%Y-%m-%d')
+        data = Booking(checkin_date=indate, checkout_date=outdate, special_requests=comments,user=user)
+        db.session.add(data)
+        db.session.commit()
+        return '/booking/'+ data.id + '/confirmation'
+
+    
+@app.route("/booking/<id>/confirmation", methods = ['POST','GET'])
+def booking_confirmation(id):
+    db_booking = Booking.query.get(id)
+    if db_booking == None:
+        return 'Not found', 404
+    return render_template('booking/confirmation.html')
+@app.get("/My-bookings")
+@ensure_login
+def My_bookings(user):
+    db_bookings = Booking.query.filter_by(user_id=user.id).first()
+    print(db_bookings)
+    return "db_bookings"
 
 @app.get("/auth/logout")
 def user_logout():

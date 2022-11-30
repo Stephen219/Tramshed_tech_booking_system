@@ -1,8 +1,7 @@
 import functools
-from flask import Flask, request,render_template, session
+from flask import Flask, request,render_template, session, jsonify
 from flask_migrate import Migrate
 from flask_session import Session
-from flask_sqlalchemy import SQLAlchemy
 from db import db, User, Location, Booking
 from datetime import datetime
 ALLOWED_EXTENXIONS= set(['txt','pdf','png','jpg','jpeg','gif'])
@@ -67,31 +66,6 @@ def location_temp_add():
     db.session.add(data)
     db.session.commit()
     return "succes"
-
-@app.route("/location/<id>/booking", methods = ['POST','GET'])
-def location_booking(id):
-    if request.method == "GET":
-        return render_template("location/booking.html", id=id, title="Book now")
-    if request.method == "POST":
-        datein= request.form.get('datein')#rem: args for get form for post
-        dateout = request.form.get('dateout')
-        comments = request.form.get('comments')
-        indate =datetime.strptime(datein,'%Y-%m-%d')
-        outdate =datetime.strptime(dateout,'%Y-%m-%d')
-        data = Booking(checkin_date=indate, checkout_date=outdate, special_requests=comments)
-        db.session.add(data)
-        db.session.commit()
-        return '/booking/'+ data.id + '/confirmation'
-@app.route("/booking/<id>/confirmation", methods = ['POST','GET'])
-def booking_confirmation(id):
-    db_booking = Booking.query.get(id)
-    if db_booking == None:
-        return 'Not found', 404
-    return render_template('booking/confirmation.html')
-@app.get("/My bookings/")
-def My_bookings(id):
-    db_bookings = Booking.query.filter_by(user_id=["user_id"]).first()
-    return render_template
 
 
 import user
