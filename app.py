@@ -87,6 +87,7 @@ def location_temp_add():
 
 
 import user
+import admin
 
 if __name__ == "__main__":
     with app.app_context():
