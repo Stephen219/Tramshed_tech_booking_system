@@ -61,6 +61,7 @@ class Booking(db.Model):
     special_requests = db.Column(db.String, nullable=True)
     user_id = db.Column(db.String, db.ForeignKey('user.id'))
     location_id = db.Column(db.String, db.ForeignKey('location.id'))
+    location_name= db.Column(db.String, db.ForeignKey('location.name'))
     review_id = db.Column(db.String, db.ForeignKey('review.id'))
     created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
     updated_at = db.Column(db.DateTime(timezone=True), onupdate=func.now())

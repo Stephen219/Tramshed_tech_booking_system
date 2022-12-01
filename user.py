@@ -2,7 +2,7 @@ from __main__ import app
 from flask import render_template, jsonify, request, session, redirect, url_for
 import functools
 from marshmallow import Schema, fields, validate, EXCLUDE, ValidationError
-from db import db, User , Booking
+from db import db, User , Booking , Location
 from datetime import datetime
 import bcrypt
 
@@ -143,12 +143,20 @@ def booking_confirmation(id):
     if db_booking == None:
         return 'Not found', 404
     return render_template('booking/confirmation.html')
+
+@app.get("/book-now")
+@ensure_login
+def book_now(user):
+    db_locations =Location.query.all()
+    return render_template("locations.html", data=db_locations )
+    
+
 @app.get("/My-bookings")
 @ensure_login
 def My_bookings(user):
     db_bookings = Booking.query.filter_by(user_id=user.id).first()
     print(db_bookings)
-    return "db_bookings"
+    return render_template("my-bookings.html",data=db_bookings)
 
 @app.get("/auth/logout")
 def user_logout():
