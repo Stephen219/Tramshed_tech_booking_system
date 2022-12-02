@@ -1,6 +1,6 @@
 [{
 	"name": "Codebase",
-	"address": "CodeBase Edinburgh , 37a Castle Terrace, Edinburgh, EH1 2EL",
+	"address": "CodeBase Edinburgh, EH1 2EL",
 	"maps": "https://goo.gl/maps/Tq5d856YhW4NYF4u6",
 	"main_photo": "https://images.squarespace-cdn.com/content/v1/55439320e4b0f92b5d6c4c8b/1646867535415-4JI39H286BUMT26H4FHN/C36A1915.jpg?format=2500w",
 	"additional_photos": "https://images.squarespace-cdn.com/content/v1/55439320e4b0f92b5d6c4c8b/1646868533510-J1OT4PEG5VM9FCBF8BJE/15.10.19_-_CREATIVE_BRIDGE_C02_-_DAY01_-_LQ-19+%281%29.jpg?format=2500w,https://images.squarespace-cdn.com/content/v1/55439320e4b0f92b5d6c4c8b/1646868421127-07KQ4N1OHTDDKQME686A/15.10.19_-_CREATIVE_BRIDGE_C02_-_DAY01_-_LQ-52+%281%29.jpg?format=2500w",
@@ -12,7 +12,7 @@
 	"checkin_instructions": "Use the email address or phone number to call ahead and book a desk, let them know you're a Tramshed member"
 }, {
 	"name": "Catalyst",
-	"address": "Titanic Quarter, Queens Road, Belfast, BT3 9DT",
+	"address": "Titanic Quarter, Belfast, BT3 9DT",
 	"maps": "https://goo.gl/maps/qvaA6jcBfYh4EYut5",
 	"main_photo": "https://wearecatalyst.org/wp-content/uploads/2022/05/Catalyst03.jpg",
 	"additional_photos": "https://wearecatalyst.org/wp-content/uploads/2022/03/DSC07673-scaled-2048x1570.jpg,https://wearecatalyst.org/wp-content/uploads/2021/01/2F6A1513.jpg",
@@ -24,7 +24,7 @@
 	"checkin_instructions": "Use the email address or phone number to call ahead and book a desk, let them know you're a Tramshed member"
 }, {
 	"name": "C4DI",
-	"address": "C4DI Campus, 31-38 Queen Street, Hull, HU1 1UU",
+	"address": "C4DI Campus, Hull, HU1 1UU",
 	"maps": "https://goo.gl/maps/aebTUBhCpRFczYpA6",
 	"main_photo": "https://images.squarespace-cdn.com/content/v1/5709040420c647579532dbb4/1594914119071-OWI9G22S295OCMSWL0VL/_K5L1162.jpg?format=2500w",
 	"additional_photos": "https://images.squarespace-cdn.com/content/v1/5709040420c647579532dbb4/1588346951023-V0QWKQI35IDUACMOJ0WM/_MKL2718.jpg?format=750w,https://images.squarespace-cdn.com/content/v1/5709040420c647579532dbb4/1588346977833-LGY6P9473H2C5JF6I2UG/_K5M5505.jpg?format=750w",
@@ -36,8 +36,8 @@
 	"checkin_instructions": "Use the email address or phone number to call ahead and book a desk, let them know you're a Tramshed member"
 }, {
 	"name": "Dogpatch Labs",
-	"maps": "https://goo.gl/maps/zhN3rwPhqVxhB9Bf7",
 	"address": "Custom House Quay, Dublin, D01 Y6H7",
+	"maps": "https://goo.gl/maps/zhN3rwPhqVxhB9Bf7",
 	"main_photo": "https://dogpatchlabs.wpenginepowered.com/wp-content/uploads/2022/09/ian_browne.jpg",
 	"additional_photos": "https://dogpatchlabs.wpenginepowered.com/wp-content/uploads/2021/07/bordered.jpg,https://dogpatchlabs.com/wp-content/uploads/2020/03/UG_3-1.jpg",
 	"description": "Dogpatch Labs is a startup hub, located in the heart of Dublin\u2019s Digital Docklands.",
