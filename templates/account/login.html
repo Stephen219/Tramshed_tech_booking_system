@@ -3,7 +3,7 @@
   <main class="flex flex-col items-center justify-center w-full h-screen px-4 space-y-8">
     {{ macros.logo(class="h-20") }}
     <div class="flex flex-col items-center text-center">
-      <h1 class="text-3xl font-bold">Welcome Back</h1>
+      <h1 class="text-3xl font-bold">Welcome</h1>
       <span class="text-lg font-light">Enter your credentials below</span>
     </div>
     <form id="login-form"
@@ -15,6 +15,7 @@
       <span id="login-error"
             class="absolute left-0 right-0 mx-auto text-center text-red-500 -bottom-10"></span>
     </form>
+    <a href="/member/join" class="underline">Not a member?</a>
   </main>
 {% endblock content %}
 {% block scripts %}
