@@ -141,11 +141,12 @@ def location_booking(user,id):
 
     
 @app.route("/booking/<id>/confirmation", methods = ['POST','GET'])
-def booking_confirmation(id):
+@ensure_login
+def booking_confirmation(user,id):
     db_booking = Booking.query.get(id)
     if db_booking == None:
         return 'Not found', 404
-    return render_template('booking/confirmation.html')
+    return render_template('booking/confirmation.html', user=user, booking=db_booking)
 @app.get("/My-bookings")
 @ensure_login
 def My_bookings(user):
