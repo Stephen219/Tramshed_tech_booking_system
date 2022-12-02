@@ -11,6 +11,8 @@ import bcrypt
 PASSWORD_REGEX = "^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$"
 
 # Schema validation from https://stackoverflow.com/a/61648076
+
+
 class NewMemberSchema(Schema):
     first_name = fields.String(
         required=True,
@@ -113,14 +115,25 @@ def user_homepage(user):
     return render_template("account/index.html", user=user, page="/")
 
 
-@app.get("/account/<page>")
+@app.get("/account/settings")
 @ensure_login
-def user_pages(user, page):
-    if page == "help":
-        return redirect("/support")
-    return render_template("account/" + page + ".html", user=user, page="/" + page)
+def user_settings(user):
+    return render_template("account/settings.html", user=user, page="/settings")
 
-@app.route("/location/<id>/booking", methods = ['POST','GET'])
+
+@app.get("/account/bookings")
+@ensure_login
+def user_bookings(user):
+    db_bookings = Booking.query.filter_by(user=user)
+    bookings = [{"location": {"id":"test","name": "station f"},
+                 "checkin_date": datetime.now(), "checkout_date": datetime.now(),
+                 "created_at": datetime.now(),
+                 "status": "PENDING"
+                 }]
+    return render_template("account/bookings.html", bookings=bookings, user=user, page="/bookings")
+
+
+@app.route("/location/<id>/booking", methods=['POST', 'GET'])
 @ensure_login
 def location_booking(user,id):
     db_location = Location.query.get(id)
@@ -129,7 +142,7 @@ def location_booking(user,id):
     if request.method == "GET":
         return render_template("location/booking.html", id=id, title="Book now")
     if request.method == "POST":
-        datein= request.form.get('datein')#rem: args for get form for post
+        datein = request.form.get('datein')  # rem: args for get form for post
         dateout = request.form.get('dateout')
         comments = request.form.get('comments')
         indate =datetime.strptime(datein,'%Y-%m-%d')
@@ -137,7 +150,8 @@ def location_booking(user,id):
         data = Booking(checkin_date=indate, checkout_date=outdate, special_requests=comments,user=user, location=db_location)
         db.session.add(data)
         db.session.commit()
-        return '/booking/'+ data.id + '/confirmation'
+        return '/booking/' + data.id + '/confirmation'
+
 
     
 @app.route("/booking/<id>/confirmation", methods = ['POST','GET'])
@@ -153,6 +167,7 @@ def My_bookings(user):
     db_bookings = Booking.query.filter_by(user_id=user.id).first()
     print(db_bookings)
     return "db_bookings"
+
 
 @app.get("/auth/logout")
 def user_logout():
@@ -196,7 +211,8 @@ def user_join():
         if not db_user == None:  # Check if user in db already
             return jsonify({"email": ["already exists"]}), 400
         salt = bcrypt.gensalt()
-        body["password"] = bcrypt.hashpw(str(body["password"]).encode("utf-8"), salt)
+        body["password"] = bcrypt.hashpw(
+            str(body["password"]).encode("utf-8"), salt)
         body[
             "avatar"
         ] = "https://source.boringavatars.com/marble/120/{}%20{}?colors=FAD089,FF9C5B,F5634A,ED303C,3B8183".format(
