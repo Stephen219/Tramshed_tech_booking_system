@@ -3,7 +3,7 @@ from flask import render_template, jsonify, request, session, redirect, url_for
 import functools
 from marshmallow import Schema, fields, validate, EXCLUDE, ValidationError
 from user import PASSWORD_REGEX
-from db import db, Admin
+from db import db, Admin, Location
 import bcrypt
 
 
@@ -34,6 +34,55 @@ class LoginSchema(Schema):
         error_messages={"required": "required"},
     )
 
+    class Meta:
+        # Strip unknown values from output
+        unknown = EXCLUDE
+
+class CreateLocationSchema(Schema):
+    name = fields.String(
+        required=True, 
+        error_messages={"required": "required", "invalid": "invalid"}
+    )
+    address = fields.String(
+        required=True, 
+        error_messages={"required": "required", "invalid": "invalid"}
+    )
+    main_photo = fields.String(
+        required=True, 
+        error_messages={"required": "required", "invalid": "invalid"}
+    )
+    additional_photos = fields.String(
+        required=True, 
+        error_messages={"required": "required", "invalid": "invalid"}
+    )
+    description = fields.String(
+        required=True, 
+        error_messages={"required": "required", "invalid": "invalid"}
+    )
+    website = fields.String(
+        required=True, 
+        error_messages={"required": "required", "invalid": "invalid"}
+    )
+    maps = fields.String(
+        required=True, 
+        error_messages={"required": "required", "invalid": "invalid"}
+    )
+    email = fields.String(
+        required=True, 
+        error_messages={"required": "required", "invalid": "invalid"}
+    )
+    phone_number = fields.String(
+        required=True, 
+        error_messages={"required": "required", "invalid": "invalid"}
+    )
+    opening_hours = fields.String(
+        required=True, 
+        error_messages={"required": "required", "invalid": "invalid"}
+    )
+    checkin_instructions = fields.String(
+        required=True, 
+        error_messages={"required": "required", "invalid": "invalid"}
+    )
     class Meta:
         # Strip unknown values from output
         unknown = EXCLUDE
@@ -115,3 +164,21 @@ def admin_create():
 
         session["admin_id"] = data.id  # log user in after create account
         return jsonify({"status": "success"})
+@app.route("/_/locations/add", METHOD=['GET','POST'])
+@ensure_login
+def add_locations (admin):
+    if request.method== "GET":
+        return render_template("/add_locations.html")
+    if request.method== "POST":
+        schema = CreateLocationSchema()
+        try:
+            body = schema.load(request.json)
+        except ValidationError as err:
+            return jsonify(err.messages), 400  # Return errors in json
+        
+        data = Location(**body) # Turn input into db object
+        db.session.add(data)
+        db.session.commit()
+
+
+
