@@ -85,7 +85,6 @@ def location_temp_add():
     db.session.commit()
     return "succes"
 
-
 import user
 import admin
 
