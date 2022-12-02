@@ -2,7 +2,7 @@ from __main__ import app
 from flask import render_template, jsonify, request, session, redirect, url_for
 import functools
 from marshmallow import Schema, fields, validate, EXCLUDE, ValidationError
-from db import db, User , Booking
+from db import db, User , Booking, Location
 from datetime import datetime
 import bcrypt
 
@@ -123,6 +123,9 @@ def user_pages(user, page):
 @app.route("/location/<id>/booking", methods = ['POST','GET'])
 @ensure_login
 def location_booking(user,id):
+    db_location = Location.query.get(id)
+    if db_location == None:
+        return "Not found", 404
     if request.method == "GET":
         return render_template("location/booking.html", id=id, title="Book now")
     if request.method == "POST":
@@ -131,7 +134,7 @@ def location_booking(user,id):
         comments = request.form.get('comments')
         indate =datetime.strptime(datein,'%Y-%m-%d')
         outdate =datetime.strptime(dateout,'%Y-%m-%d')
-        data = Booking(checkin_date=indate, checkout_date=outdate, special_requests=comments,user=user)
+        data = Booking(checkin_date=indate, checkout_date=outdate, special_requests=comments,user=user, location=db_location)
         db.session.add(data)
         db.session.commit()
         return '/booking/'+ data.id + '/confirmation'
