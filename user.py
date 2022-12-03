@@ -124,13 +124,13 @@ def user_settings(user):
 @app.get("/account/bookings")
 @ensure_login
 def user_bookings(user):
-    db_bookings = Booking.query.filter_by(user=user)
+    db_bookings = Booking.query.filter_by(user=user).all()
     bookings = [{"location": {"id":"test","name": "station f"},
                  "checkin_date": datetime.now(), "checkout_date": datetime.now(),
                  "created_at": datetime.now(),
                  "status": "PENDING"
                  }]
-    return render_template("account/bookings.html", bookings=bookings, user=user, page="/bookings")
+    return render_template("account/bookings.html", bookings=db_bookings, user=user,)
 
 
 @app.route("/location/<id>/booking", methods=['POST', 'GET'])
@@ -164,7 +164,7 @@ def booking_confirmation(user,id):
 @app.get("/My-bookings")
 @ensure_login
 def My_bookings(user):
-    db_bookings = Booking.query.filter_by(user_id=user.id).first()
+    db_bookings = Booking.query.filter_by(user_id=user.id).all()
     print(db_bookings)
     return "db_bookings"
 

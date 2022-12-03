@@ -1,14 +1,10 @@
 {% extends "account/layout.html" %}
 {% block _content %}
 
-    <main class="flex flex-col items-center pt-20 sm:p-10 md:pt-16">
-        
-        <div class="p-2 text-3xl font-bold text-left ">My bookings</div>
-        
-        
-        <div class="flex items-center justify-between p-1 text-right">
-            
-            <div class="flex justify-center space-x-24 ">
+    <main class="flex flex-col w-full pt-2 space-y-8 sm:p-10 md:pt-16">
+        <div class="flex flex-row items-center justify-between w-full">
+            <span class="text-3xl font-bold text-left ">My bookings</span>
+            <div class="flex justify-between space-y-2">
                 <span>
                     <select id="filter" name="selectionlist" form="filter">
                         <option value="sort">
@@ -31,19 +27,25 @@
                 </span>
             </div>
         </div>
-        <div class="flex flex-row justify-center border-2 rounded-lg border-black-100 bg-black-50 ">
-            <div class="flex flex-col justify-center pl-10 pr-0 ">Image</div>
-            {% for booking in bookings %}
-
-
+        {% for booking in bookings %}
+        <div class="flex flex-row justify-between w-full p-4 border-2 rounded-lg border-black-100 ">
             
-            <div class="flex flex-col p-2 border-1.5 border-solid rounded-lg ">
 
-                    <div class="p-1 text-4xl text-center ">{{ booking.location.name }}</div>
-                    <div class="flex flex-row items-center justify-between pl-5 pr-12">
-                        <div class="justify-start pr-20 bg-red-200 ">PENDING</div>
-                        <a class="flex items-center justify-end px-2 py-1 space-x-2 text-xs underline border rounded pr-26 focus-ring border-dark-200"
-                           href="{{ booking.maps }}">
+                <div class="flex h-full space-x-3">
+                   <img
+                    alt="{{booking.location.name}} main photo"
+                    src="{{booking.location.main_photo}}"
+                    class="object-cover w-auto max-h-[8.75rem] h-full rounded aspect-[4/3]"
+                  />
+
+                <div class="flex flex-col border-1.5 border-solid rounded-lg text-center  ">
+                    <div id="space"class="pb-4 text-3xl text-left">{{ booking.location.name }}</div>
+                    
+                    <div class="flex flex-row items-center space-x-4">
+                        <span class="px-3 font-light text-sm lowercase rounded {% if booking.status=='PENDING' %}bg-[#F7CBCB]{% elif booking.status=='CONFIRMED' %}bg-[#CBF7D5]{% endif %}">{{booking.status}}</span
+                        
+                        <a class="flex items-center justify-end px-2 py-1 space-x-2 text-xs underline border rounded pl-26 focus-ring border-dark-200"
+                           href="{{ booking.location.address }}">
                             <svg width="12"
                                  height="12"
                                  viewBox="0 0 12 12"
@@ -55,37 +57,39 @@
                                 <path
                                 d="M1.80985 4.245C2.79485 -0.0849988 9.20986 -0.0799987 10.1899 4.25C10.7649 6.79 9.18486 8.94 7.79986 10.27C7.31589 10.7368 6.66973 10.9976 5.99736 10.9976C5.32498 10.9976 4.67882 10.7368 4.19486 10.27C2.81485 8.94 1.23485 6.785 1.80985 4.245V4.245Z"
                                 stroke="#2C2C2C" />
-                            </svg>
-                            <span>Station F</span>
+                            </svg>Location
+                            
                         </a>
                     </div>
-                    <div class="flex flex-row p-2 justify-evenly ">
-                        <div class="text-left pl-9">
-                            Check-in:
-                            <br/>
-                            {{ booking.checkin_date }}
+                    <div class="flex flex-row space-x-4">
+                        <div class="flex flex-col text-left">
+                           <span> Check-in:</span>
+                           <span class=" whitespace-nowrap"> {{ booking.checkin_date.strftime('%Y-%m-%d') }}</span>
                         </div>
-                        <div id= "outdate" class="p-2 space-y-5 bg-white-300">
-                            Check-out:
-                            <br/>
-                            {{ booking.checkout_date }}
+                        <div id= "outdate" class="flex flex-col ">
+                           <span class=""> Check-out:</span>
+                        
+                           <span class=" whitespace-nowrap"> {{ booking.checkout_date.strftime('%Y-%m-%d') }}</span>
                         </div>
-                        <div id= "date"class="p-1 bg-white-300">
-                            <span>booking date:</span>
-                            <br/>
-                            {{ booking.created_at }}
+                        <div id= "date"class="flex flex-col bg-white-300 ">
+                            <span class= "flex-initial">Booking date:</span>
+                            <span class=" whitespace-nowrap">{{ booking.created_at.strftime('%Y-%m-%d') }}</span>
                         </div>
                     </div>
+                </div></div>
+                <div class="flex flex-col justify-between pl-10 pr-0 border-2 border-white border-solid">
+                    <span class="pt-10">
+                        <a href="/location/{{ booking.location.id }}/booking"
+                           class="px-6 py-1 font-light text-white bg-black rounded pr-7">Rebook</a>
+                    </span>
+                    
                 </div>
-                <div class="flex flex-col justify-center pl-10 pr-0 border-2 border-white border-solid"><span>
-                    <a href="/location/{{booking.location.id}}/booking"
-                       class="px-6 py-1 font-light text-white bg-black rounded pr-7">Rebook</a>
-                </span></div>
             </div>
-            
+            {% endfor %}
+
         </div>
-    {% endfor %}
-</main>
+    
+
 {% endblock %}
 <script>
     const locations = document.getElementById("space")
