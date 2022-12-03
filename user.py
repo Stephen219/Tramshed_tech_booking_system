@@ -130,7 +130,7 @@ def user_bookings(user):
                  "created_at": datetime.now(),
                  "status": "PENDING"
                  }]
-    return render_template("account/bookings.html", bookings=db_bookings, user=user, page="/bookings")
+    return render_template("account/bookings.html", bookings=db_bookings, user=user,)
 
 
 @app.route("/location/<id>/booking", methods=['POST', 'GET'])

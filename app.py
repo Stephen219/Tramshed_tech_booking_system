@@ -52,8 +52,8 @@ def location_page(user):
     db_locations = Location.query.all()
     return render_template("locations.html", user=user, data=db_locations)
 
-#import user
-#import admin
+import user
+import admin
 
 if __name__ == "__main__":
     with app.app_context():
