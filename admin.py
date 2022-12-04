@@ -164,11 +164,14 @@ def admin_create():
 
         session["admin_id"] = data.id  # log user in after create account
         return jsonify({"status": "success"})
-@app.route("/_/locations/add", METHOD=['GET','POST'])
-@ensure_login
-def add_locations (admin):
+
+
+
+@app.route("/_/locations/add", methods=['GET','POST'])
+#@ensure_login
+def add_locations ():
     if request.method== "GET":
-        return render_template("/add_locations.html")
+        return render_template("admin/add/location.html")
     if request.method== "POST":
         schema = CreateLocationSchema()
         try:
@@ -179,6 +182,25 @@ def add_locations (admin):
         data = Location(**body) # Turn input into db object
         db.session.add(data)
         db.session.commit()
+        return '/_/locations/' + data.id
 
 
+@app.route("/_/locations/manage", methods=['GET'])
+#@ensure_login
+def manage_locations():
+    if request.method== "GET":
+        db_locations=Location.query.all()
+        return render_template("admin/location management.html", data=db_locations)
+
+@app.route("/_/locations/<id>", methods=['GET','POST','DELETE'])
+#@ensure_login
+def confirm_details(id):
+    if request.method== "DELETE":
+        db_location = Location.query.get(id)
+        db.session.delete(db_location)
+        db.session.commit()
+        return "/_/locations/manage"
+    if request.method== "GET":
+        db_location=Location.query.get(id)
+        return render_template("admin/add/Details.html", location=db_location)
 
