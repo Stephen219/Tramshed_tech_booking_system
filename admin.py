@@ -169,7 +169,7 @@ def admin_create():
 
 @app.route("/_/locations/add", methods=['GET','POST'])
 @ensure_login
-def add_locations (admin):
+def add_locations(admin):
     if request.method== "GET":
         return render_template("admin/add/location.html")
     if request.method== "POST":
