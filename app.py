@@ -55,10 +55,6 @@ def location_page(user):
     return render_template("locations.html", user=user, data=db_locations)
 
 
-@app.get("/_/bookings")
-def view_bookings():
-    db_bookings=Booking.query.all()
-    return render_template("admin/bookings.html", bookings=db_bookings)
 
 import user
 import admin
