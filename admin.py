@@ -203,8 +203,10 @@ def confirm_details( admin,id):
     if request.method== "GET":
         db_location=Location.query.get(id)
         return render_template("admin/add/Details.html", location=db_location)
-#@app.get("/_/bookings")
-#@ensure_login
-def view_bookings(admin):
+
+
+@app.get("/_/bookings")
+@ensure_login
+def view_bookings():
     db_bookings=Booking.query.all()
-    return render_template("admin/bokings.html", bookings=db_bookings)
+    return render_template("admin/bookings.html", bookings=db_bookings)
