@@ -4,7 +4,7 @@ import functools
 from flask import Flask, render_template, session,request, redirect
 from flask_migrate import Migrate
 from flask_session import Session
-from db import db, User, Location
+from db import db, User, Location, Booking
 
 ALLOWED_EXTENXIONS = set(["txt", "pdf", "png", "jpg", "jpeg", "gif"])
 
@@ -54,6 +54,11 @@ def location_page(user):
     db_locations = Location.query.all()
     return render_template("locations.html", user=user, data=db_locations)
 
+
+@app.get("/_/bookings")
+def view_bookings():
+    db_bookings=Booking.query.all()
+    return render_template("admin/bookings.html", bookings=db_bookings)
 
 import user
 import admin
