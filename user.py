@@ -127,13 +127,13 @@ def location_booking(user,id):
     if db_location == None:
         return "Not found", 404
     if request.method == "GET":
-        return render_template("location/booking.html", id=id, title="Book now")
+        return render_template("location/booking.html", user=user, location=db_location, title="Book now")
     if request.method == "POST":
         datein= request.form.get('datein')#rem: args for get form for post
         dateout = request.form.get('dateout')
         comments = request.form.get('comments')
-        indate =datetime.strptime(datein,'%Y-%m-%d')
-        outdate =datetime.strptime(dateout,'%Y-%m-%d')
+        indate =datetime.strptime(datein,'%Y-%m-%dT%H:%M')
+        outdate =datetime.strptime(dateout,'%Y-%m-%dT%H:%M')
         data = Booking(checkin_date=indate, checkout_date=outdate, special_requests=comments,user=user, location=db_location)
         db.session.add(data)
         db.session.commit()
