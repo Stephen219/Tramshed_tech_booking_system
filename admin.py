@@ -40,47 +40,47 @@ class LoginSchema(Schema):
 
 class CreateLocationSchema(Schema):
     name = fields.String(
-        required=True, 
+        required=True,
         error_messages={"required": "required", "invalid": "invalid"}
     )
     address = fields.String(
-        required=True, 
+        required=True,
         error_messages={"required": "required", "invalid": "invalid"}
     )
     main_photo = fields.String(
-        required=True, 
+        required=True,
         error_messages={"required": "required", "invalid": "invalid"}
     )
     additional_photos = fields.String(
-        required=True, 
+        required=True,
         error_messages={"required": "required", "invalid": "invalid"}
     )
     description = fields.String(
-        required=True, 
+        required=True,
         error_messages={"required": "required", "invalid": "invalid"}
     )
     website = fields.String(
-        required=True, 
+        required=True,
         error_messages={"required": "required", "invalid": "invalid"}
     )
     maps = fields.String(
-        required=True, 
+        required=True,
         error_messages={"required": "required", "invalid": "invalid"}
     )
     email = fields.String(
-        required=True, 
+        required=True,
         error_messages={"required": "required", "invalid": "invalid"}
     )
     phone_number = fields.String(
-        required=True, 
+        required=True,
         error_messages={"required": "required", "invalid": "invalid"}
     )
     opening_hours = fields.String(
-        required=True, 
+        required=True,
         error_messages={"required": "required", "invalid": "invalid"}
     )
     checkin_instructions = fields.String(
-        required=True, 
+        required=True,
         error_messages={"required": "required", "invalid": "invalid"}
     )
     class Meta:
@@ -138,7 +138,7 @@ def admin_login(admin):
         ):  # Check if user in db and also if password matches
             return ({"status": "error", "message": "Invalid credentials"}), 401
         session["admin_id"] = db_admin.id
-        
+
         return jsonify({"status": "success"})
 
 @app.route("/_/auth/create", methods=["GET", "POST"])
@@ -154,7 +154,7 @@ def admin_create():
             body = schema.load(request.json)
         except ValidationError as err:
             return jsonify(err.messages), 400  # Return errors in json
-        
+
         salt = bcrypt.gensalt()
         body["password"] = bcrypt.hashpw(str(body["password"]).encode("utf-8"), salt)
 
@@ -178,7 +178,7 @@ def add_locations ():
             body = schema.load(request.json)
         except ValidationError as err:
             return jsonify(err.messages), 400  # Return errors in json
-        
+
         data = Location(**body) # Turn input into db object
         db.session.add(data)
         db.session.commit()
@@ -186,7 +186,7 @@ def add_locations ():
 
 
 @app.route("/_/locations/manage", methods=['GET'])
-#@ensure_login
+@ensure_login
 def manage_locations():
     if request.method== "GET":
         db_locations=Location.query.all()
@@ -203,4 +203,3 @@ def confirm_details(id):
     if request.method== "GET":
         db_location=Location.query.get(id)
         return render_template("admin/add/Details.html", location=db_location)
-
