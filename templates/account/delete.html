@@ -1,0 +1,78 @@
+{% extends "layout.html" %}
+{% block _content %}
+    <div class="flex flex-col ">
+        <span class="text-2xl font-bold ">Confirm Cancellation</span>
+        <div class= "flex flex-row pl-3 space-x-4">
+            <div class="flex flex-col space-y-4">
+                <p class="flex-row text-base ">
+                    Confirm cancellation of booking id <span class=" bg-black-100">{{ booking.id }}</span>
+                </p>
+                <p class="text-base">The following are the details of your cancelled item:</p>
+                <div class="flex flex-col space-y-2">
+                    Location Name:
+                    <span class="font-bold">{{ booking.location.name }}</span>
+                </br>
+                Location Address:
+                <span class="font-bold">{{ booking.location.address }}</span>
+            </div>
+            <div class="flex flex-col space-y-2">
+                <span=class"font-light ">Checkin date:<span class=" bg-black-100 whitespace-nowrap">{{ booking.checkin_date.strftime('%Y-%m-%d') }}</span></span>
+            </br>
+        </br>
+        Checkout date:<span class="bg-black-100">{{ booking.checkout_date.strftime('%Y-%m-%d') }}</span>
+    </div>
+    <div>
+        Booked on:
+        <span class="bg-black-100">{{ booking.created_at.strftime('%Y-%m-%d') }}</span>
+    </div>
+    <form onsubmit="submitForm(); return false">
+        <div >
+            <span>We would like to know why you are cancelling your booking
+                <br/>
+            </span>
+            <span class="border-dark-500"><textarea class="resize-none"
+          id="reason"
+          placeholder="Enter a comment here."
+          name="textbox"
+          rows="4"
+          cols="39"></textarea></span>
+        </div>
+        <div class="flex flex-row space-x-9">
+            <a href="/account"
+               class="flex items-center h-10 px-8 py-1 font-semibold text-white rounded bg-dark w-max">Back</a>
+            <button type="button"
+                    onclick="deleteBooking()"
+                    class="flex items-center h-10 px-8 py-1 font-semibold text-white rounded bg-dark w-max">
+                Cancel
+            </button>
+        </div>
+    </form>
+</div>
+<div class="flex ">
+    <img alt="{{ booking.location.name }} main photo"
+         src="{{ booking.location.main_photo }}"
+         class="object-cover w-auto h-full max-h-[29rem] rounded aspect-[4/3] min-[1366px]:block "/>
+</div>
+</div>
+</div>
+{% endblock _content %}
+{% block scripts %}
+    {{ super() }}
+    <script>
+    function deleteBooking(){
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("POST", '/booking/{{booking.id}}/cancel', true); //synchronous
+        xhttp.setRequestHeader("Content-type", "application/json");
+        xhttp.onload = function() {
+        if (xhttp.status === 200) {
+            window.location.href = xhttp.responseText;
+        }
+        };
+        xhttp.send();
+      }
+    
+    
+    
+
+    </script>
+{% endblock scripts %}

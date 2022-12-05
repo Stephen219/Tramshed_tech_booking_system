@@ -3,7 +3,7 @@ from flask import render_template, jsonify, request, session, redirect, url_for
 import functools
 from marshmallow import Schema, fields, validate, EXCLUDE, ValidationError
 from user import PASSWORD_REGEX
-from db import db, Admin
+from db import db, Admin, Location,Booking
 import bcrypt
 
 
@@ -34,6 +34,55 @@ class LoginSchema(Schema):
         error_messages={"required": "required"},
     )
 
+    class Meta:
+        # Strip unknown values from output
+        unknown = EXCLUDE
+
+class CreateLocationSchema(Schema):
+    name = fields.String(
+        required=True,
+        error_messages={"required": "required", "invalid": "invalid"}
+    )
+    address = fields.String(
+        required=True,
+        error_messages={"required": "required", "invalid": "invalid"}
+    )
+    main_photo = fields.String(
+        required=True,
+        error_messages={"required": "required", "invalid": "invalid"}
+    )
+    additional_photos = fields.String(
+        required=True,
+        error_messages={"required": "required", "invalid": "invalid"}
+    )
+    description = fields.String(
+        required=True,
+        error_messages={"required": "required", "invalid": "invalid"}
+    )
+    website = fields.String(
+        required=True,
+        error_messages={"required": "required", "invalid": "invalid"}
+    )
+    maps = fields.String(
+        required=True,
+        error_messages={"required": "required", "invalid": "invalid"}
+    )
+    email = fields.String(
+        required=True,
+        error_messages={"required": "required", "invalid": "invalid"}
+    )
+    phone_number = fields.String(
+        required=True,
+        error_messages={"required": "required", "invalid": "invalid"}
+    )
+    opening_hours = fields.String(
+        required=True,
+        error_messages={"required": "required", "invalid": "invalid"}
+    )
+    checkin_instructions = fields.String(
+        required=True,
+        error_messages={"required": "required", "invalid": "invalid"}
+    )
     class Meta:
         # Strip unknown values from output
         unknown = EXCLUDE
@@ -89,7 +138,7 @@ def admin_login(admin):
         ):  # Check if user in db and also if password matches
             return ({"status": "error", "message": "Invalid credentials"}), 401
         session["admin_id"] = db_admin.id
-        
+
         return jsonify({"status": "success"})
 
 @app.route("/_/auth/create", methods=["GET", "POST"])
@@ -105,7 +154,7 @@ def admin_create():
             body = schema.load(request.json)
         except ValidationError as err:
             return jsonify(err.messages), 400  # Return errors in json
-        
+
         salt = bcrypt.gensalt()
         body["password"] = bcrypt.hashpw(str(body["password"]).encode("utf-8"), salt)
 
@@ -115,3 +164,49 @@ def admin_create():
 
         session["admin_id"] = data.id  # log user in after create account
         return jsonify({"status": "success"})
+
+
+
+@app.route("/_/locations/add", methods=['GET','POST'])
+@ensure_login
+def add_locations(admin):
+    if request.method== "GET":
+        return render_template("admin/add/location.html")
+    if request.method== "POST":
+        schema = CreateLocationSchema()
+        try:
+            body = schema.load(request.json)
+        except ValidationError as err:
+            return jsonify(err.messages), 400  # Return errors in json
+
+        data = Location(**body) # Turn input into db object
+        db.session.add(data)
+        db.session.commit()
+        return '/_/locations/' + data.id
+
+
+@app.route("/_/locations/manage", methods=['GET'])
+@ensure_login
+def manage_locations(admin):
+    if request.method== "GET":
+        db_locations=Location.query.all()
+        return render_template("admin/location management.html", data=db_locations)
+
+@app.route("/_/locations/<id>", methods=['GET','POST','DELETE'])
+@ensure_login
+def confirm_details( admin,id):
+    if request.method== "DELETE":
+        db_location = Location.query.get(id)
+        db.session.delete(db_location)
+        db.session.commit()
+        return "/_/locations/manage"
+    if request.method== "GET":
+        db_location=Location.query.get(id)
+        return render_template("admin/add/Details.html", location=db_location)
+
+
+@app.get("/_/bookings")
+@ensure_login
+def view_bookings():
+    db_bookings=Booking.query.all()
+    return render_template("admin/bookings.html", bookings=db_bookings)
