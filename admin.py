@@ -168,7 +168,7 @@ def admin_create():
 
 
 @app.route("/_/locations/add", methods=['GET','POST'])
-#@ensure_login
+@ensure_login
 def add_locations ():
     if request.method== "GET":
         return render_template("admin/add/location.html")
@@ -186,14 +186,14 @@ def add_locations ():
 
 
 @app.route("/_/locations/manage", methods=['GET'])
-#@ensure_login
+@ensure_login
 def manage_locations():
     if request.method== "GET":
         db_locations=Location.query.all()
         return render_template("admin/location management.html", data=db_locations)
 
 @app.route("/_/locations/<id>", methods=['GET','POST','DELETE'])
-#@ensure_login
+@ensure_login
 def confirm_details(id):
     if request.method== "DELETE":
         db_location = Location.query.get(id)
