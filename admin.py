@@ -3,7 +3,7 @@ from flask import render_template, jsonify, request, session, redirect, url_for
 import functools
 from marshmallow import Schema, fields, validate, EXCLUDE, ValidationError
 from user import PASSWORD_REGEX
-from db import db, Admin, Location
+from db import db, Admin, Location,Booking
 import bcrypt
 
 
@@ -203,3 +203,10 @@ def confirm_details( admin,id):
     if request.method== "GET":
         db_location=Location.query.get(id)
         return render_template("admin/add/Details.html", location=db_location)
+
+
+@app.get("/_/bookings")
+@ensure_login
+def view_bookings():
+    db_bookings=Booking.query.all()
+    return render_template("admin/bookings.html", bookings=db_bookings)
