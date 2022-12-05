@@ -132,6 +132,33 @@ def user_bookings(user):
                  }]
     return render_template("account/bookings.html", bookings=db_bookings, user=user,)
 
+@app.route("/booking/<id>/cancel", methods = ['POST','GET','PATCH','DELETE'])
+@ensure_login
+def booking_deletion(user,id): 
+    db_booking=Booking.query.get(id)
+    if db_booking == None:
+        return "Not found", 404
+    if request.method== "GET":
+        print(id)
+        return render_template('account/delete.html',user=user, booking=db_booking )
+   
+    if request.method== "POST":
+        db_booking.status = "CANCELLED"
+        db.session.commit()
+        print("success")
+        return "/account/bookings"
+
+    
+            
+        
+        
+
+
+
+
+
+
+
 
 @app.route("/location/<id>/booking", methods=['POST', 'GET'])
 @ensure_login
