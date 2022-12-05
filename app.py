@@ -1,5 +1,7 @@
 import functools
-from flask import Flask, render_template, session
+#import user
+#import admin
+from flask import Flask, render_template, session,request, redirect
 from flask_migrate import Migrate
 from flask_session import Session
 from db import db, User, Location
@@ -52,9 +54,9 @@ def location_page(user):
     db_locations = Location.query.all()
     return render_template("locations.html", user=user, data=db_locations)
 
+
 import user
 import admin
-
 if __name__ == "__main__":
     with app.app_context():
         # https://stackoverflow.com/a/45887721

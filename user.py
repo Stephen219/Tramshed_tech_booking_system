@@ -112,8 +112,8 @@ def user_homepage(user):
         db.session.commit()
 
         return jsonify({"status": "success"})
-    return render_template("account/index.html", user=user, page="/")
-
+    db_bookings = Booking.query.filter_by(user=user).all()
+    return render_template("account/index.html", user=user, bookings=db_bookings, page="/")
 
 @app.get("/account/settings")
 @ensure_login
