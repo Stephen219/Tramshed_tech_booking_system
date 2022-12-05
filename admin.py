@@ -186,7 +186,7 @@ def add_locations ():
 
 
 @app.route("/_/locations/manage", methods=['GET'])
-@ensure_login
+#@ensure_login
 def manage_locations():
     if request.method== "GET":
         db_locations=Location.query.all()
