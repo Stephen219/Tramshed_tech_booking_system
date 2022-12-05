@@ -15,11 +15,14 @@ metadata = MetaData(naming_convention=convention)
 
 db = SQLAlchemy(metadata=metadata)
 # !Migration steps!
-# Comment out any import(s) above if __name__ == "__main__": 
-# To create a migration run -> flask db migrate -m "<message>"
-# then to apply the migration to the db -> flask db upgrade
-# Un-Comment the imports you commented
+# Check README.md on gitlab
 
+class Admin(db.Model):
+    id = db.Column(db.String, primary_key=True, default=nanoid.generate)
+    username = db.Column(db.String, unique=True, nullable=False)
+    password = db.Column(db.String, nullable=False)
+    created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
+    updated_at = db.Column(db.DateTime(timezone=True), onupdate=func.now())
 
 class User(db.Model):
     id = db.Column(db.String, primary_key=True, default=nanoid.generate)

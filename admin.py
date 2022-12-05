@@ -1,0 +1,117 @@
+from __main__ import app
+from flask import render_template, jsonify, request, session, redirect, url_for
+import functools
+from marshmallow import Schema, fields, validate, EXCLUDE, ValidationError
+from user import PASSWORD_REGEX
+from db import db, Admin
+import bcrypt
+
+
+# Schema validation from https://stackoverflow.com/a/61648076
+class CreateAccountSchema(Schema):
+    username = fields.String(
+        required=True, error_messages={"required": "required", "invalid": "invalid"}
+    )
+    password = fields.String(
+        required=True,
+        validate=validate.Regexp(
+            regex=PASSWORD_REGEX,
+            error="password must contain a minimum of eight characters, at least one letter, one number and one special character",
+        ),
+        error_messages={"required": "required"},
+    )
+
+    class Meta:
+        # Strip unknown values from output
+        unknown = EXCLUDE
+
+class LoginSchema(Schema):
+    username = fields.String(
+        required=True, error_messages={"required": "required", "invalid": "invalid"}
+    )
+    password = fields.String(
+        required=True,
+        error_messages={"required": "required"},
+    )
+
+    class Meta:
+        # Strip unknown values from output
+        unknown = EXCLUDE
+
+def ensure_login(func):
+    @functools.wraps(func)
+    def check_login(*args, **kwargs):
+        logged_in = False
+        sess = session.get("admin_id")
+        if not sess == None:
+            logged_in = True
+        if not logged_in and not "/_/auth/login" in request.path:
+            return redirect(url_for("admin_login"))
+        if logged_in and "/_/auth/login" in request.path:
+            return redirect(url_for("admin_homepage"))
+        db_admin = Admin.query.get(sess)
+        if db_admin == None and logged_in:
+            session.clear()
+            return redirect("/_/")
+        return func(db_admin, *args, **kwargs)
+
+    return check_login
+
+@app.get("/_/")
+@ensure_login
+def admin_homepage(admin):
+    return render_template("admin/index.html", admin=admin)
+
+@app.get("/_/auth/logout")
+def admin_logout():
+    # Clear session and redirect
+    session.clear()
+    return redirect("/")
+
+
+@app.route("/_/auth/login", methods=["GET", "POST"])
+@ensure_login
+def admin_login(admin):
+    if request.method == "GET":
+        db_admins = Admin.query.all()
+        if len(db_admins) < 1:
+            return redirect(url_for("admin_create"))
+        return render_template("admin/login.html")
+    if request.method == "POST":
+        schema = LoginSchema()
+        try:
+            body = schema.load(request.json)
+        except ValidationError as err:
+            return jsonify(err.messages), 400  # Return errors in json
+        db_admin = Admin.query.filter_by(username=body["username"]).first()
+        if db_admin == None or not bcrypt.checkpw(
+            str(body["password"]).encode("utf-8"), db_admin.password
+        ):  # Check if user in db and also if password matches
+            return ({"status": "error", "message": "Invalid credentials"}), 401
+        session["admin_id"] = db_admin.id
+        
+        return jsonify({"status": "success"})
+
+@app.route("/_/auth/create", methods=["GET", "POST"])
+def admin_create():
+    db_admins = Admin.query.all()
+    if len(db_admins) > 0:
+        return redirect('/_/auth/login')
+    if request.method == "GET":
+        return render_template("admin/create.html")
+    if request.method == "POST":
+        schema = CreateAccountSchema()
+        try:
+            body = schema.load(request.json)
+        except ValidationError as err:
+            return jsonify(err.messages), 400  # Return errors in json
+        
+        salt = bcrypt.gensalt()
+        body["password"] = bcrypt.hashpw(str(body["password"]).encode("utf-8"), salt)
+
+        data = Admin(**body)  # Turn input into db object
+        db.session.add(data)
+        db.session.commit()
+
+        session["admin_id"] = data.id  # log user in after create account
+        return jsonify({"status": "success"})

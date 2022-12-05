@@ -2,30 +2,25 @@
 {% block content %}
   <main class="flex flex-col items-center justify-center w-full h-screen px-4 space-y-8">
     {{ macros.logo(class="h-20") }}
-    <div class="flex flex-col items-center text-center">
-      <h1 class="text-3xl font-bold">Welcome</h1>
-      <span class="text-lg font-light">Enter your credentials below</span>
-    </div>
     <form id="login-form"
           onsubmit="submitForm(); return false"
           class="relative flex flex-col w-full max-w-md space-y-4">
-      {{ macros.textInput(type='email', placeholder='Email', name="email", id="email", required=true) }}
+      {{ macros.textInput(type='text', placeholder='Username', name="username", id="username", required=true) }}
       {{ macros.textInput(type='password', placeholder='Password', name="password", id="password", required=true) }}
       {{ macros.button("Log In", type='submit') }}
       <span id="login-error"
             class="absolute left-0 right-0 mx-auto text-center text-red-500 -bottom-10"></span>
     </form>
-    <a href="/member/join" class="underline">Not a member?</a>
   </main>
 {% endblock content %}
 {% block scripts %}
   <script>
     const form = document.getElementById("login-form");
     const submitForm = async () => {
-      const email = form["email"].value;
+      const username = form["username"].value;
       const password = form["password"].value;
-      const payload = JSON.stringify({ email, password })
-      const res = await fetch('/auth/login', {
+      const payload = JSON.stringify({ username, password })
+      const res = await fetch('/_/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -33,7 +28,7 @@
         body: payload
       })
       if (res.ok) {
-        return window.location.href = "/account";
+        return window.location.href = "/_/";
       }
       let errmsg = 'Invalid Credentials'
       if (res.status !== 401) errmsg = 'Something went wrong'
