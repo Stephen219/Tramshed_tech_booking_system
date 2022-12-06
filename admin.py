@@ -207,6 +207,6 @@ def confirm_details( admin,id):
 
 @app.get("/_/bookings")
 @ensure_login
-def view_bookings():
+def view_bookings(admin):
     db_bookings=Booking.query.all()
     return render_template("admin/bookings.html", bookings=db_bookings)
