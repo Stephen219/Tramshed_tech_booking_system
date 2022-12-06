@@ -1,177 +1,151 @@
-{% extends "base.html" %}
-{% block head_scripts %}
-  <style>
-      body {
-        text-align:center;
-        
-        top: 1%;
-        left:4%;
-        right: 4%;
-        bottom:3%
-      }
-        
-      
-      
-      .form {
-        max-width: 500px;
-        max-height: 700px;
-        margin: 3px auto;
-        padding: 10px;
-        
-        border-radius: 14px;
-        
-        text-align: center;
-        background-color: rgb(231, 237, 237);
-        
-      }
-      .image{
-        width: 80%;
-        height: 80%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 10;
-        margin: 0px auto;
-        /*background: #3c5077;*/
-      }
-      .date{font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-        font-size: medium;
-      }
-      .comments{
-        font-size: medium;
-        font-family: Georgia, 'Times New Roman', Times, serif;
-        text-align: left;
-        padding: 1em;
-        resize: none;
-        
-      }
-      .form data{
-        
-        border: #cccccc;
-        background-color: antiquewhite;
-      }
-      .button {
-      background-color: rgb(70, 70, 126);
-      
-      border: 2px solid double #cccccc;
-      border-radius: 4px;
-      display: inline-block;
-       color: #eeeeee;
-      text-align: center;
-      font-size: 17px;
-      padding: 14px;
-      width: 100px;
-      transition: all 0.5s;
-      cursor: pointer;
-      margin: 3px;
-      }
-      button span {
-        cursor: pointer;
-        display: inline-block;
-        position: relative;
-        transition: 0.5s;
-      }
-      button span:after {
-        content: '\00bb';
-        position: absolute;
-        opacity: 0;
-        top: 0;
-        right: -20px;
-        transition: 0.5s;
-      }
-      .form data{font-family: italics;
-      }
-      .comments{
-        background-color:rgba(255, 255, 255, 0.663);
-      }
-    </style>
-{% endblock head_scripts %}
-{% block content %}
-  <div class="form">
-    <form onsubmit="submitForm(); return false" class="form" id="myForm">
-      <img class="image"
-           src="{{ url_for('static', filename='logo-black.png') }}"
-           alt=""
-           Image
-           width="45"
-           height="46"
-           altr/>
-      <div class="form data" id="formdata ">
-        <h1>Fill in the spaces to book:</h1>
-        <hr/>
-        Check-in Date:
-        <br/>
-        <input type="date"
-               id="indate"
-               name="datein"
-               class="date"
-               data-date-inline-picker="true"
-               required/>
-        <br/>
-        <br/>
-        Check-out Date:
-        <br/>
-        <input type="date"
-               max="3000-12-12"
-               name="dateout"
-               id="outdate"
-               class="date"
-               data-date-inline-picker="true"
-               required/>
-        <br/>
-        <br/>
-        Enter any other consideration needed:
-        <br/>
-        <textarea id="comments" class="comments" placeholder="Enter a consideration needed." name="textbox" rows="4" cols="39"></textarea>
-        <br/>
+{% extends "layout.html" %} {% block _content %}
+<div class="flex flex-col items-center space-y-12 lg:pt-16 max-w-[1366px] lg:mx-6">
+  <div class="flex flex-col items-center justify-between w-full gap-6 lg:flex-row max-w-7xl">
+    <form
+      class="flex flex-col items-center max-w-lg mx-6 space-y-8 lg:mx-0"
+      id="booking-form"
+      onsubmit="submitForm(); return false"
+    >
+      <div class="flex flex-col items-center space-y-2">
+        <h2 class="text-4xl font-bold">{{location.name}}</h2>
+        <span class="font-light">{{location.opening_hours}}</span>
+        <div class="flex flex-wrap items-center justify-center gap-3">
+          <a
+            class="flex items-center px-2 py-1 space-x-2 text-xs border rounded focus-ring border-dark-200"
+            href="{{location.maps}}"
+            target="_blank"
+          >
+            <svg
+              width="12"
+              height="12"
+              viewBox="0 0 12 12"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M5.99994 6.715C6.2048 6.715 6.40766 6.67465 6.59693 6.59625C6.7862 6.51786 6.95817 6.40295 7.10303 6.25809C7.24789 6.11323 7.3628 5.94126 7.44119 5.75199C7.51959 5.56272 7.55994 5.35986 7.55994 5.155C7.55994 4.95014 7.51959 4.74728 7.44119 4.55802C7.3628 4.36875 7.24789 4.19677 7.10303 4.05191C6.95817 3.90706 6.7862 3.79215 6.59693 3.71375C6.40766 3.63535 6.2048 3.595 5.99994 3.595C5.5862 3.595 5.18941 3.75936 4.89685 4.05191C4.6043 4.34447 4.43994 4.74126 4.43994 5.155C4.43994 5.56874 4.6043 5.96553 4.89685 6.25809C5.18941 6.55064 5.5862 6.715 5.99994 6.715V6.715Z"
+                stroke="#2C2C2C"
+              />
+              <path
+                d="M1.80985 4.245C2.79485 -0.0849988 9.20986 -0.0799987 10.1899 4.25C10.7649 6.79 9.18486 8.94 7.79986 10.27C7.31589 10.7368 6.66973 10.9976 5.99736 10.9976C5.32498 10.9976 4.67882 10.7368 4.19486 10.27C2.81485 8.94 1.23485 6.785 1.80985 4.245V4.245Z"
+                stroke="#2C2C2C"
+              />
+            </svg>
+            <span class="whitespace-nowrap"> {{location.address}} </span>
+          </a>
+          <a
+            class="flex items-center px-2 py-1 space-x-2 text-xs underline border rounded focus-ring border-dark-300"
+            href="{{location.website}}"
+            target="_blank"
+          >
+            <svg
+              width="12"
+              height="12"
+              viewBox="0 0 12 12"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <g clip-path="url(#clip0_3_629)">
+                <path
+                  d="M6 11C8.7615 11 11 8.7615 11 6C11 3.2385 8.7615 1 6 1C3.2385 1 1 3.2385 1 6C1 8.7615 3.2385 11 6 11Z"
+                  stroke="#2C2C2C"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M3.99979 1.5H4.49979C3.52481 4.42078 3.52481 7.57922 4.49979 10.5H3.99979M7.49979 1.5C8.47478 4.42078 8.47478 7.57922 7.49979 10.5"
+                  stroke="#2C2C2C"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M1.5 8.00004V7.50004C4.42078 8.47502 7.57922 8.47502 10.5 7.50004V8.00004M1.5 4.50004C4.42078 3.52505 7.57922 3.52505 10.5 4.50004"
+                  stroke="#2C2C2C"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </g>
+              <defs>
+                <clipPath id="clip0_3_629">
+                  <rect width="12" height="12" fill="white" />
+                </clipPath>
+              </defs>
+            </svg>
+            <span class="whitespace-nowrap">
+              {{location.website.replace("https://", "").replace("http://", "")}}
+            </span>
+          </a>
+          <dt class="sr-only">Reviews</dt>
+        </div>
       </div>
-      <a href="base.html"><input type="submit" value="Exit" id="book" class="button"/></a>
-      
-      
-      <button type="submit" class="button">Submit</button>
+      <div class="grid w-full grid-flow-row grid-cols-2 gap-4">
+        <div class="flex flex-col col-span-2 space-y-1 sm:col-span-1">
+          <label for="checkin_date" class="text-sm">Check In</label>
+          <input
+            id="checkin_date"
+            name="checkin_date"
+            type="datetime-local"
+            class="h-12 px-4 border rounded disabled:cursor-not-allowed disabled:opacity-80 border-dark-300 placeholder:font-light placeholder:text-dark-200 placeholder:text-sm focus-ring"
+            required
+          />
+        </div>
+        <div class="flex flex-col col-span-2 space-y-1 sm:col-span-1">
+          <label for="checkout_date" class="text-sm">Check Out</label>
+          <input
+            id="checkout_date"
+            name="checkout_date"
+            type="datetime-local"
+            class="h-12 px-4 border rounded disabled:cursor-not-allowed disabled:opacity-80 border-dark-300 placeholder:font-light placeholder:text-dark-200 placeholder:text-sm focus-ring"
+            required
+          />
+        </div>
+        <div class="flex flex-col col-span-2 space-y-1">
+          <label for="comments" class="text-sm">Special Requests (optional)</label>
+          <textarea
+            id="comments"
+            name="comments"
+            class="h-32 p-4 border rounded disabled:cursor-not-allowed disabled:opacity-80 border-dark-300 placeholder:font-light placeholder:text-dark-200 placeholder:text-sm focus-ring"
+          ></textarea>
+        </div>
+      </div>
+      {{ macros.button("Book now", type='submit', class='w-36') }}
     </form>
-    <span id="txt"></span>
+    <img
+      alt="{{location.name}} main photo"
+      src="{{location.main_photo}}"
+      class="order-first lg:order-last w-full lg:w-[50%] xl:w-[60%] lg:max-w-2xl lg:rounded object-cover h-auto aspect-video lg:aspect-[4/3]"
+    />
   </div>
-{% endblock content %}
-{% block scripts %}
-  <script>
-    //https://stackoverflow.com/questions/54551549/js-set-minimum-date-for-html-input-date-with-an-if#:~:text=You%20can%20set%20the%20minimum%20value%20using%20the,built%E2%80%93in%20ECMAScript%20parser%20will%20be%20treated%20as%20UTC.
-    window.onload = function(){
+  <div class="flex flex-col items-center space-y-5">
+    <h3 class="text-3xl font-semibold">Reviews</h3>
+    <div class="flex flex-wrap justify-center gap-6">[reviews will go here]</div>
+  </div>
+</div>
+{% endblock _content %} {% block scripts %} {{ super() }}
+<script>
+  const form = document.getElementById("booking-form");
+  // Set min datetime in picker
+  const today = new Date().toISOString().slice(0, 16);
+  form["checkin_date"].min = today;
+  form["checkin_date"].value = today;
+  form["checkout_date"].min = today;
 
-      var d = new Date();
-      var s = d.getFullYear() + '-' + 
-              ('0' + (d.getMonth()+1)).slice(-2) + '-' +
-              ('0' + d.getDate()).slice(-2);
-    
-      
-      var node = document.querySelector('input');
-      if (node) {
-        node.setAttribute('min', s);
-        node.setAttribute('value', s);
-      }
-      var node = document.getElementById('outdate');
-      if (node) {
-        node.setAttribute('min', s);
-        node.setAttribute('value', s);
-      }
-    }
-    function submitForm() {
-        var datein = document.forms["myForm"]["datein"].value;
-        var dateout = document.forms["myForm"]["dateout"].value;
-        var comments = document.forms["myForm"]["comments"].value;
-        
-          params = 'datein='+datein+'&dateout='+dateout+'&comments='+comments;
-          var xhttp = new XMLHttpRequest();
-          xhttp.open("POST", '/location/{{ id }}/booking', true); //synchronous
-          xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-          xhttp.onload = function() {
-            if (xhttp.status === 200) {
-              window.location.href = xhttp.responseText;
-              return;
-            }
-        };
-        xhttp.send(params);
-        }
+  function submitForm() {
+    var datein = form["checkin_date"].value;
+    var dateout = form["checkout_date"].value;
+    var comments = form["comments"].value;
 
-  </script>
+    params = "datein=" + datein + "&dateout=" + dateout + "&comments=" + comments;
+    var xhttp = new XMLHttpRequest();
+    xhttp.open("POST", "/location/{{ location.id }}/booking", true); //synchronous
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.onload = function () {
+      if (xhttp.status === 200) {
+        window.location.href = xhttp.responseText;
+        return;
+      }
+    };
+    xhttp.send(params);
+  }
+</script>
 {% endblock scripts %}
