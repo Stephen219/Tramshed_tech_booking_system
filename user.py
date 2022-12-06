@@ -187,13 +187,21 @@ def booking_confirmation(user,id):
     db_booking = Booking.query.get(id)
     if db_booking == None:
         return 'Not found', 404
-    return render_template('booking/confirmation.html', user=user, booking=db_booking)
+    return render_template('booking/confirmation.html')
+
+@app.get("/book-now")
+@ensure_login
+def book_now(user):
+    db_locations =Location.query.all()
+    return render_template("locations.html", data=db_locations )
+    
+
 @app.get("/My-bookings")
 @ensure_login
 def My_bookings(user):
-    db_bookings = Booking.query.filter_by(user_id=user.id).all()
+    db_bookings = Booking.query.filter_by(user_id=user.id)
     print(db_bookings)
-    return "db_bookings"
+    #return render_template("my-bookings.html",data=db_bookings)
 
 
 @app.get("/auth/logout")
