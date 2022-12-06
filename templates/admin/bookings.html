@@ -28,7 +28,7 @@
                 <td class="font-light lowercase rounded {% if booking.status=='PENDING' %}bg-[#F7CBCB]{% elif booking.status=='CONFIRMED' %}bg-[#CBF7D5]{%elif booking.status=='DECLINED' %} bg-[#f47373]{%elif booking.status=='CANCELLED' %} bg-[#ba68c8]{% endif %}">{{booking.status}}</td>
                 <td class="font-light">{{booking.checkin_date.strftime('%d-%m-%Y')}}</td>
                 <td class="font-light">{{booking.checkout_date.strftime('%d-%m-%Y')}}</td>
-                <td class="font-light">{{booking.location.created_at.strftime('%d-%m-%Y')}}</td>
+                <td class="font-light">{{booking.created_at.strftime('%d-%m-%Y')}}</td>
                 <td class="font-light">{{booking.special_requests}}</td>
             </tr class="border-b">
             {% endfor %}

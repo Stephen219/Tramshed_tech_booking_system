@@ -155,7 +155,7 @@ def confirm_details(admin, id):
         db_location = Location.query.get(id)
         db.session.delete(db_location)
         db.session.commit()
-        return "/_/locations/manage"
+        return "/_/locations"
     if request.method == "GET":
         db_location = Location.query.get(id)
         return render_template("admin/add/Details.html", location=db_location)
