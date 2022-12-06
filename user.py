@@ -2,7 +2,7 @@ from __main__ import app
 from flask import render_template, jsonify, request, session, redirect, url_for
 import functools
 from marshmallow import Schema, fields, validate, EXCLUDE, ValidationError
-from db import db, User , Booking, Location
+from db import db, User, Booking, Location
 from datetime import datetime
 import bcrypt
 
@@ -113,7 +113,10 @@ def user_homepage(user):
 
         return jsonify({"status": "success"})
     db_bookings = Booking.query.filter_by(user=user).all()
-    return render_template("account/index.html", user=user, bookings=db_bookings, page="/")
+    return render_template(
+        "account/index.html", user=user, bookings=db_bookings, page="/"
+    )
+
 
 @app.get("/account/settings")
 @ensure_login
@@ -125,76 +128,67 @@ def user_settings(user):
 @ensure_login
 def user_bookings(user):
     db_bookings = Booking.query.filter_by(user=user).all()
-    bookings = [{"location": {"id":"test","name": "station f"},
-                 "checkin_date": datetime.now(), "checkout_date": datetime.now(),
-                 "created_at": datetime.now(),
-                 "status": "PENDING"
-                 }]
-    return render_template("account/bookings.html", bookings=db_bookings, user=user,)
+    bookings = [
+        {
+            "location": {"id": "test", "name": "station f"},
+            "checkin_date": datetime.now(),
+            "checkout_date": datetime.now(),
+            "created_at": datetime.now(),
+            "status": "PENDING",
+        }
+    ]
+    return render_template(
+        "account/bookings.html",
+        bookings=db_bookings,
+        user=user,
+    )
 
-@app.route("/booking/<id>/cancel", methods = ['POST','GET','PATCH','DELETE'])
+
+@app.route("/booking/<id>/cancel", methods=["POST", "GET", "PATCH", "DELETE"])
 @ensure_login
-def booking_deletion(user,id): 
-    db_booking=Booking.query.get(id)
+def booking_deletion(user, id):
+    db_booking = Booking.query.get(id)
     if db_booking == None:
         return "Not found", 404
-    if request.method== "GET":
+    if request.method == "GET":
         print(id)
-        return render_template('account/delete.html',user=user, booking=db_booking )
-   
-    if request.method== "POST":
+        return render_template("account/delete.html", user=user, booking=db_booking)
+
+    if request.method == "POST":
         db_booking.status = "CANCELLED"
         db.session.commit()
         print("success")
         return "/account/bookings"
 
-    
-            
-        
-        
 
-
-
-
-
-
-
-
-@app.route("/location/<id>/booking", methods=['POST', 'GET'])
+@app.route("/location/<id>/booking", methods=["POST", "GET"])
 @ensure_login
-def location_booking(user,id):
+def location_booking(user, id):
     db_location = Location.query.get(id)
     if db_location == None:
         return "Not found", 404
     if request.method == "GET":
-        return render_template("location/booking.html", id=id, title="Book now")
+        return render_template("location/booking.html", user=user, location=db_location, title="Book now")
     if request.method == "POST":
         datein = request.form.get('datein')  # rem: args for get form for post
         dateout = request.form.get('dateout')
         comments = request.form.get('comments')
-        indate =datetime.strptime(datein,'%Y-%m-%d')
-        outdate =datetime.strptime(dateout,'%Y-%m-%d')
+        indate =datetime.strptime(datein,'%Y-%m-%dT%H:%M')
+        outdate =datetime.strptime(dateout,'%Y-%m-%dT%H:%M')
         data = Booking(checkin_date=indate, checkout_date=outdate, special_requests=comments,user=user, location=db_location)
         db.session.add(data)
         db.session.commit()
-        return '/booking/' + data.id + '/confirmation'
+        return "/booking/" + data.id + "/confirmation"
 
 
-    
-@app.route("/booking/<id>/confirmation", methods = ['POST','GET'])
+@app.route("/booking/<id>/confirmation", methods=["POST", "GET"])
 @ensure_login
-def booking_confirmation(user,id):
+def booking_confirmation(user, id):
     db_booking = Booking.query.get(id)
     if db_booking == None:
-        return 'Not found', 404
-    return render_template('booking/confirmation.html')
+        return "Not found", 404
+    return render_template("booking/confirmation.html", user=user, booking=db_booking)
 
-@app.get("/book-now")
-@ensure_login
-def book_now(user):
-    db_locations =Location.query.all()
-    return render_template("locations.html", data=db_locations )
-    
 
 @app.get("/My-bookings")
 @ensure_login
@@ -246,8 +240,7 @@ def user_join():
         if not db_user == None:  # Check if user in db already
             return jsonify({"email": ["already exists"]}), 400
         salt = bcrypt.gensalt()
-        body["password"] = bcrypt.hashpw(
-            str(body["password"]).encode("utf-8"), salt)
+        body["password"] = bcrypt.hashpw(str(body["password"]).encode("utf-8"), salt)
         body[
             "avatar"
         ] = "https://source.boringavatars.com/marble/120/{}%20{}?colors=FAD089,FF9C5B,F5634A,ED303C,3B8183".format(
