@@ -1,0 +1,41 @@
+{% extends "admin/layout.html" %} {% block _content %}
+<div class="flex flex-col w-full space-y-4">
+    <span class="text-3xl font-bold text-left">BOOKINGS</span>
+    <p class="font-light">The following are the available bookings made</p>
+    <table name="bookings table" id="booking" class="min-w-full">
+        <thead class="text-base font-semibold border-b bg-gray-50">
+            <tr>
+                <th scope="col" class="px-2 py-1 text-sm">Booking_Id</th>
+                <th scope="col" class="px-2 py-1 text-sm">Location_Id</th>
+                <th scope="col" class="px-2 py-1 text-sm">User_Id</th>
+                <th scope="col" class="px-2 py-1 text-sm">Name</th>
+                <th scope="col" class="px-2 py-1 text-sm">Sir_name</th>
+                <th scope="col" class="px-2 py-1 text-sm">Status</th>
+                <th scope="col" class="px-2 py-1 text-sm">Checkin</th>
+                <th scope="col" class="px-2 py-1 text-sm">Checkout</th>
+                <th scope="col" class="px-2 py-1 text-sm">Date of Booking</th>
+                <th scope="col" class="px-2 py-1 text-sm">Special_requests</th>
+            </tr>
+        </thead class="border-b">
+        <tbody>
+            {% for booking in bookings %}
+            <tr class="border-b">
+                <td class="font-light">{{booking.id}}</td>
+                <td class="font-light">{{booking.location.id}}</td>
+                <td class="font-light">{{booking.user.id}}</td>
+                <td class="font-light">{{booking.location.name}}</td>
+                <td class="font-light">{{booking.user.last_name}}</td>
+                <td class="font-light lowercase rounded {% if booking.status=='PENDING' %}bg-[#F7CBCB]{% elif booking.status=='CONFIRMED' %}bg-[#CBF7D5]{%elif booking.status=='DECLINED' %} bg-[#f47373]{%elif booking.status=='CANCELLED' %} bg-[#ba68c8]{% endif %}">{{booking.status}}</td>
+                <td class="font-light">{{booking.checkin_date.strftime('%d-%m-%Y')}}</td>
+                <td class="font-light">{{booking.checkout_date.strftime('%d-%m-%Y')}}</td>
+                <td class="font-light">{{booking.location.created_at.strftime('%d-%m-%Y')}}</td>
+                <td class="font-light">{{booking.special_requests}}</td>
+            </tr class="border-b">
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="flex flex-col space-x-2">
+        <a href="/_/" class="flex items-center h-10 px-8 py-1 font-semibold text-white rounded bg-dark w-max">Back</a>
+    </div>
+</div>
+{% endblock %}

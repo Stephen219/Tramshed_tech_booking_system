@@ -1,8 +1,8 @@
 import functools
-from flask import Flask, render_template, session
+from flask import Flask, render_template, session,request, redirect
 from flask_migrate import Migrate
 from flask_session import Session
-from db import db, User, Location
+from db import db, User, Location, Booking
 
 ALLOWED_EXTENXIONS = set(["txt", "pdf", "png", "jpg", "jpeg", "gif"])
 
@@ -51,6 +51,8 @@ def homepage(user):
 def location_page(user):
     db_locations = Location.query.all()
     return render_template("locations.html", user=user, data=db_locations)
+
+
 
 import user
 import admin

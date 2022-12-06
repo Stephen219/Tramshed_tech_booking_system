@@ -1,0 +1,93 @@
+{% extends "base.html" %} {% block content %}
+<div class="flex justify-center mx-auto">
+    <div class="flex flex-col justify-between min-h-full space-y-4">
+        <form name="Add new" id="location-add-form" onsubmit="submitForm(); return false">
+            <div class="flex flex-col space-y-3">
+                <span class="text-2xl font-bold text-left">ADD NEW LOCATION</span>
+                <span class="text-xl font-semibold text-left">LOCATION DETAILS</span>
+                <div class="flex flex-col space-y-2">
+                    <span class="text-base font-light">Name</span>
+                    <input type="text" class="px-4 py-5 border rounded form-input" id="name" placeholder="Name">
+                    <span class="text-base font-light">Address</span>
+                    <input type="textarea" class="px-4 py-5 border rounded form-input" placeholder="Address" id="address">
+                    <span class="text-base font-light">Location</span>
+                    <input Class="px-4 py-5 border rounded form-input" id="location" placeholder="location">
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-base font-light">Description</span>
+                    <textarea class="border rounded form-input" id="description" placeholder=" Description"
+                        name="textbox" rows="5" cols="30"></textarea>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-base font-light">Checkin_Instructions</span>
+                    <textarea class="border rounded form-input" id="checkin_instruction"
+                        placeholder="Checkin instructions" name="textbox" rows="3" cols="30"></textarea>
+                </div>
+                <div class="flex flex-col space-y-2">
+                    <span class="text-base font-light">Opening_Hours</span>
+                    <input type="text" class="border rounded time required:'true'"id="opening_hours">
+                </div>
+            </div>
+            <div class="flex flex-col space-y-2">
+                <span class="text-xl text-left">CONTACT DETAILS</span>
+                <div class="flex flex-col space-y-2">
+                    <span class="text-base font-light"> Email:</span>
+                    <input type="email" class="px-4 py-5 border rounded form-input" placeholder="email" id="email">
+                    <span class="text-base font-light">Tel:</span>
+                    <input type=" phone number" class="px-4 py-5 border rounded form-input" id="tel"
+                        placeholder="0712345678">
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-base font-light">Website:</span>
+                    <input type="url" class="px-4 py-5 border rounded form-input" placeholder="website"id="website">
+                </div>
+            </div>
+            <div class="flex flex-col space-y-3">
+                <span class="text-xl text-left"> LOCATION IMAGES</span>
+                <div class="flex justify-between">
+                    <span class="text-base font-light">Main photo</span>
+                    <input type="url" class="px-3 py-4 border rounded form-input" id="main">
+                    <span class="text-base font-normal">Additional photos</span>
+                    <input type="url" class="px-3 py-4 border rounded form-input" id="additional">
+                </div>
+            </div>
+            <button type="submit" class="text-white rounded w-max bg-dark">Continue</button>
+        </form>
+    </div>
+</div>
+
+
+<script>
+
+    const form = document.getElementById("location-add-form")
+    async function submitForm() {
+        var name = form["name"].value;
+        var address = form["address"].value;
+        var maps = form["location"].value;
+        var description = form["description"].value;
+        var checkin_instructions = form["checkin_instruction"].value;
+        var opening_hours = form["opening_hours"].value;
+        var email = form["email"].value;
+        var phone_number= form["tel"].value;
+        var website= form["website"].value;
+        var main_photo= form["main"].value;
+        var additional_photos= form["additional"].value
+   
+        const payload = JSON.stringify({ name, address, maps, description, checkin_instructions, opening_hours, email, phone_number, website, main_photo, additional_photos })
+        console.log(payload)
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("POST", '/_/locations/add', true); //synchronous
+        xhttp.setRequestHeader("Content-type", "application/json");
+        xhttp.onload = function() {
+        if (xhttp.status === 200) {
+            window.location.href = xhttp.responseText;
+            return;
+        }
+        };
+        xhttp.send(payload);
+        return false
+        // xhttp.send(JSON.stringify({ name, address, location, details, checkin_instructions, opening_hours, email }));
+    }
+
+</script>
+{% endblock %}

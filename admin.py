@@ -3,7 +3,7 @@ from flask import render_template, jsonify, request, session, redirect, url_for
 import functools
 from marshmallow import Schema, fields, validate, EXCLUDE, ValidationError
 from user import PASSWORD_REGEX
-from db import db, Admin
+from db import db, Admin, Location, Booking
 import bcrypt
 
 
@@ -25,6 +25,7 @@ class CreateAccountSchema(Schema):
         # Strip unknown values from output
         unknown = EXCLUDE
 
+
 class LoginSchema(Schema):
     username = fields.String(
         required=True, error_messages={"required": "required", "invalid": "invalid"}
@@ -37,6 +38,47 @@ class LoginSchema(Schema):
     class Meta:
         # Strip unknown values from output
         unknown = EXCLUDE
+
+
+class CreateLocationSchema(Schema):
+    name = fields.String(
+        required=True, error_messages={"required": "required", "invalid": "invalid"}
+    )
+    address = fields.String(
+        required=True, error_messages={"required": "required", "invalid": "invalid"}
+    )
+    main_photo = fields.String(
+        required=True, error_messages={"required": "required", "invalid": "invalid"}
+    )
+    additional_photos = fields.String(
+        required=True, error_messages={"required": "required", "invalid": "invalid"}
+    )
+    description = fields.String(
+        required=True, error_messages={"required": "required", "invalid": "invalid"}
+    )
+    website = fields.String(
+        required=True, error_messages={"required": "required", "invalid": "invalid"}
+    )
+    maps = fields.String(
+        required=True, error_messages={"required": "required", "invalid": "invalid"}
+    )
+    email = fields.String(
+        required=True, error_messages={"required": "required", "invalid": "invalid"}
+    )
+    phone_number = fields.String(
+        required=True, error_messages={"required": "required", "invalid": "invalid"}
+    )
+    opening_hours = fields.String(
+        required=True, error_messages={"required": "required", "invalid": "invalid"}
+    )
+    checkin_instructions = fields.String(
+        required=True, error_messages={"required": "required", "invalid": "invalid"}
+    )
+
+    class Meta:
+        # Strip unknown values from output
+        unknown = EXCLUDE
+
 
 def ensure_login(func):
     @functools.wraps(func)
@@ -57,10 +99,67 @@ def ensure_login(func):
 
     return check_login
 
+
 @app.get("/_/")
 @ensure_login
 def admin_homepage(admin):
-    return render_template("admin/index.html", admin=admin)
+    return render_template("admin/index.html", admin=admin, page="/")
+
+
+@app.get("/_/bookings")
+@ensure_login
+def admin_view_bookings(admin):
+    db_bookings = Booking.query.all()
+    return render_template(
+        "admin/bookings.html", admin=admin, page="/bookings", bookings=db_bookings
+    )
+
+
+@app.get("/_/settings")
+@ensure_login
+def admin_settings(admin):
+    return render_template("admin/index.html", admin=admin, page="/settings")
+
+
+@app.get("/_/locations")
+@ensure_login
+def admin_view_locations(admin):
+    db_locations = Location.query.all()
+    return render_template(
+        "admin/locations.html", admin=admin, page="/locations", locations=db_locations
+    )
+
+
+@app.route("/_/locations/add", methods=["GET", "POST"])
+@ensure_login
+def add_locations(admin):
+    if request.method == "GET":
+        return render_template("admin/add/location.html")
+    if request.method == "POST":
+        schema = CreateLocationSchema()
+        try:
+            body = schema.load(request.json)
+        except ValidationError as err:
+            return jsonify(err.messages), 400  # Return errors in json
+
+        data = Location(**body)  # Turn input into db object
+        db.session.add(data)
+        db.session.commit()
+        return "/_/locations/" + data.id
+
+
+@app.route("/_/locations/<id>", methods=["GET", "POST", "DELETE"])
+@ensure_login
+def confirm_details(admin, id):
+    if request.method == "DELETE":
+        db_location = Location.query.get(id)
+        db.session.delete(db_location)
+        db.session.commit()
+        return "/_/locations/manage"
+    if request.method == "GET":
+        db_location = Location.query.get(id)
+        return render_template("admin/add/Details.html", location=db_location)
+
 
 @app.get("/_/auth/logout")
 def admin_logout():
@@ -89,14 +188,15 @@ def admin_login(admin):
         ):  # Check if user in db and also if password matches
             return ({"status": "error", "message": "Invalid credentials"}), 401
         session["admin_id"] = db_admin.id
-        
+
         return jsonify({"status": "success"})
+
 
 @app.route("/_/auth/create", methods=["GET", "POST"])
 def admin_create():
     db_admins = Admin.query.all()
     if len(db_admins) > 0:
-        return redirect('/_/auth/login')
+        return redirect("/_/auth/login")
     if request.method == "GET":
         return render_template("admin/create.html")
     if request.method == "POST":
@@ -105,7 +205,7 @@ def admin_create():
             body = schema.load(request.json)
         except ValidationError as err:
             return jsonify(err.messages), 400  # Return errors in json
-        
+
         salt = bcrypt.gensalt()
         body["password"] = bcrypt.hashpw(str(body["password"]).encode("utf-8"), salt)
 

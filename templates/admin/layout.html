@@ -6,36 +6,9 @@
     id="side-navbar"
   >
     <div class="flex flex-col space-y-16">
-      <div class="flex items-center justify-between w-full max-w-[12rem] mx-auto">
-        <a href="/" class="flex justify-center hover:opacity-75 focus-ring"
-          >{{ macros.logo(class="h-12 lg:h-14") }}</a
-        >
-        <button
-          class="z-40 p-1 border rounded lg:hidden border-black-300 focus-ring"
-          aria-label="Close Sidebar"
-          onclick="toggleNavbar()"
-        >
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 12 12"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M9.64219 9.10781C9.71261 9.17891 9.75211 9.27493 9.75211 9.375C9.75211 9.47507 9.71261 9.57109 9.64219 9.64219C9.57051 9.7115 9.47471 9.75024 9.375 9.75024C9.2753 9.75024 9.17949 9.7115 9.10782 9.64219L6 6.52969L2.89219 9.64219C2.82051 9.7115 2.72471 9.75024 2.625 9.75024C2.5253 9.75024 2.42949 9.7115 2.35782 9.64219C2.2874 9.57109 2.24789 9.47507 2.24789 9.375C2.24789 9.27493 2.2874 9.17891 2.35782 9.10781L5.47032 6L2.35782 2.89219C2.29802 2.81933 2.26746 2.72683 2.27208 2.63268C2.27671 2.53854 2.31618 2.44948 2.38283 2.38283C2.44948 2.31618 2.53854 2.2767 2.63269 2.27208C2.72683 2.26746 2.81933 2.29801 2.89219 2.35781L6 5.47031L9.10782 2.35781C9.18068 2.29801 9.27318 2.26746 9.36732 2.27208C9.46146 2.2767 9.55052 2.31618 9.61717 2.38283C9.68383 2.44948 9.7233 2.53854 9.72793 2.63268C9.73255 2.72683 9.70199 2.81933 9.64219 2.89219L6.52969 6L9.64219 9.10781Z"
-              fill="black"
-            />
-          </svg>
-        </button>
-      </div>
-      <div class="flex flex-col items-center space-y-3">
-        <img alt="user profile picture" src="{{ user.avatar }}" class="w-auto h-28" />
-        <span class="text-xl font-semibold">{{ user.first_name }} {{ user.last_name }}</span>
-      </div>
       <div class="flex flex-col w-48 mx-auto space-y-3 transition-colors">
         <a
-          href="/account"
+          href="/_"
           class="flex items-center w-full px-4 py-2 space-x-3 {% if page == '/' %}bg-white{% endif %} hover:bg-white rounded focus-ring"
         >
           <svg
@@ -62,7 +35,28 @@
           <span class="font-light">Dashboard</span>
         </a>
         <a
-          href="/account/bookings"
+          href="/_/locations"
+          class="flex items-center w-full px-4 py-2 space-x-3 {% if page == '/locations' %}bg-white{% endif %} hover:bg-white rounded focus-ring"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="12"
+            height="12"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="M2.29 7.78v9.73c0 1.9 1.35 2.68 2.99 1.74l2.35-1.34c.51-.29 1.36-.32 1.89-.05l5.25 2.63c.53.26 1.38.24 1.89-.05l4.33-2.48c.55-.32 1.01-1.1 1.01-1.74V6.49c0-1.9-1.35-2.68-2.99-1.74l-2.35 1.34c-.51.29-1.36.32-1.89.05L9.52 3.52c-.53-.26-1.38-.24-1.89.05L3.3 6.05c-.56.32-1.01 1.1-1.01 1.73ZM8.56 4v13M15.73 6.62V20"
+              stroke="#2c2c2c"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            ></path>
+          </svg>
+          <span class="font-light">Locations</span>
+        </a>
+        <a
+          href="/_/bookings"
           class="flex items-center w-full px-4 py-2 space-x-3 {% if page == '/bookings' %}bg-white{% endif %} hover:bg-white rounded focus-ring"
         >
           <svg
@@ -95,40 +89,7 @@
           <span class="font-light">Bookings</span>
         </a>
         <a
-          href="/account/help"
-          class="flex items-center w-full px-4 py-2 space-x-3 {% if page == '/help' %}bg-white{% endif %} hover:bg-white rounded focus-ring"
-        >
-          <svg
-            width="12"
-            height="12"
-            viewBox="0 0 12 12"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <g clip-path="url(#clip0_8_529)">
-              <path
-                d="M5.985 11C8.7465 11 10.985 8.7615 10.985 6C10.985 3.2385 8.7465 1 5.985 1C3.2235 1 0.985001 3.2385 0.985001 6C0.985001 8.7615 3.2235 11 5.985 11V11Z"
-                stroke="black"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-              <path
-                d="M2.45 2.46503L4.22 4.23003M2.45 9.53503L4.22 7.77003M9.525 9.53503L7.755 7.77003M9.525 2.46503L7.755 4.23003M6 8.25003C6.59673 8.25003 7.16903 8.01297 7.59099 7.59102C8.01294 7.16906 8.25 6.59676 8.25 6.00003C8.25 5.40329 8.01294 4.83099 7.59099 4.40904C7.16903 3.98708 6.59673 3.75003 6 3.75003C5.40326 3.75003 4.83096 3.98708 4.40901 4.40904C3.98705 4.83099 3.75 5.40329 3.75 6.00003C3.75 6.59676 3.98705 7.16906 4.40901 7.59102C4.83096 8.01297 5.40326 8.25003 6 8.25003V8.25003Z"
-                stroke="black"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </g>
-            <defs>
-              <clipPath id="clip0_8_529">
-                <rect width="12" height="12" fill="white" />
-              </clipPath>
-            </defs>
-          </svg>
-          <span class="font-light">Help</span>
-        </a>
-        <a
-          href="/account/settings"
+          href="/_/settings"
           class="flex items-center w-full px-4 py-2 space-x-3 {% if page == '/settings' %}bg-white{% endif %} hover:bg-white rounded focus-ring"
         >
           <svg
@@ -160,12 +121,12 @@
               </clipPath>
             </defs>
           </svg>
-          <span class="font-light">Account Settings</span>
+          <span class="font-light">Settings</span>
         </a>
       </div>
     </div>
     <a
-      href="/auth/logout"
+      href="/_/auth/logout"
       class="flex items-center w-48 px-4 py-2 mx-auto space-x-3 rounded hover:opacity-80 focus-ring"
     >
       <svg
@@ -208,7 +169,6 @@
   </button>
   {% block _content %} {% endblock _content %}
 </div>
-{% endblock %} 
-{% block scripts %}
+{% endblock %} {% block scripts %}
 <script src="{{url_for('static', filename='hamburger-menu.js')}}"></script>
 {% endblock %}

@@ -1,3 +1,26 @@
 {% extends "account/layout.html" %} {% block _content %}
-<main class="p-16">hi</main>
+<main class="h-full p-16">
+    <div class="flex flex-col space-y-4 rounded-2xl p-6 w-[26.25rem] min-h-[20rem] max-h-[30rem] bg-dark-300">
+        <div class="flex justify-between w-full">
+            <h2 class="text-2xl text-white">Bookings</h2>
+            <a href="/locations" class="focus-ring">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"><path d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81v8.37C2 19.83 4.17 22 7.81 22h8.37c3.64 0 5.81-2.17 5.81-5.81V7.81C22 4.17 19.83 2 16.19 2ZM16 12.75h-3.25V16c0 .41-.34.75-.75.75s-.75-.34-.75-.75v-3.25H8c-.41 0-.75-.34-.75-.75s.34-.75.75-.75h3.25V8c0-.41.34-.75.75-.75s.75.34.75.75v3.25H16c.41 0 .75.34.75.75s-.34.75-.75.75Z" fill="#ffffff"></path></svg>
+            </a>
+        </div>
+        <div class="flex flex-col w-full space-y-4 max-h-[20rem] overflow-y-auto">
+            {% for booking in bookings %}
+            <div class="flex items-center justify-between w-full p-2 bg-white rounded-lg">
+                <div class="flex space-x-3">
+                    <img src="{{booking.location.main_photo}}" class="max-h-11 h-full w-auto rounded aspect-[4/3]" />
+                    <div class="flex flex-col justify-between h-full">
+                        <h3>{{booking.location.name}}</h3>
+                        <span class="text-sm">{{booking.location.created_at.strftime('%d-%m-%Y')}}</span>
+                    </div>
+                </div>
+                <span class="font-light lowercase rounded {% if booking.status=='PENDING' %}bg-[#F7CBCB]{% elif booking.status=='CONFIRMED' %}bg-[#CBF7D5]{%elif booking.status=='DECLINED' %} bg-[#f47373]{%elif booking.status=='CANCELLED' %} bg-[#ba68c8]{% endif %}">{{booking.status}}</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    </main
 {% endblock _content %}
