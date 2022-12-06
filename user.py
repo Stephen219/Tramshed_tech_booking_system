@@ -193,9 +193,9 @@ def booking_confirmation(user, id):
 @app.get("/My-bookings")
 @ensure_login
 def My_bookings(user):
-    db_bookings = Booking.query.filter_by(user_id=user.id).all()
+    db_bookings = Booking.query.filter_by(user_id=user.id)
     print(db_bookings)
-    return "db_bookings"
+    #return render_template("my-bookings.html",data=db_bookings)
 
 
 @app.get("/auth/logout")
