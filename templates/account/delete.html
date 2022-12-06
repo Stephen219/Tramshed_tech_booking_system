@@ -25,7 +25,7 @@
         Booked on:
         <span class="bg-black-100">{{ booking.created_at.strftime('%Y-%m-%d') }}</span>
     </div>
-    <form onsubmit="submitForm(); return false">
+    <form onsubmit="deleteBooking(); return false" id="myForm" method="POST">
         <div >
             <span>We would like to know why you are cancelling your booking
                 <br/>
@@ -60,17 +60,22 @@
     {{ super() }}
     <script>
     function deleteBooking(){
+        var reason = document.forms["myForm"]["reason"].value;
+        params = 'reason='+reason
         var xhttp = new XMLHttpRequest();
         xhttp.open("POST", '/booking/{{booking.id}}/cancel', true); //synchronous
-        xhttp.setRequestHeader("Content-type", "application/json");
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         xhttp.onload = function() {
         if (xhttp.status === 200) {
             window.location.href = xhttp.responseText;
+           
+      
         }
         };
-        xhttp.send();
+        xhttp.send(params);
+         console.log(reason)
       }
-    
+      
     
     
 

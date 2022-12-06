@@ -59,6 +59,7 @@ class Location(db.Model):
 class Booking(db.Model):
     id = db.Column(db.String, primary_key=True, default=nanoid.generate)
     status = db.Column(db.String, default="PENDING")
+    cancellation_reason = db.Column(db.String, nullable=True)
     checkin_date = db.Column(db.DateTime(timezone=True), nullable=False)
     checkout_date = db.Column(db.DateTime(timezone=True), nullable=False)
     special_requests = db.Column(db.String, nullable=True)

@@ -150,18 +150,21 @@ def booking_deletion(user, id):
     db_booking = Booking.query.get(id)
     if db_booking == None:
         return "Not found", 404
-    if request.method == "GET":
-        print(id)
-        return render_template("account/delete.html", user=user, booking=db_booking)
-
-    if request.method == "POST":
+    if request.method== "GET":
+        
+        return render_template('account/delete.html',user=user, booking=db_booking )
+   
+    if request.method== "POST":
+        #reason=request.get_json(reason)
+        reason = request.form.get("reason")
+       
+        db_booking.cancellation_reason=reason
         db_booking.status = "CANCELLED"
         db.session.commit()
-        print("success")
+        
         return "/account/bookings"
 
-
-@app.route("/location/<id>/booking", methods=["POST", "GET"])
+@app.route("/location/<id>/booking", methods=['POST', 'GET'])
 @ensure_login
 def location_booking(user, id):
     db_location = Location.query.get(id)
