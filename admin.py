@@ -6,7 +6,7 @@ from user import PASSWORD_REGEX
 from db import db, Admin, Location, Booking
 import bcrypt
 
-
+ALLOWED_EXTENXIONS = set(["txt", "pdf", "png", "jpg", "jpeg", "gif"])
 # Schema validation from https://stackoverflow.com/a/61648076
 class CreateAccountSchema(Schema):
     username = fields.String(
@@ -111,7 +111,7 @@ def admin_homepage(admin):
 def admin_view_bookings(admin):
     db_bookings = Booking.query.all()
     return render_template(
-        "admin/bookings.html", admin=admin, page="/bookings", bookings=db_bookings
+        "admin/bookings table.html", admin=admin, page="/bookings", bookings=db_bookings
     )
 
 
@@ -155,10 +155,36 @@ def confirm_details(admin, id):
         db_location = Location.query.get(id)
         db.session.delete(db_location)
         db.session.commit()
-        return "/_/locations/manage"
+        return "/_/locations"
     if request.method == "GET":
         db_location = Location.query.get(id)
-        return render_template("admin/add/Details.html", location=db_location)
+        return render_template("admin/add/details.html", location=db_location)
+
+@app.route("/_/bookings/manage", methods=["GET"])
+@ensure_login
+def manage_bookings(admin):
+    if request.method =="GET":
+        db_bookings=Booking.query.all()
+        return render_template("admin/bookings.html", bookings=db_bookings)
+
+@app.route("/_/booking/<id>/approve", methods=["POST"])
+@ensure_login
+def approve_booking(admin, id):
+    if request.method =="POST":
+        db_bookings=Booking.query.get(id)
+        db_bookings.status ="APPROVED"
+        db.session.commit()
+        return "/_/bookings/manage"
+
+
+@app.route("/_/booking/<id>/decline", methods=["POST"])
+@ensure_login
+def decline_booking(admin, id):
+    if request.method =="POST":
+        db_bookings=Booking.query.get(id)
+        db_bookings.status ="DECLINED"
+        db.session.commit()
+        return "/_/bookings/manage"
 
 
 @app.get("/_/auth/logout")
