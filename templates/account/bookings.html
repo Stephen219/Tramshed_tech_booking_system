@@ -3,20 +3,23 @@
     <main class="flex flex-col w-full pt-2 space-y-8 sm:p-10 md:pt-16">
         <div class="flex flex-row items-center justify-between w-full">
             <span class="text-3xl font-bold text-left ">My bookings</span>
-            <div class="flex justify-between space-y-2">
-                <span>
-                    <select id="filter" name="selectionlist" form="filter">
-                        <option value="sort">
+            <div class="flex justify-between space-x-3 space-y-2 ">
+                <span class="pt-2">
+                    <select class="border-solid"
+                            id="filter"
+                            name="selectionlist"
+                            onchange="changeSort(event)">
+                        <option value="">
                             Sort by
                         </option>
-                        <option id="rd" value="rb">
-                            Recently booked
-                        </option>
-                        <option id ="az"value="a-z" on>
+                        <option class=""bg-dark-100"" value="atoz">
                             Locations A-Z
                         </option>
-                        <option id="za" value="z-a" onClick =sorting aZ()>
-                            Locations Z-A
+                        <option value="ztoa"
+                            <button class="bg-dark-100" onclick="changeSort("ztoa")">Locations Z-A</button>
+                        </option>
+                        <option value="statuss"
+                            <button class="bg-dark-100" onclick="changeSort("statuss")">Status</button>
                         </option>
                     </select>
                 </span>
@@ -27,17 +30,20 @@
             </div>
         </div>
         {% for booking in bookings %}
-            <div class="flex flex-row justify-between w-full p-4 border-2 rounded-lg border-black-100 ">
+            <div class="flex flex-row justify-between w-full p-4 border-2 rounded-lg border-black-100 "
+                 id="Locations"
+                 name="Locations">
                 <div class="flex h-full space-x-3">
                     <img alt="{{ booking.location.name }} main photo"
                          src="{{ booking.location.main_photo }}"
                          class="object-cover w-auto max-h-[8.75rem] h-full rounded aspect-[4/3]"/>
                     <div class="flex flex-col border-1.5 border-solid rounded-lg text-center  ">
-                        <div id="space"class="pb-4 text-3xl text-left">{{ booking.location.name }}</div>
+                        <div name="space"id="space"class="pb-4 text-3xl text-left">{{ booking.location.name }}</div>
                         <div class="flex flex-row items-center space-x-4">
-                            <span class="px-3 text-sm font-light lowercase rounded {% if booking.status=='PENDING' %}bg-[#F7CBCB]{% elif booking.status=='CONFIRMED' %}bg-[#CBF7D5]{%elif booking.status=='DECLINED' %} bg-[#f47373]{%elif booking.status=='CANCELLED' %} bg-[#ba68c8]{% endif %}">{{booking.status}}</span>
+                            <span class="px-3 text-sm font-light lowercase rounded {% if booking.status=='PENDING' %}bg-[#F7CBCB]{% elif booking.status=='CONFIRMED' %}bg-[#CBF7D5]{% elif booking.status=='DECLINED' %} bg-[#f47373]{% elif booking.status=='CANCELLED' %} bg-[#ba68c8]{% endif %}">{{ booking.status }}</span>
                             <a class="flex items-center justify-end px-2 py-1 space-x-2 text-xs underline border rounded pl-26 focus-ring border-dark-200"
-                               href="{{ booking.location.maps }}" target="_blank">
+                               href="{{ booking.location.maps }}"
+                               target="_blank">
                                 <svg width="12"
                                      height="12"
                                      viewBox="0 0 12 12"
@@ -54,7 +60,7 @@
                             </a>
                         </div>
                         <div class="flex flex-row space-x-4">
-                            <div class="flex flex-col text-left">
+                            <div class="flex flex-col text-left"id="indate">
                                 <span>Check-in:</span>
                                 <span class=" whitespace-nowrap">{{ booking.checkin_date.strftime('%Y-%m-%d') }}</span>
                             </div>
@@ -82,17 +88,14 @@
     </div>
 </main>
 {% endblock %}
-<script>
-    const locations = document.getElementById("space")
-    const indate = document.getElementById("indate")
-    const outdate = document.getElementById("outdate")
-    const date = document.getElementById("date")
-    function sorting aZ() {
-        location.sort();
-        
-    }
+{% block scripts %}
+    {{ super()}}
+    <script>
+    function changeSort (event) {
+        const newSort = event.target.value
+        if (!newSort) return window.location.href = "/account/bookings"
+        window.location.href = "/account/bookings?sort_by=" + newSort 
+    } 
 
-
-
-
-</script>
+    </script>
+{% endblock %}
