@@ -116,27 +116,27 @@ def user_homepage(user):
     return render_template(
         "account/index.html", user=user, bookings=db_bookings, page="/"
     )
-
-
 @app.get("/account/settings")
 @ensure_login
 def user_settings(user):
     return render_template("account/settings.html", user=user, page="/settings")
 
-
 @app.get("/account/bookings")
 @ensure_login
 def user_bookings(user):
+    sort_by = request.args.get("sort_by")
     db_bookings = Booking.query.filter_by(user=user).all()
-    bookings = [
-        {
-            "location": {"id": "test", "name": "station f"},
-            "checkin_date": datetime.now(),
-            "checkout_date": datetime.now(),
-            "created_at": datetime.now(),
-            "status": "PENDING",
-        }
-    ]
+    if sort_by == "atoz":
+        db_bookings.sort(key=lambda x:x.location.name)
+    elif sort_by == "ztoa":
+        db_bookings.sort(key=lambda x:x.location.name, reverse=True)
+    elif sort_by == "statuss":
+        db_bookings.sort(key=lambda x:x.status)
+    elif sort_by == "from":
+        db_bookings.sort(key=lambda x:x.location.created_at)   
+        
+        
+    
     return render_template(
         "account/bookings.html",
         bookings=db_bookings,
@@ -144,7 +144,7 @@ def user_bookings(user):
     )
 
 
-@app.route("/booking/<id>/cancel", methods=["POST", "GET", "PATCH", "DELETE"])
+@app.route("/booking/<id>/cancel", methods=["POST", "GET"])
 @ensure_login
 def booking_deletion(user, id):
     db_booking = Booking.query.get(id)
@@ -155,7 +155,6 @@ def booking_deletion(user, id):
         return render_template('account/delete.html',user=user, booking=db_booking )
    
     if request.method== "POST":
-        #reason=request.get_json(reason)
         reason = request.form.get("reason")
        
         db_booking.cancellation_reason=reason
