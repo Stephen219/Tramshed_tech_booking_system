@@ -116,8 +116,6 @@ def user_homepage(user):
     return render_template(
         "account/index.html", user=user, bookings=db_bookings, page="/"
     )
-
-
 @app.get("/account/settings")
 @ensure_login
 def user_settings(user):
