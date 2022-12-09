@@ -8,14 +8,8 @@
           <h1 class="text-4xl font-bold text-center sm:text-5xl">{{ location.name }}</h1>
           <div class="flex flex-col items-center space-x-2 font-light sm:flex-row">
             <div class="flex items-center space-x-2">
-              <span>({{ '%0.1f'| format(rating|float) }})</span>
-              <div class="flex items-center space-x-2">
-                {% for _ in range(rating|round(0,'floor')|int) %} {{
-                macros.RatingStar('filled') }} {% endfor %} {% if rating|round(1) >= 0.5 and
-                not ".0" in rating|round(1)|string %} {{ macros.RatingStar('half') }} {% else
-                %} {{ macros.RatingStar('empty') }} {% endif %} {% for _ in range(4 -
-                rating|round(0,'floor')|int) %} {{ macros.RatingStar('empty') }} {% endfor %}
-              </div>
+              <span>({{ '%0.1f'| format(location.avg_rating|float) }})</span>
+              {{macros.RatingStarDisplay(location.avg_rating)}}
             </div>
             <span class="hidden sm:block">|</span>
             <div class="flex items-center space-x-2">
@@ -25,7 +19,9 @@
             </div>
           </div>
         </div>
-        <span class="text-sm font-light text-center">[sample review will go here]</span>
+        {% if location.randomReview %}
+          {{macros.UserReview(location.randomReview)}}
+        {% endif %}
         <a
           href="/location/{{ location.id }}/booking"
           class="flex items-center justify-center w-40 h-10 font-light text-white bg-black rounded sm:w-80"
@@ -80,7 +76,7 @@
     currentIndicator.classList.replace("w-4", "w-8");
     currentIndicator.classList.replace("bg-dark-100", "bg-dark");
     if (index == 1) return (slideContainer.style.transform = "");
-    slideContainer.style.transform = `translateX(calc(-100% * ${index - 1}))`;
+    slideContainer.style.transform = `translateX(calc((-100% * ${index - 1}) - 1px))`;
   };
   setInterval(() => {
     if (activeSlide + 1 > totalSlides) return setActiveSlide(1);

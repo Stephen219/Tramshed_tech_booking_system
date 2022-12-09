@@ -4,7 +4,7 @@
     <form
       class="flex flex-col items-center max-w-lg mx-6 space-y-8 lg:mx-0"
       id="booking-form"
-      onsubmit="submitForm(); return false"
+      onsubmit="submitBookingForm(); return false"
     >
       <div class="flex flex-col items-center space-y-2">
         <h2 class="text-4xl font-bold">{{location.name}}</h2>
@@ -118,22 +118,63 @@
   </div>
   <div class="flex flex-col items-center space-y-5">
     <h3 class="text-3xl font-semibold">Reviews</h3>
-    <div class="flex flex-wrap justify-center gap-6">[reviews will go here]</div>
+    {% for booking in unreviewd_bookings %}
+      <form
+        class="flex flex-col items-center space-y-4 w-96"
+        onsubmit="submitReviewForm('{{booking.id}}','{{loop.index}}'); return false"
+        id="leave-review"
+      >
+        <input type="number" id="rating" hidden />
+        <div class="flex items-center space-x-3">
+          <button type="button" onclick="setReviewRating(1,'{{loop.index}}')" id="star-1">
+            {{macros.RatingStar('empty', size='19')}}
+          </button>
+          <button type="button" onclick="setReviewRating(2,'{{loop.index}}')" id="star-2">
+            {{macros.RatingStar('empty', size='19')}}
+          </button>
+          <button type="button" onclick="setReviewRating(3,'{{loop.index}}')" id="star-3">
+            {{macros.RatingStar('empty', size='19')}}
+          </button>
+          <button type="button" onclick="setReviewRating(4,'{{loop.index}}')" id="star-4">
+            {{macros.RatingStar('empty', size='19')}}
+          </button>
+          <button type="button" onclick="setReviewRating(5,'{{loop.index}}')" id="star-5">
+            {{macros.RatingStar('empty', size='19')}}
+          </button>
+        </div>
+        <div class="flex flex-col w-full space-y-1">
+          <label for="comment" class="text-sm">Comment (optional)</label>
+          <textarea
+            id="comment"
+            name="comment"
+            class="h-32 p-4 border rounded disabled:cursor-not-allowed disabled:opacity-80 border-dark-300 placeholder:font-light placeholder:text-dark-200 placeholder:text-sm focus-ring"
+          ></textarea>
+        </div>
+        {{ macros.button("Submit", type='submit') }}
+      </form>
+    {% endfor %}
+    <div class="flex flex-wrap justify-center gap-6">
+      {% for booking in all_bookings %}
+        {% if not booking.review == None %}
+          {{macros.UserReview(booking.review)}}
+        {% endif %}
+      {% endfor %}
+    </div>
   </div>
 </div>
 {% endblock _content %} {% block scripts %} {{ super() }}
 <script>
-  const form = document.getElementById("booking-form");
+  const bookForm = document.getElementById("booking-form");
   // Set min datetime in picker
   const today = new Date().toISOString().slice(0, 16);
-  form["checkin_date"].min = today;
-  form["checkin_date"].value = today;
-  form["checkout_date"].min = today;
+  bookForm["checkin_date"].min = today;
+  bookForm["checkin_date"].value = today;
+  bookForm["checkout_date"].min = today;
 
-  function submitForm() {
-    var datein = form["checkin_date"].value;
-    var dateout = form["checkout_date"].value;
-    var comments = form["comments"].value;
+  function submitBookingForm() {
+    var datein = bookForm["checkin_date"].value;
+    var dateout = bookForm["checkout_date"].value;
+    var comments = bookForm["comments"].value;
 
     params = "datein=" + datein + "&dateout=" + dateout + "&comments=" + comments;
     var xhttp = new XMLHttpRequest();

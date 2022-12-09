@@ -1,8 +1,9 @@
 import functools
-from flask import Flask, render_template, session,request, redirect
+from flask import Flask, render_template, session, request, redirect
 from flask_migrate import Migrate
 from flask_session import Session
 from db import db, User, Location, Booking
+from random import choice
 
 ALLOWED_EXTENXIONS = set(["txt", "pdf", "png", "jpg", "jpeg", "gif"])
 
@@ -42,8 +43,19 @@ def use_user(func):
 @use_user
 def homepage(user):
     db_locations = Location.query.all()
+    for location in db_locations:
+        db_bookings = Booking.query.filter(
+            Booking.location == location, Booking.review != None
+        ).all()
+        location.avg_rating = 0
+        if len(db_bookings) > 0:
+            location.randomReview = choice(db_bookings).review
+            location.avg_rating = sum(
+                booking.review.rating for booking in db_bookings
+            ) / len(db_bookings)
+
     # FIXME: Reviews and ratings need to be displayed
-    return render_template("index.html", user=user, locations=db_locations, rating=4.1)
+    return render_template("index.html", user=user, locations=db_locations)
 
 
 @app.get("/locations")
@@ -51,7 +63,6 @@ def homepage(user):
 def location_page(user):
     db_locations = Location.query.all()
     return render_template("locations.html", user=user, data=db_locations)
-
 
 
 import user
