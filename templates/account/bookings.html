@@ -1,82 +1,56 @@
 {% extends "account/layout.html" %}
 {% block _content %}
-    <main class="flex flex-col w-full pt-2 space-y-8 sm:p-10 md:pt-16">
-        <div class="flex flex-row items-center justify-between w-full">
-            <span class="text-3xl font-bold text-left ">My bookings</span>
-            <div class="flex justify-between space-x-3 space-y-2 ">
-                <span class="pt-2">
-                    <select class="border-solid"
-                            id="filter"
-                            name="selectionlist"
-                            onchange="changeSort(event)">
-                        <option value="">
-                            Sort by
-                        </option>
-                        <option class=""bg-dark-100"" value="atoz">
-                            Locations A-Z
-                        </option>
-                        <option value="ztoa"
-                            <button class="bg-dark-100" onclick="changeSort("ztoa")">Locations Z-A</button>
-                        </option>
-                        <option value="statuss"
-                            <button class="bg-dark-100" onclick="changeSort("statuss")">Status</button>
-                        </option>
-                    </select>
-                </span>
-                <span>
-                    <a href="/locations"
-                       class="px-6 py-1 font-light text-white bg-black rounded w-max">Add Bookings</a>
-                </span>
-            </div>
+<main class="flex flex-col w-full pt-2 space-y-8 sm:p-10 md:pt-16">
+    <div class="flex flex-row items-center justify-between w-full">
+        <span class="text-3xl font-bold text-left ">My bookings</span>
+        <div class="flex justify-between space-x-3 space-y-2 ">
+            <span class="pt-2">
+                <select class="border-solid" id="filter" name="selectionlist" onchange="changeSort(event)">
+                    <option value="">
+                        Sort by
+                    </option>
+                    <option class="" bg-dark-100"" value="atoz">
+                        Locations A-Z
+                    </option>
+                    <option value="ztoa" <button class="bg-dark-100" onclick="changeSort(" ztoa")">Locations
+                        Z-A</button>
+                    </option>
+                    <option value="statuss" <button class="bg-dark-100" onclick="changeSort(" statuss")">Status</button>
+                    </option>
+                </select>
+            </span>
+            <span>
+                <a href="/locations" class="px-6 py-1 font-light text-white bg-black rounded w-max">Add Bookings</a>
+            </span>
         </div>
-        {% for booking in bookings %}
-            <div class="flex flex-row justify-between w-full p-4 border-2 rounded-lg border-black-100 "
-                 id="Locations"
-                 name="Locations">
-                <div class="flex h-full space-x-3">
-                    <img alt="{{ booking.location.name }} main photo"
-                         src="{{ booking.location.main_photo }}"
-                         class="object-cover w-auto max-h-[8.75rem] h-full rounded aspect-[4/3]"/>
-                    <div class="flex flex-col border-1.5 border-solid rounded-lg text-center  ">
-                        <div name="space"id="space"class="pb-4 text-3xl text-left">{{ booking.location.name }}</div>
-                        <div class="flex flex-row items-center space-x-4">
-                            <span class="px-3 text-sm font-light lowercase rounded {% if booking.status=='PENDING' %}bg-[#F7CBCB]{% elif booking.status=='CONFIRMED' %}bg-[#CBF7D5]{% elif booking.status=='DECLINED' %} bg-[#f47373]{% elif booking.status=='CANCELLED' %} bg-[#ba68c8]{% endif %}">{{ booking.status }}</span>
-                            <a class="flex items-center justify-end px-2 py-1 space-x-2 text-xs underline border rounded pl-26 focus-ring border-dark-200"
-                               href="{{ booking.location.maps }}"
-                               target="_blank">
-                                <svg width="12"
-                                     height="12"
-                                     viewBox="0 0 12 12"
-                                     fill="none"
-                                     xmlns="http://www.w3.org/2000/svg">
-                                    <path
-                                    d="M5.99994 6.715C6.2048 6.715 6.40766 6.67465 6.59693 6.59625C6.7862 6.51786 6.95817 6.40295 7.10303 6.25809C7.24789 6.11323 7.3628 5.94126 7.44119 5.75199C7.51959 5.56272 7.55994 5.35986 7.55994 5.155C7.55994 4.95014 7.51959 4.74728 7.44119 4.55802C7.3628 4.36875 7.24789 4.19677 7.10303 4.05191C6.95817 3.90706 6.7862 3.79215 6.59693 3.71375C6.40766 3.63535 6.2048 3.595 5.99994 3.595C5.5862 3.595 5.18941 3.75936 4.89685 4.05191C4.6043 4.34447 4.43994 4.74126 4.43994 5.155C4.43994 5.56874 4.6043 5.96553 4.89685 6.25809C5.18941 6.55064 5.5862 6.715 5.99994 6.715V6.715Z"
-                                    stroke="#2C2C2C" />
-                                    <path
-                                    d="M1.80985 4.245C2.79485 -0.0849988 9.20986 -0.0799987 10.1899 4.25C10.7649 6.79 9.18486 8.94 7.79986 10.27C7.31589 10.7368 6.66973 10.9976 5.99736 10.9976C5.32498 10.9976 4.67882 10.7368 4.19486 10.27C2.81485 8.94 1.23485 6.785 1.80985 4.245V4.245Z"
-                                    stroke="#2C2C2C" />
-                                </svg>
-                                {{ booking.location.address }}
-                            </a>
-                        </div>
-                        <div class="flex flex-row space-x-4">
-                            <div class="flex flex-col text-left"id="indate">
-                                <span>Check-in:</span>
-                                <span class=" whitespace-nowrap">{{ booking.checkin_date.strftime('%Y-%m-%d') }}</span>
-                            </div>
-                            <div id= "outdate" class="flex flex-col ">
-                                <span class="">Check-out:</span>
-                                <span class=" whitespace-nowrap">{{ booking.checkout_date.strftime('%Y-%m-%d') }}</span>
-                            </div>
-                            <div id= "date"class="flex flex-col bg-white-300 ">
-                                <span class= "flex-initial">Booking date:</span>
-                                <span class=" whitespace-nowrap">{{ booking.created_at.strftime('%Y-%m-%d') }}</span>
-                            </div>
-                        </div>
-                    </div>
+    </div>
+    {% for booking in bookings %}
+    <div class="flex flex-row justify-between w-full p-4 border-2 rounded-lg border-black-100 " id="Locations"
+        name="Locations">
+        <div class="flex h-full space-x-3">
+            <img alt="{{ booking.location.name }} main photo" src="{{ booking.location.main_photo }}"
+                class="object-cover w-auto max-h-[8.75rem] h-full rounded aspect-[4/3]" />
+            <div class="flex flex-col border-1.5 border-solid rounded-lg text-center  ">
+                <div name="space" id="space" class="pb-4 text-3xl text-left">{{ booking.location.name }}</div>
+                <div class="flex flex-row items-center space-x-4">
+                    <span
+                        class="px-3 text-sm font-light lowercase rounded {% if booking.status=='PENDING' %}bg-[#F7CBCB]{% elif booking.status=='APPROVED' %}bg-[#CBF7D5]{% elif booking.status=='DECLINED' %} bg-[#f47373]{% elif booking.status=='CANCELLED' %} bg-[#ba68c8]{% endif %}">{{
+                        booking.status }}</span>
+                    <a class="flex items-center justify-end px-2 py-1 space-x-2 text-xs underline border rounded pl-26 focus-ring border-dark-200"
+                        href="{{ booking.location.maps }}" target="_blank">
+                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M5.99994 6.715C6.2048 6.715 6.40766 6.67465 6.59693 6.59625C6.7862 6.51786 6.95817 6.40295 7.10303 6.25809C7.24789 6.11323 7.3628 5.94126 7.44119 5.75199C7.51959 5.56272 7.55994 5.35986 7.55994 5.155C7.55994 4.95014 7.51959 4.74728 7.44119 4.55802C7.3628 4.36875 7.24789 4.19677 7.10303 4.05191C6.95817 3.90706 6.7862 3.79215 6.59693 3.71375C6.40766 3.63535 6.2048 3.595 5.99994 3.595C5.5862 3.595 5.18941 3.75936 4.89685 4.05191C4.6043 4.34447 4.43994 4.74126 4.43994 5.155C4.43994 5.56874 4.6043 5.96553 4.89685 6.25809C5.18941 6.55064 5.5862 6.715 5.99994 6.715V6.715Z"
+                                stroke="#2C2C2C" />
+                            <path
+                                d="M1.80985 4.245C2.79485 -0.0849988 9.20986 -0.0799987 10.1899 4.25C10.7649 6.79 9.18486 8.94 7.79986 10.27C7.31589 10.7368 6.66973 10.9976 5.99736 10.9976C5.32498 10.9976 4.67882 10.7368 4.19486 10.27C2.81485 8.94 1.23485 6.785 1.80985 4.245V4.245Z"
+                                stroke="#2C2C2C" />
+                        </svg>
+                        {{ booking.location.address }}
+                    </a>
                 </div>
                 <div class="flex flex-row space-x-4">
-                    <div class="flex flex-col text-left">
+                    <div class="flex flex-col text-left" id="indate">
                         <span>Check-in:</span>
                         <span class=" whitespace-nowrap">{{ booking.checkin_date.strftime('%Y-%m-%d') }}</span>
                     </div>
@@ -101,17 +75,16 @@
         </div>
     </div>
     {% endfor %}
-    </div>
 </main>
 {% endblock %}
 {% block scripts %}
-    {{ super()}}
-    <script>
-    function changeSort (event) {
+{{ super()}}
+<script>
+    function changeSort(event) {
         const newSort = event.target.value
         if (!newSort) return window.location.href = "/account/bookings"
-        window.location.href = "/account/bookings?sort_by=" + newSort 
-    } 
+        window.location.href = "/account/bookings?sort_by=" + newSort
+    }
 
-    </script>
+</script>
 {% endblock %}

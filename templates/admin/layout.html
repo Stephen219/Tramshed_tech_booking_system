@@ -3,28 +3,16 @@
   <div class="h-screen absolute w-full bg-[rgba(0,0,0,0.25)] hidden" id="bg-overlay"></div>
   <aside
     class="absolute lg:relative z-50 transition-transform ease-in -translate-x-[16rem] lg:translate-x-0 h-screen bg-[#F3F1EF] flex flex-col justify-between w-full max-w-[16rem] py-16 rounded-r-2xl"
-    id="side-navbar"
-  >
+    id="side-navbar">
     <div class="flex flex-col space-y-16">
       <div class="flex flex-col w-48 mx-auto space-y-3 transition-colors">
-        <a
-          href="/_"
-          class="flex items-center w-full px-4 py-2 space-x-3 {% if page == '/' %}bg-white{% endif %} hover:bg-white rounded focus-ring"
-        >
-          <svg
-            width="12"
-            height="12"
-            viewBox="0 0 12 12"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
+        <a href="/_"
+          class="flex items-center w-full px-4 py-2 space-x-3 {% if page == '/' %}bg-white{% endif %} hover:bg-white rounded focus-ring">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g clip-path="url(#clip0_8_520)">
               <path
                 d="M6 8.99502V7.49502M4.51 1.42002L1.815 3.52002C1.365 3.87002 1 4.61502 1 5.18002V8.88502C1 10.045 1.945 10.995 3.105 10.995H8.895C10.055 10.995 11 10.045 11 8.89002V5.25002C11 4.64502 10.595 3.87002 10.1 3.52502L7.01 1.36002C6.31 0.87002 5.185 0.89502 4.51 1.42002Z"
-                stroke="black"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
+                stroke="black" stroke-linecap="round" stroke-linejoin="round" />
             </g>
             <defs>
               <clipPath id="clip0_8_520">
@@ -34,51 +22,23 @@
           </svg>
           <span class="font-light">Dashboard</span>
         </a>
-        <a
-          href="/_/locations"
-          class="flex items-center w-full px-4 py-2 space-x-3 {% if page == '/locations' %}bg-white{% endif %} hover:bg-white rounded focus-ring"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="12"
-            height="12"
-            viewBox="0 0 24 24"
-            fill="none"
-          >
+        <a href="/_/locations"
+          class="flex items-center w-full px-4 py-2 space-x-3 {% if page == '/locations' %}bg-white{% endif %} hover:bg-white rounded focus-ring">
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none">
             <path
               d="M2.29 7.78v9.73c0 1.9 1.35 2.68 2.99 1.74l2.35-1.34c.51-.29 1.36-.32 1.89-.05l5.25 2.63c.53.26 1.38.24 1.89-.05l4.33-2.48c.55-.32 1.01-1.1 1.01-1.74V6.49c0-1.9-1.35-2.68-2.99-1.74l-2.35 1.34c-.51.29-1.36.32-1.89.05L9.52 3.52c-.53-.26-1.38-.24-1.89.05L3.3 6.05c-.56.32-1.01 1.1-1.01 1.73ZM8.56 4v13M15.73 6.62V20"
-              stroke="#2c2c2c"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            ></path>
+              stroke="#2c2c2c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
           </svg>
           <span class="font-light">Locations</span>
         </a>
-        <a
-          href="/_/bookings"
-          class="flex items-center w-full px-4 py-2 space-x-3 {% if page == '/bookings' %}bg-white{% endif %} hover:bg-white rounded focus-ring"
-        >
-          <svg
-            width="12"
-            height="12"
-            viewBox="0 0 12 12"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
+        <a href="/_/bookings"
+          class="flex items-center w-full px-4 py-2 space-x-3 {% if page == '/bookings' %}bg-white{% endif %} hover:bg-white rounded focus-ring">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g clip-path="url(#clip0_8_524)">
-              <path
-                d="M11 6C11 8.76 8.76 11 6 11C3.24 11 1 8.76 1 6C1 3.24 3.24 1 6 1C8.76 1 11 3.24 11 6Z"
-                stroke="black"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-              <path
-                d="M7.855 7.59001L6.305 6.66501C6.035 6.50501 5.815 6.12 5.815 5.805V3.755"
-                stroke="black"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
+              <path d="M11 6C11 8.76 8.76 11 6 11C3.24 11 1 8.76 1 6C1 3.24 3.24 1 6 1C8.76 1 11 3.24 11 6Z"
+                stroke="black" stroke-linecap="round" stroke-linejoin="round" />
+              <path d="M7.855 7.59001L6.305 6.66501C6.035 6.50501 5.815 6.12 5.815 5.805V3.755" stroke="black"
+                stroke-linecap="round" stroke-linejoin="round" />
             </g>
             <defs>
               <clipPath id="clip0_8_524">
@@ -88,32 +48,55 @@
           </svg>
           <span class="font-light">Bookings</span>
         </a>
-        <a
-          href="/_/settings"
-          class="flex items-center w-full px-4 py-2 space-x-3 {% if page == '/settings' %}bg-white{% endif %} hover:bg-white rounded focus-ring"
-        >
-          <svg
-            width="12"
-            height="12"
-            viewBox="0 0 12 12"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
+        <a href="/_/bookings/manage"
+          class="flex items-center w-full px-4 py-2 space-x-3 {% if page == '/bookings' %}bg-white{% endif %} hover:bg-white rounded focus-ring">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g clip-path="url(#clip0_8_524)">
+              <path d="M11 6C11 8.76 8.76 11 6 11C3.24 11 1 8.76 1 6C1 3.24 3.24 1 6 1C8.76 1 11 3.24 11 6Z"
+                stroke="black" stroke-linecap="round" stroke-linejoin="round" />
+              <path d="M7.855 7.59001L6.305 6.66501C6.035 6.50501 5.815 6.12 5.815 5.805V3.755" stroke="black"
+                stroke-linecap="round" stroke-linejoin="round" />
+            </g>
+            <defs>
+              <clipPath id="clip0_8_524">
+                <rect width="12" height="12" fill="white" />
+              </clipPath>
+            </defs>
+          </svg>
+          <span class="font-light">Pending</span>
+        </a>
+        <a target="_blank" href="https://mail.google.com"
+          class="flex items-center w-full px-4 py-2 space-x-3 {% if page == '/bookings' %}bg-white{% endif %} hover:bg-white rounded focus-ring">
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none">
+            <path d="M17 20.5H7c-3 0-5-1.5-5-5v-7c0-3.5 2-5 5-5h10c3 0 5 1.5 5 5v7c0 3.5-2 5-5 5Z" stroke="black"
+              stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path>
+            <path d="m17 9-3.13 2.5c-1.03.82-2.72.82-3.75 0L7 9" stroke="black" stroke-width="1.5"
+              stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+          <span class="font-light">Mails</span>
+        </a>
+        <a target="_blank" href="https://calendar.google.com"
+          class="flex items-center w-full px-4 py-2 space-x-3 {% if page == '/bookings' %}bg-white{% endif %} hover:bg-white rounded focus-ring">
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none">
+            <path
+              d="M8 2v3M16 2v3M3.5 9.09h17M21 8.5V17c0 3-1.5 5-5 5H8c-3.5 0-5-2-5-5V8.5c0-3 1.5-5 5-5h8c3.5 0 5 2 5 5Z"
+              stroke="black" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round">
+            </path>
+            <path d="M15.695 13.7h.009M15.695 16.7h.009M11.995 13.7h.01M11.995 16.7h.01M8.294 13.7h.01M8.294 16.7h.01"
+              stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+          <span class="font-light">calendar</span>
+        </a>
+        <a href="/_/settings"
+          class="flex items-center w-full px-4 py-2 space-x-3 {% if page == '/settings' %}bg-white{% endif %} hover:bg-white rounded focus-ring">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g clip-path="url(#clip0_8_534)">
               <path
                 d="M6 7.5C6.39782 7.5 6.77936 7.34196 7.06066 7.06066C7.34196 6.77936 7.5 6.39782 7.5 6C7.5 5.60218 7.34196 5.22064 7.06066 4.93934C6.77936 4.65804 6.39782 4.5 6 4.5C5.60218 4.5 5.22064 4.65804 4.93934 4.93934C4.65804 5.22064 4.5 5.60218 4.5 6C4.5 6.39782 4.65804 6.77936 4.93934 7.06066C5.22064 7.34196 5.60218 7.5 6 7.5V7.5Z"
-                stroke="black"
-                stroke-miterlimit="10"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
+                stroke="black" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
               <path
                 d="M1 6.44003V5.56003C1 5.04003 1.425 4.61003 1.95 4.61003C2.855 4.61003 3.225 3.97003 2.77 3.18503C2.51 2.73503 2.665 2.15003 3.12 1.89003L3.985 1.39503C4.38 1.16003 4.89 1.30003 5.125 1.69503L5.18 1.79003C5.63 2.57503 6.37 2.57503 6.825 1.79003L6.88 1.69503C7.115 1.30003 7.625 1.16003 8.02 1.39503L8.885 1.89003C9.34 2.15003 9.495 2.73503 9.235 3.18503C8.78 3.97003 9.15 4.61003 10.055 4.61003C10.575 4.61003 11.005 5.03503 11.005 5.56003V6.44003C11.005 6.96003 10.58 7.39003 10.055 7.39003C9.15 7.39003 8.78 8.03003 9.235 8.81503C9.495 9.27003 9.34 9.85003 8.885 10.11L8.02 10.605C7.625 10.84 7.115 10.7 6.88 10.305L6.825 10.21C6.375 9.42503 5.635 9.42503 5.18 10.21L5.125 10.305C4.89 10.7 4.38 10.84 3.985 10.605L3.12 10.11C2.90205 9.98454 2.74279 9.7777 2.67717 9.53491C2.61155 9.29213 2.64494 9.03323 2.77 8.81503C3.225 8.03003 2.855 7.39003 1.95 7.39003C1.425 7.39003 1 6.96003 1 6.44003V6.44003Z"
-                stroke="black"
-                stroke-miterlimit="10"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
+                stroke="black" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
             </g>
             <defs>
               <clipPath id="clip0_8_534">
@@ -125,24 +108,13 @@
         </a>
       </div>
     </div>
-    <a
-      href="/_/auth/logout"
-      class="flex items-center w-48 px-4 py-2 mx-auto space-x-3 rounded hover:opacity-80 focus-ring"
-    >
-      <svg
-        width="12"
-        height="12"
-        viewBox="0 0 12 12"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
+    <a href="/_/auth/logout"
+      class="flex items-center w-48 px-4 py-2 mx-auto space-x-3 rounded hover:opacity-80 focus-ring">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
         <g clip-path="url(#clip0_8_539)">
           <path
             d="M4.45 3.77999C4.605 1.98 5.53 1.245 7.555 1.245H7.62C9.855 1.245 10.75 2.14 10.75 4.375V7.635C10.75 9.87 9.855 10.765 7.62 10.765H7.555C5.545 10.765 4.62 10.04 4.455 8.27M7.5 6H1.81M2.925 4.325L1.25 6L2.925 7.675"
-            stroke="#2C2C2C"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
+            stroke="#2C2C2C" stroke-linecap="round" stroke-linejoin="round" />
         </g>
         <defs>
           <clipPath id="clip0_8_539">
@@ -153,18 +125,10 @@
       <span class="font-light">Logout</span>
     </a>
   </aside>
-  <button
-    class="absolute p-1 border rounded lg:hidden border-black-300 top-6 left-6 focus-ring"
-    aria-label="Open Sidebar"
-    id="navbar-toggle-btn"
-  >
+  <button class="absolute p-1 border rounded lg:hidden border-black-300 top-6 left-6 focus-ring"
+    aria-label="Open Sidebar" id="navbar-toggle-btn">
     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none">
-      <path
-        d="M3 7h18M3 12h18M3 17h18"
-        stroke="black"
-        stroke-width="1.5"
-        stroke-linecap="round"
-      ></path>
+      <path d="M3 7h18M3 12h18M3 17h18" stroke="black" stroke-width="1.5" stroke-linecap="round"></path>
     </svg>
   </button>
   {% block _content %} {% endblock _content %}
