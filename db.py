@@ -40,6 +40,7 @@ class User(db.Model):
 class Location(db.Model):
     id = db.Column(db.String, primary_key=True, default=nanoid.generate)
     name= db.Column(db.String, nullable=False)
+    tatus= db.Column(db.String, default="Available")
     address= db.Column(db.String, nullable=False)
     main_photo= db.Column(db.String, nullable=False)
     additional_photos= db.Column(db.String, nullable=False)

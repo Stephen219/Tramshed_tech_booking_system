@@ -12,7 +12,7 @@
                         <option value="">
                             Sort by
                         </option>
-                        <option class=""bg-dark-100"" value="atoz">
+                        <option class="bg-dark-100" value="atoz">
                             Locations A-Z
                         </option>
                         <option value="ztoa"
@@ -65,7 +65,7 @@
                                 <span class=" whitespace-nowrap">{{ booking.checkin_date.strftime('%Y-%m-%d') }}</span>
                             </div>
                             <div id= "outdate" class="flex flex-col ">
-                                <span class="">Check-out:</span>
+                                <span class="font-light">Check-out:</span>
                                 <span class=" whitespace-nowrap">{{ booking.checkout_date.strftime('%Y-%m-%d') }}</span>
                             </div>
                             <div id= "date"class="flex flex-col bg-white-300 ">
@@ -75,32 +75,21 @@
                         </div>
                     </div>
                 </div>
-                <div class="flex flex-row space-x-4">
-                    <div class="flex flex-col text-left">
-                        <span>Check-in:</span>
-                        <span class=" whitespace-nowrap">{{ booking.checkin_date.strftime('%Y-%m-%d') }}</span>
-                    </div>
-                    <div id="outdate" class="flex flex-col ">
-                        <span class="">Check-out:</span>
-                        <span class=" whitespace-nowrap">{{ booking.checkout_date.strftime('%Y-%m-%d') }}</span>
-                    </div>
-                    <div id="date" class="flex flex-col bg-white-300 ">
-                        <span class="flex-initial">Booking date:</span>
-                        <span class=" whitespace-nowrap">{{ booking.created_at.strftime('%Y-%m-%d') }}</span>
-                    </div>
+                <div class="flex flex-col justify-between pl-10 pr-0 border-2 border-white border-solid">
+                    <span class="pt-10">
+                        <a href="/location/{{ booking.location.id }}/booking"
+                            class="px-6 py-1 font-light text-white bg-black rounded pr-7">Rebook</a>
+                    </span>
+                    <span><a href="/booking/{{ booking.id }}/cancel"
+                            class="flex items-center py-1 font-semibold text-white rounded px-7 h-9 bg-dark w-max">Cancel</a></span>
                 </div>
             </div>
+            {% endfor %}
+
         </div>
-        <div class="flex flex-col justify-between pl-10 pr-0 border-2 border-white border-solid">
-            <span class="pt-10">
-                <a href="/location/{{ booking.location.id }}/booking"
-                    class="px-6 py-1 font-light text-white bg-black rounded pr-7">Rebook</a>
-            </span>
-            <span><a href="/booking/{{ booking.id }}/cancel"
-                    class="flex items-center h-10 px-8 py-1 font-semibold text-white rounded bg-dark w-max">Cancel</a></span>
-        </div>
+        
     </div>
-    {% endfor %}
+    
     </div>
 </main>
 {% endblock %}

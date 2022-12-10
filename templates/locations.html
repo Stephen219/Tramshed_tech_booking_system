@@ -10,7 +10,10 @@
       <div class="flex flex-col justify-between min-h-full space-y-6">
         <div class="flex flex-col space-y-8">
           <div class="flex flex-col space-y-2">
-            <h2 class="text-3xl font-semibold">{{location.name}}</h2>
+            <div class ="flex flex-row justify-between">
+              <div class="text-3xl font-semibold">{{location.name}}</div>
+              <div class="flex justify-end p-2 text-lg font-semibold text-lowercase rounded-lg {% if location.tatus=='Available' %}bg-[#CBF7D5]{% elif location.tatus=='Unavailable' %} bg-[#f47373]{% endif %}">{{location.tatus}}</div>
+            </div>
             <div class="flex flex-wrap items-center gap-3">
               <a
                 class="flex items-center px-2 py-1 space-x-2 text-xs border rounded focus-ring border-dark-200"
@@ -77,6 +80,7 @@
                   {{location.website.replace("https://", "").replace("http://", "")}}
                 </span>
               </a>
+              
               <dt class="sr-only">Reviews</dt>
             </div>
           </div>
