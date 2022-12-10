@@ -1,15 +1,20 @@
-{% extends "base.html" %} {% block content %}
+{% extends "admin/layout.html" %} {% block _content %}
 <main class="flex flex-col w-full pt-2 space-y-8 sm:p-10 md:pt-16">
     <div class="flex flex-row items-center justify-between w-full">
         <span class="text-3xl font-bold text-left ">Bookings</span>
         <div class="flex justify-between space-y-2">
-            <span>
-                <select id="filter" name="selectionlist" form="filter">
-                    <option value="sort">
+            <span class="pt-2">
+                <select class="border-solid" id="filter" name="selectionlist" onchange="changeSort(event)">
+                    <option value="">
                         Sort by
                     </option>
-                    <option id="rd" value="rb">
-                        Recently booked
+                    <option class=" bg-dark-100" value="pending">
+                        pending
+                    </option>
+                    <option value="approved" button class="bg-dark-100" onclick="changeSort( 'approved')">approved
+                        </button>
+                    </option>
+                    <option value="cancelled" button class="bg-dark-100" onclick="changeSort('cancelled')">cancelled</button>
                     </option>
                 </select>
             </span>
@@ -66,7 +71,7 @@
             </span>
             <span>
             <button
-            onclick="declineBooking('{{booking.id}}')"
+            onclick="approveBooking('{{booking.id}}')"
                 class="font-light text-white bg-black rounded w-max ">Approve</a></button>
             </span>
         </div>
@@ -88,7 +93,7 @@
       xhttp.send();
     }
 
-    function declineBooking(id){
+    function approveBooking(id){
         var xhttp = new XMLHttpRequest();
       xhttp.open("POST", '/_/booking/'+id+'/approve', true); //synchronous
       xhttp.setRequestHeader("Content-type", "application/json");
@@ -100,6 +105,10 @@
       xhttp.send();
     }
 
-
+    function changeSort(event) {
+        const newSort = event.target.value
+        if (!newSort) return window.location.href = "/_/bookings/manage"
+        window.location.href = "/_/bookings/manage?sort_by=" + newSort
+    }
 </script>
 {% endblock %}

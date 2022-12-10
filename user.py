@@ -1,5 +1,5 @@
 from __main__ import app
-from flask import render_template, jsonify, request, session, redirect, url_for
+from flask import render_template, jsonify, request, session, redirect, url_for,make_response,escape, session
 import functools
 from marshmallow import Schema, fields, validate, EXCLUDE, ValidationError
 from db import db, User, Booking, Location, Review
@@ -119,6 +119,7 @@ def user_homepage(user):
 @app.get("/account/settings")
 @ensure_login
 def user_settings(user):
+    email=request.cookies.get('email')
     return render_template("account/settings.html", user=user, page="/settings")
 
 @app.get("/account/bookings")
@@ -147,6 +148,7 @@ def user_bookings(user):
 @app.route("/booking/<id>/cancel", methods=["POST", "GET"])
 @ensure_login
 def booking_deletion(user, id):
+    email=request.cookies.get('email')
     db_booking = Booking.query.get(id)
     if db_booking == None:
         return "Not found", 404
@@ -166,6 +168,7 @@ def booking_deletion(user, id):
 @app.route("/location/<id>/booking", methods=['POST', 'GET'])
 @ensure_login
 def location_booking(user, id):
+    email=request.cookies.get('email')
     db_location = Location.query.get(id)
     if db_location == None:
         return "Not found", 404

@@ -1,1 +1,63 @@
-{% extends "admin/layout.html" %}
+{% extends "admin/layout.html" %} {% block _content%}
+<div class="flex flex-col w-full p-8">
+    <div class="flex flex-row justify-between w-full">
+        <div class="flex justify-between">
+            <span class="font-bold">Welcome back !!</span>
+        </div>
+        <div class="flex">
+            <span class="font-light">Admin portal</span>
+        </div>
+        <div class="flex flex-col space-y-1 font-semibold ">
+            <p>last logged in:</p>
+            <span id="date"></span>
+            <span id="time"></span>
+        </div>
+    </div>
+    <div class="flex justify-between">
+        <div class="flex flex-wrap">
+            <div class="flex flex-col items-center w-48 h-48 p-4 space-y-4 border rounded shadow border-black-300">
+                <span class="font-bold">Members</span>
+                <span class="font-bold"> {{total_users}}</span>
+            </div>
+        </div>
+        <div class="flex flex-wrap">
+            <div class="flex flex-col items-center w-48 h-48 p-4 space-y-4 border rounded shadow border-black-300">
+                <span class="font-bold">Locations</span>
+                <span class="font-bold"> {{total_locations}}</span>
+            </div>
+        </div>
+        <div class="flex flex-wrap">
+            <div class="flex flex-col items-center w-48 h-48 p-4 space-y-4 border rounded shadow border-black-300">
+                <span class="font-bold">Bookings</span>
+                <span class="font-bold"> {{total_bookings}}</span>
+            </div>
+        </div>
+    </div>
+    </br>
+    <div class="flex justify-between">
+        <div class="flex flex-wrap">
+            <div class="flex flex-col items-center w-48 h-48 p-4 space-y-4 border rounded shadow border-black-300">
+                <span class="font-bold">Pending Bookings</span>
+                <span class="font-bold"> {{total_pending}}</span>
+            </div>
+        </div>
+        <div class="flex flex-wrap">
+            <div class="flex flex-col items-center w-48 h-48 p-4 space-y-4 border rounded shadow border-black-300">
+                <span class="font-bold">Cancelled Bookings</span>
+                <span class="font-bold"> {{total_cancelled}}</span>
+            </div>
+        </div>
+    </div>
+</div>
+</main>
+
+
+<script>
+    var dt = new Date();
+    document.getElementById("date").innerHTML = dt.toLocaleDateString();
+</script>
+<script>
+    var dt = new Date();
+    document.getElementById("time").innerHTML = dt.toLocaleTimeString();
+</script>
+{% endblock %}

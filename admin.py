@@ -3,11 +3,13 @@ from flask import render_template, jsonify, request, session, redirect, url_for
 import functools
 from marshmallow import Schema, fields, validate, EXCLUDE, ValidationError
 from user import PASSWORD_REGEX
-from db import db, Admin, Location, Booking
+from db import db, Admin, Location, Booking , User
 import bcrypt
 
 ALLOWED_EXTENXIONS = set(["txt", "pdf", "png", "jpg", "jpeg", "gif"])
 # Schema validation from https://stackoverflow.com/a/61648076
+
+
 class CreateAccountSchema(Schema):
     username = fields.String(
         required=True, error_messages={"required": "required", "invalid": "invalid"}
@@ -103,7 +105,10 @@ def ensure_login(func):
 @app.get("/_/")
 @ensure_login
 def admin_homepage(admin):
-    return render_template("admin/index.html", admin=admin, page="/")
+    db_users=User.query.all()
+    db_locations = Location.query.all()
+    db_bookings = Booking.query.all()
+    return render_template("admin/index.html" ,total_users=len(db_users), total_locations=len(db_locations), total_bookings=len(db_bookings),admin=admin, page="/")
 
 
 @app.get("/_/bookings")
@@ -160,19 +165,24 @@ def confirm_details(admin, id):
         db_location = Location.query.get(id)
         return render_template("admin/add/details.html", location=db_location)
 
+
 @app.route("/_/bookings/manage", methods=["GET"])
 @ensure_login
 def manage_bookings(admin):
-    if request.method =="GET":
-        db_bookings=Booking.query.all()
+    if request.method == "GET":
+        db_bookings = Booking.query.all()
+        if not request.args.get('status') == None:
+            db_bookings = Booking.query.filter_by(
+                status=request.args.get('status'))
         return render_template("admin/bookings.html", bookings=db_bookings)
+
 
 @app.route("/_/booking/<id>/approve", methods=["POST"])
 @ensure_login
 def approve_booking(admin, id):
-    if request.method =="POST":
-        db_bookings=Booking.query.get(id)
-        db_bookings.status ="APPROVED"
+    if request.method == "POST":
+        db_bookings = Booking.query.get(id)
+        db_bookings.status = "APPROVED"
         db.session.commit()
         return "/_/bookings/manage"
 
@@ -180,9 +190,9 @@ def approve_booking(admin, id):
 @app.route("/_/booking/<id>/decline", methods=["POST"])
 @ensure_login
 def decline_booking(admin, id):
-    if request.method =="POST":
-        db_bookings=Booking.query.get(id)
-        db_bookings.status ="DECLINED"
+    if request.method == "POST":
+        db_bookings = Booking.query.get(id)
+        db_bookings.status = "DECLINED"
         db.session.commit()
         return "/_/bookings/manage"
     
@@ -251,7 +261,8 @@ def admin_create():
             return jsonify(err.messages), 400  # Return errors in json
 
         salt = bcrypt.gensalt()
-        body["password"] = bcrypt.hashpw(str(body["password"]).encode("utf-8"), salt)
+        body["password"] = bcrypt.hashpw(
+            str(body["password"]).encode("utf-8"), salt)
 
         data = Admin(**body)  # Turn input into db object
         db.session.add(data)
