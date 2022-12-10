@@ -1,0 +1,107 @@
+{% extends "layout.html" %} {% block _content %} 
+<div class="flex flex-col items-center space-y-8">
+  {% for booking in unreviewd_bookings %}
+  <div class="flex flex-col items-center lg:mx-6 lg:mt-[15vh]">
+    <div class="flex flex-col items-center gap-8 lg:flex-row max-w-7xl">
+      <div
+        class="flex flex-col items-center justify-between max-w-2xl min-h-full mx-6 space-y-8 lg:max-w-none "
+      >
+        <div class="flex flex-col items-center w-full space-y-4">
+          <h2 class="text-4xl font-semibold">{{booking.location.name}}</h2>
+          <div class="flex flex-col space-y-2 w-[18.5rem] font-light">
+            <h3 class="text-lg font-semibold text-center">Leave a review</h3>
+            <div class="flex items-center justify-between min-w-full">
+              <span>Booking id</span>
+              <span class="py-2 text-sm text-center rounded bg-black-100 w-52">{{booking.id}}</span>
+            </div>
+            <div class="flex items-center justify-between min-w-full">
+              <span>Check in</span>
+              <span class="py-2 text-sm text-center rounded bg-black-100 w-52">{{booking.checkin_date}}</span>
+            </div>
+            <div class="flex items-center justify-between min-w-full">
+              <span>Check out</span>
+              <span class="py-2 text-sm text-center rounded bg-black-100 w-52">{{booking.checkout_date}}</span>
+            </div>
+          </div>
+        </div>
+        <form
+          class="flex flex-col items-center space-y-4 w-96"
+          onsubmit="submitReviewForm('{{booking.id}}','{{loop.index}}'); return false"
+          id="leave-review"
+        >
+          <input type="number" id="rating" hidden />
+          <div class="flex items-center space-x-3">
+            <button type="button" onclick="setReviewRating(1,'{{loop.index}}')" id="star-1">
+              {{macros.RatingStar('empty', size='19')}}
+            </button>
+            <button type="button" onclick="setReviewRating(2,'{{loop.index}}')" id="star-2">
+              {{macros.RatingStar('empty', size='19')}}
+            </button>
+            <button type="button" onclick="setReviewRating(3,'{{loop.index}}')" id="star-3">
+              {{macros.RatingStar('empty', size='19')}}
+            </button>
+            <button type="button" onclick="setReviewRating(4,'{{loop.index}}')" id="star-4">
+              {{macros.RatingStar('empty', size='19')}}
+            </button>
+            <button type="button" onclick="setReviewRating(5,'{{loop.index}}')" id="star-5">
+              {{macros.RatingStar('empty', size='19')}}
+            </button>
+          </div>
+          <div class="flex flex-col w-full space-y-1">
+            <label for="comment" class="text-sm">Comment (optional)</label>
+            <textarea
+              id="comment"
+              name="comment"
+              class="h-32 p-4 border rounded disabled:cursor-not-allowed disabled:opacity-80 border-dark-300 placeholder:font-light placeholder:text-dark-200 placeholder:text-sm focus-ring"
+            ></textarea>
+          </div>
+          {{ macros.button("Submit", type='submit') }}
+        </form>
+      </div>
+      <img
+        alt="{{booking.location.name}} main photo"
+        src="{{booking.location.main_photo}}"
+        class="order-first lg:order-last w-full lg:w-[50%] xl:w-[60%] lg:max-w-2xl lg:rounded object-cover h-auto aspect-video lg:aspect-[4/3]"
+      />
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock _content %} {% block scripts %} {{ super() }}
+<script>
+    const reviewForms = document.querySelectorAll("#leave-review");
+    
+    function submitReviewForm(id, index) {
+    var rating = reviewForms[parseInt(index) - 1]["rating"].value;
+    if (!rating) return;
+    var comment = reviewForms[parseInt(index) - 1]["comment"].value;
+
+    params = "rating=" + rating + "&comment=" + comment;
+    var xhttp = new XMLHttpRequest();
+    xhttp.open("POST", "/booking/" + id + "/review", true); //synchronous
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.onload = function () {
+      if (xhttp.status === 200) {
+        window.location.href = "/locations";
+        return;
+      }
+    };
+    xhttp.send(params);
+  }
+
+  function setReviewRating(rating, index) {
+    const form = reviewForms[parseInt(index) - 1];
+    Array.from({ length: rating }, (x, i) => {
+      const star = form[`star-${i + 1}`];
+      star.innerHTML = `{{macros.RatingStar('filled', size='19')}}`;
+    });
+    if (rating < form["rating"].value) {
+      Array.from({ length: form["rating"].value - rating }, (x, i) => {
+        const star = form[`star-${form["rating"].value - i}`];
+        star.innerHTML = `{{macros.RatingStar('empty', size='19')}}`;
+      });
+    }
+    form["rating"].value = rating;
+  }
+</script>
+{% endblock scripts %}
