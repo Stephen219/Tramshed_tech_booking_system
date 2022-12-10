@@ -3,13 +3,18 @@
     <div class="flex flex-row items-center justify-between w-full">
         <span class="text-3xl font-bold text-left ">Bookings</span>
         <div class="flex justify-between space-y-2">
-            <span>
-                <select id="filter" name="selectionlist" form="filter">
-                    <option value="sort">
+            <span class="pt-2">
+                <select class="border-solid" id="filter" name="selectionlist" onchange="changeSort(event)">
+                    <option value="">
                         Sort by
                     </option>
-                    <option id="rd" value="rb">
-                        Recently booked
+                    <option class=" bg-dark-100" value="pending">
+                        pending
+                    </option>
+                    <option value="approved" button class="bg-dark-100" onclick="changeSort( 'approved')">approved
+                        </button>
+                    </option>
+                    <option value="cancelled" button class="bg-dark-100" onclick="changeSort('cancelled')">cancelled</button>
                     </option>
                 </select>
             </span>
@@ -100,6 +105,10 @@
       xhttp.send();
     }
 
-
+    function changeSort(event) {
+        const newSort = event.target.value
+        if (!newSort) return window.location.href = "/_/bookings/manage"
+        window.location.href = "/_/bookings/manage?sort_by=" + newSort
+    }
 </script>
 {% endblock %}

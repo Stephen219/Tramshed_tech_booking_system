@@ -108,13 +108,7 @@ def admin_homepage(admin):
     db_users=User.query.all()
     db_locations = Location.query.all()
     db_bookings = Booking.query.all()
-    most_booked_index= 0
-    most_booked_bookings = 0
-    for location, i in enumerate(db_locations):
-        # Check if the bookings in this location is more than most_booked_bookings
-        # else continue
-
-        return render_template("admin/index.html",total_users=len(db_users), total_locations=len(db_locations), total_bookings=len(db_bookings),admin=admin, page="/")
+    return render_template("admin/index.html" ,total_users=len(db_users), total_locations=len(db_locations), total_bookings=len(db_bookings),admin=admin, page="/")
 
 
 @app.get("/_/bookings")
