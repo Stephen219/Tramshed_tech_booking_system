@@ -2,7 +2,7 @@ from __main__ import app
 from flask import render_template, jsonify, request, session, redirect, url_for,make_response,escape, session
 import functools
 from marshmallow import Schema, fields, validate, EXCLUDE, ValidationError
-from db import db, User, Booking, Location
+from db import db, User, Booking, Location, Review
 from datetime import datetime
 import bcrypt
 
@@ -173,7 +173,9 @@ def location_booking(user, id):
     if db_location == None:
         return "Not found", 404
     if request.method == "GET":
-        return render_template("location/booking.html", user=user, location=db_location, title="Book now")
+        unreviewd_bookings = Booking.query.filter_by(user=user, location=db_location, review=None).all()
+        all_bookings = Booking.query.filter_by(location=db_location).all()
+        return render_template("location/booking.html", user=user, location=db_location, all_bookings=all_bookings, unreviewd_bookings=unreviewd_bookings, title="Book now")
     if request.method == "POST":
         datein = request.form.get('datein')  # rem: args for get form for post
         dateout = request.form.get('dateout')
@@ -185,6 +187,25 @@ def location_booking(user, id):
         db.session.commit()
         return "/booking/" + data.id + "/confirmation"
 
+@app.get("/bookings/review")
+@ensure_login
+def bookings_review(user):
+    unreviewd_bookings = Booking.query.filter_by(user=user, review=None).all()
+    return render_template("location/review.html", user=user, unreviewd_bookings=unreviewd_bookings)
+
+@app.post("/booking/<id>/review")
+@ensure_login
+def handle_review(user, id):
+    db_booking = Booking.query.get(id)
+    if db_booking == None:
+        return 'Not found', 404
+    rating = request.form.get('rating')
+    comment = request.form.get('comment')
+    data = Review(rating=rating, comment=comment, user=user)
+    db_booking.review = data
+    db.session.add(data)
+    db.session.commit()
+    return 'success'
 
 @app.route("/booking/<id>/confirmation", methods=["POST", "GET"])
 @ensure_login

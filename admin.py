@@ -195,6 +195,24 @@ def decline_booking(admin, id):
         db_bookings.status = "DECLINED"
         db.session.commit()
         return "/_/bookings/manage"
+    
+    
+@app.route("/_/booking/<id>/unavailable", methods=["POST"])
+@ensure_login
+def unavailable(admin, id):
+    if request.method =="POST":
+        db_location=Location.query.get(id)
+        db_location.tatus ="Unavailable"
+        db.session.commit()
+        return "/_/locations"
+@app.route("/_/booking/<id>/available", methods=["POST"])
+@ensure_login
+def available(admin, id):
+    if request.method =="POST":
+        db_location=Location.query.get(id)
+        db_location.tatus ="Available"
+        db.session.commit()
+        return "/_/locations"
 
 
 @app.get("/_/auth/logout")
