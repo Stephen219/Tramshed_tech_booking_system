@@ -108,6 +108,12 @@ def admin_homepage(admin):
     db_users=User.query.all()
     db_locations = Location.query.all()
     db_bookings = Booking.query.all()
+    def pending_status(db_bookings,db_locations):
+        for status in db_bookings:
+            for location in db_locations:
+                if status == "PENDING":
+                 print(location)
+                return len(location) 
     return render_template("admin/index.html" ,total_users=len(db_users), total_locations=len(db_locations), total_bookings=len(db_bookings),admin=admin, page="/")
 
 
@@ -125,6 +131,11 @@ def admin_view_bookings(admin):
 def admin_settings(admin):
     return render_template("admin/index.html", admin=admin, page="/settings")
 
+@app.get("/_/members")
+@ensure_login
+def view_members(admin):
+    db_users= User.query.all()
+    return render_template("admin/members.html", members=db_users, admin=admin)
 
 @app.get("/_/locations")
 @ensure_login
@@ -174,6 +185,34 @@ def manage_bookings(admin):
         if not request.args.get('status') == None:
             db_bookings = Booking.query.filter_by(
                 status=request.args.get('status'))
+        return render_template("admin/bookings.html", bookings=db_bookings)
+
+@app.route("/_/bookings/manage?status=PENDING", methods=["GET"])
+@ensure_login
+def pending_bookings(admin):
+    if request.method == "GET":
+        return render_template("admin/bookings.html", admin=admin)
+
+@app.route("/_/bookings/manage?status=APPROVED", methods=["GET"])
+@ensure_login
+def approved_bookings(admin):
+        return render_template("admin/bookings.html")
+
+@app.route("/_/bookings/manage?status=CANCELLED", methods=["GET"])
+@ensure_login
+def cancelled_bookings(admin):
+    if request.method == "GET":
+        return render_template("admin/bookings.html")
+
+
+@app.route("/_/bookings/declined", methods=["GET"])
+@ensure_login
+def declined_bookings(admin):
+    if request.method == "GET":
+        db_bookings = Booking.query.all()
+        if not request.args.get('status') == None:
+            db_bookings = Booking.query.filter_by(
+                status=request.args.get('status="DECLINED"'))
         return render_template("admin/bookings.html", bookings=db_bookings)
 
 
