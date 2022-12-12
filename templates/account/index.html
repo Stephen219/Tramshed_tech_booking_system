@@ -1,11 +1,30 @@
 {% extends "account/layout.html" %} {% block _content %}
-<main class="h-full p-16">
+<main class="w-full h-full p-16">
+    <div class="flex w-full">
+        <div class="flex flex-row justify-between w-full">
+            <div class="flex justify-between w-full">
+                <span class="font-bold">WELCOME BACK!!</span>
+                <div class="flex font-light">
+                    <span>User Portal</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                        <path
+                            d="M12.12 12.78a.963.963 0 0 0-.24 0 3.27 3.27 0 0 1-3.16-3.27c0-1.81 1.46-3.28 3.28-3.28a3.276 3.276 0 0 1 .12 6.55ZM18.74 19.38A9.934 9.934 0 0 1 12 22c-2.6 0-4.96-.99-6.74-2.62.1-.94.7-1.86 1.77-2.58 2.74-1.82 7.22-1.82 9.94 0 1.07.72 1.67 1.64 1.77 2.58Z"
+                            stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                        <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10Z"
+                            stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                </div>
+                <div class="flex flex-col space-y-1 font-semibold ">
+                    <p>last logged in:</p>
+                    <span id="date"></span>
+                    <span id="time"></span>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="flex flex-col space-y-4 rounded-2xl p-6 w-[26.25rem] min-h-[20rem] max-h-[30rem] bg-dark-300">
         <div class="flex justify-between w-full">
-            <h2 class="text-2xl text-white">Bookings</h2>
-            <a href="/locations" class="focus-ring">
-                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"><path d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81v8.37C2 19.83 4.17 22 7.81 22h8.37c3.64 0 5.81-2.17 5.81-5.81V7.81C22 4.17 19.83 2 16.19 2ZM16 12.75h-3.25V16c0 .41-.34.75-.75.75s-.75-.34-.75-.75v-3.25H8c-.41 0-.75-.34-.75-.75s.34-.75.75-.75h3.25V8c0-.41.34-.75.75-.75s.75.34.75.75v3.25H16c.41 0 .75.34.75.75s-.34.75-.75.75Z" fill="#ffffff"></path></svg>
-            </a>
+            <h2 class="text-2xl text-white">My bookings</h2>
         </div>
         <div class="flex flex-col w-full space-y-4 max-h-[20rem] overflow-y-auto">
             {% for booking in bookings %}
@@ -17,10 +36,68 @@
                         <span class="text-sm">{{booking.location.created_at.strftime('%d-%m-%Y')}}</span>
                     </div>
                 </div>
-                <span class="font-light lowercase rounded {% if booking.status=='PENDING' %}bg-[#F7CBCB]{% elif booking.status=='APPROVED' %}bg-[#CBF7D5]{%elif booking.status=='DECLINED' %} bg-[#f47373]{%elif booking.status=='CANCELLED' %} bg-[#ba68c8]{% endif %}">{{booking.status}}</span>
+                <span
+                    class="font-light lowercase rounded {% if booking.status=='PENDING' %}bg-[#F7CBCB]{% elif booking.status=='APPROVED' %}bg-[#CBF7D5]{%elif booking.status=='DECLINED' %} bg-[#f47373]{%elif booking.status=='CANCELLED' %} bg-[#ba68c8]{% endif %}">{{booking.status}}</span>
             </div>
             {% endfor %}
         </div>
     </div>
-    </main
+    </br>
+    <div class="flex justify-between">
+        <div class="flex flex-wrap">
+            <div class="flex flex-col items-center w-48 h-48 p-4 space-y-4 border rounded shadow border-black-300">
+                <span class="font-bold">Add Bookings</span>
+                <a href="/locations">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none">
+                        <path
+                            d="M6.7 18H4.15C2.72 18 2 17.28 2 15.85V4.15C2 2.72 2.72 2 4.15 2h4.3c1.43 0 2.15.72 2.15 2.15V6"
+                            stroke="black" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"
+                            stroke-linejoin="round"></path>
+                        <path
+                            d="M17.37 8.42v11.16c0 1.61-.8 2.42-2.41 2.42H9.12c-1.61 0-2.42-.81-2.42-2.42V8.42C6.7 6.81 7.51 6 9.12 6h5.84c1.61 0 2.41.81 2.41 2.42Z"
+                            stroke="black" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"
+                            stroke-linejoin="round"></path>
+                        <path
+                            d="M13.4 6V4.15c0-1.43.72-2.15 2.15-2.15h4.3C21.28 2 22 2.72 22 4.15v11.7c0 1.43-.72 2.15-2.15 2.15h-2.48M10 11h4M10 14h4M12 22v-3"
+                            stroke="black" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"
+                            stroke-linejoin="round"></path>
+                    </svg>
+                </a>
+            </div>
+        </div>
+        <div class="flex-wrap">
+            <div class="flex flex-col items-center w-48 h-48 p-4 space-y-4 border rounded shadow border-black-300">
+                <span class="font-bold">Reviews</span>
+                <a href="bookings/review">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none">
+                        <path
+                            d="M22 16.74V4.67c0-1.2-.98-2.09-2.17-1.99h-.06c-2.1.18-5.29 1.25-7.07 2.37l-.17.11c-.29.18-.77.18-1.06 0l-.25-.15C9.44 3.9 6.26 2.84 4.16 2.67 2.97 2.57 2 3.47 2 4.66v12.08c0 .96.78 1.86 1.74 1.98l.29.04c2.17.29 5.52 1.39 7.44 2.44l.04.02c.27.15.7.15.96 0 1.92-1.06 5.28-2.17 7.46-2.46l.33-.04c.96-.12 1.74-1.02 1.74-1.98ZM12 5.49v15M7.75 8.49H5.5M8.5 11.49h-3"
+                            stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                </a>
+            </div>
+        </div>
+        <div class="flex-wrap">
+            <div class="flex flex-col items-center w-48 h-48 space-y-4 border rounded shadow items center border-black-300">
+                <span class="font-bold">Manage My Bookings</span>
+                <a href="account/bookings">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none">
+                        <path d="M22 12c0 5.52-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2s10 4.48 10 10Z" stroke="black"
+                            stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                        <path d="m15.71 15.18-3.1-1.85c-.54-.32-.98-1.09-.98-1.72v-4.1" stroke="black"
+                            stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </div>
+</main>
+<script>
+    var dt = new Date();
+    document.getElementById("date").innerHTML = dt.toLocaleDateString();
+</script>
+<script>
+    var dt = new Date();
+    document.getElementById("time").innerHTML = dt.toLocaleTimeString();
+</script>
 {% endblock _content %}

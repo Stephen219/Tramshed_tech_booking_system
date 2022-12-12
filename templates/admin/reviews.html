@@ -1,0 +1,39 @@
+{% extends "admin/layout.html" %} {% block _content %}
+<div class="flex flex-col w-full space-y-8">
+    <div class="flex flex-col justify-between p-4">
+        <div class="flex items-center justify-between w-full px-3">
+            <span class="text-3xl font-bold">Reviews</span>
+        </div>
+        {% for review in reviews %}
+        <div class="flex flex-col justify-between border-2 rounded-lg shadow border-black-300 ">
+            <span class="text-sm font-bold">id:{{review.id}}</span>
+            <div class="flex flex-row justify-between">
+                <span class="text-sm font-light">User_id:{{review.user.id}}</span>
+                <span class="text-sm font-semibold">rating:{{review.rating}}</span>
+                <span class="text-sm font-light">{{review.created_at.strftime('%Y-%m-%d')}}</span>
+            </div>
+            <span class="font-light">Booking_id:{{review.booking_id}}</span>
+            <span class="text-base font-light">Comment:<span class="py-2 text-sm text-center rounded bg-black-100 w-52">{{review.comment}}</span></span>
+            <span>
+                <button onclick="deleteReview('{{review.id}}')"
+                    class="font-light text-white bg-black rounded max">Delete
+                </button>
+            </span>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<script>
+    function deleteReview(id){
+        var xhttp = new XMLHttpRequest ();
+        xhttp.open("DELETE",'/_/reviews/'+ id,true)//synchronous
+        xhttp.setRequestHeader("Content-type", "application/json");
+        xhttp.onload = function() {
+        if (xhttp.status === 200) {
+          window.location.href = xhttp.responseText;
+      }
+      };
+      xhttp.send();
+    }
+</script>
+{% endblock %}
