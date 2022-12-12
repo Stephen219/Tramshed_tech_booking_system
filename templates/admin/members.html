@@ -5,7 +5,6 @@
     <table name="members table" id="members" class="min-w-full">
         <thead class="text-base font-semibold border-b bg-gray-50">
             <tr>
-                <th scope="col" class="px-2 py-1 text-sm">Avatar</th>
                 <th scope="col" class="px-2 py-1 text-sm">User_Id</th>
                 <th scope="col" class="px-2 py-1 text-sm">First_name</th>
                 <th scope="col" class="px-2 py-1 text-sm">Sir_name</th>
@@ -15,7 +14,6 @@
         <tbody>
             {% for user in users %}
             <tr class="border-b">
-                <td class="font-light">{{user.avatar}}</td>
                 <td class="font-light">{{user.id}}</td>
                 <td class="font-light">{{user.first_name}}</td>
                 <td class="font-light">{{user.last_name}}</td>

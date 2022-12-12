@@ -3,7 +3,7 @@ from flask import render_template, jsonify, request, session, redirect, url_for
 import functools
 from marshmallow import Schema, fields, validate, EXCLUDE, ValidationError
 from user import PASSWORD_REGEX
-from db import db, Admin, Location, Booking , User
+from db import db, Admin, Location, Booking , User, Review
 import bcrypt
 
 ALLOWED_EXTENXIONS = set(["txt", "pdf", "png", "jpg", "jpeg", "gif"])
@@ -108,13 +108,11 @@ def admin_homepage(admin):
     db_users=User.query.all()
     db_locations = Location.query.all()
     db_bookings = Booking.query.all()
-    def pending_status(db_bookings,db_locations):
-        for status in db_bookings:
-            for location in db_locations:
-                if status == "PENDING":
-                 print(location)
-                return len(location) 
-    return render_template("admin/index.html" ,total_users=len(db_users), total_locations=len(db_locations), total_bookings=len(db_bookings),admin=admin, page="/")
+    pending_bookings = Booking.query.filter_by(status="PENDING").all()
+    approved_bookings= Booking.query.filter_by(status="APPROVED").all()
+    declined_bookings= Booking.query.filter_by(status="DECLINED").all()
+    cancelled_bookings= Booking.query.filter_by(status="CANCELLED").all()
+    return render_template("admin/index.html" ,total_users=len(db_users),total_declined=len(declined_bookings),total_cancelled=len(cancelled_bookings),total_comfirmed=len(approved_bookings), total_locations=len(db_locations), total_bookings=len(db_bookings), total_pending=len(pending_bookings),admin=admin, page="/")
 
 
 @app.get("/_/bookings")
@@ -135,7 +133,7 @@ def admin_settings(admin):
 @ensure_login
 def view_members(admin):
     db_users= User.query.all()
-    return render_template("admin/members.html", members=db_users, admin=admin)
+    return render_template("admin/members.html", users=db_users, admin=admin)
 
 @app.get("/_/locations")
 @ensure_login
@@ -176,6 +174,13 @@ def confirm_details(admin, id):
         db_location = Location.query.get(id)
         return render_template("admin/add/details.html", location=db_location)
 
+@app.route("/_/reviews/manage", methods=["GET","POST"])
+@ensure_login
+def manage_reviews(admin):
+    if request.method =="GET":
+        db_reviews= Review.query.all()
+    return render_template("admin/reviews.html", reviews=db_reviews)
+
 
 @app.route("/_/bookings/manage", methods=["GET"])
 @ensure_login
@@ -209,7 +214,7 @@ def cancelled_bookings(admin):
 @ensure_login
 def declined_bookings(admin):
     if request.method == "GET":
-        db_bookings = Booking.query.all()
+        db_bookings = Booking.query.filter_by(status="DECLINED")
         if not request.args.get('status') == None:
             db_bookings = Booking.query.filter_by(
                 status=request.args.get('status="DECLINED"'))
