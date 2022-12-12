@@ -174,9 +174,14 @@ def confirm_details(admin, id):
         db_location = Location.query.get(id)
         return render_template("admin/add/details.html", location=db_location)
 
-@app.route("/_/reviews/manage", methods=["GET","POST"])
+@app.route("/_/reviews/<id>", methods=["GET","DELETE"])
 @ensure_login
-def manage_reviews(admin):
+def manage_reviews(admin,id):
+    if request.method == "DELETE":
+        db_reviews = Review.query.get(id)
+        db.session.delete(db_reviews)
+        db.session.commit()
+        return "/_/reviews/<id>"
     if request.method =="GET":
         db_reviews= Review.query.all()
     return render_template("admin/reviews.html", reviews=db_reviews)
