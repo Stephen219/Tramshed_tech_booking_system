@@ -64,7 +64,6 @@ def location_page(user):
     db_locations = Location.query.all()
     return render_template("locations.html", user=user, data=db_locations)
 
-
 import user
 import admin
 

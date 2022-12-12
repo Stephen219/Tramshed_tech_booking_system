@@ -81,20 +81,26 @@
                 </div>
                 <p class="text-lg">{{ location.description }}</p>
                 <p class="text-lg">checkin:{{ location.checkin_instructions }}</p>
-                <div class="flex flex-col space-y-2 font-light">
-                  <span>Opening Hours: {{ location.opening_hours }}</span>
-                  {% if location.email %}
-                    <span>
-                      Email: <a href="mailto:{{ location.email }}" class="underline">{{ location.email }}</a>
-                    </span>
-                  {% endif %}
-                  {% if location.phone_number %}
-                    <span>
-                      Tel:
-                      <a href="tel:{{ location.phone_number }}" class="underline">{{ location.phone_number }}</a
-                        >
+                <div class="flex flex-row space-x-8">
+                  <div class="flex flex-col space-y-2 font-light">
+                    <span>Opening Hours: {{ location.opening_hours }}</span>
+                    {% if location.email %}
+                      <span>
+                        Email: <a href="mailto:{{ location.email }}" class="underline">{{ location.email }}</a>
                       </span>
                     {% endif %}
+                    {% if location.phone_number %}
+                      <span>
+                        Tel:
+                        <a href="tel:{{ location.phone_number }}" class="underline">{{ location.phone_number }}</a
+                          >
+                        </span>
+                      {% endif %}
+                    </div>
+                    <span class="flex flex-col flex-initial w-9 space-x-9">
+                      <span class="font-semibold">Features:</span>
+                      <span>{{ location.facilities }}</span>
+                    </span>
                   </div>
                   <img alt="{{ location.name }} main photo"
                        src="{{ location.main_photo }}"

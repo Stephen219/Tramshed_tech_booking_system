@@ -74,6 +74,10 @@ class CreateLocationSchema(Schema):
     checkin_instructions = fields.String(
         required=True, error_messages={"required": "required", "invalid": "invalid"}
     )
+    facilities= fields.String(
+        required=True, error_messages={"required": "required", "invalid": "invalid"}
+    )
+
 
     class Meta:
         # Strip unknown values from output
