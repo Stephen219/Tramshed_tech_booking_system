@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block content %}
+  <main class="flex flex-col items-center justify-center w-full h-screen px-4 space-y-8">
+    {{ macros.logo(class="h-20") }}
+    <div class="flex flex-col items-center text-center">
+      <h1 class="text-3xl font-bold">Welcome</h1>
+      <span class="text-lg font-light">Enter your email and new Password below</span>
+    </div>
+    <form id="change-form"
+          onsubmit="submitForm(); return false"
+          class="relative flex flex-col w-full max-w-md space-y-4">
+        enter email
+      {{ macros.textInput(type='email', placeholder='Email', name="email", id="email", required=true) }}
+      enter new password
+      {{ macros.textInput(type='password', placeholder='Password', name="password", id="password", required=true) }}
+      enter your one time token
+      {{ macros.textInput(type='string', placeholder='Token', name="token", id="token", required=true) }}
+      {{ macros.button("submit", type='submit') }}
+      <span id="login-error"
+            class="absolute left-0 right-0 mx-auto text-center text-red-500 -bottom-10"></span>
+    </form>
+  </main>
+{% endblock content %}
+{% block scripts %}
+  <script>
+    const PASSWORD_REGEX = new RegExp(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/);
+      const form = document.getElementById("change-form");
+      const changeErrors = document.getElementById("change-error");
+      const parseValidationError = (obj) => {
+        for (const [key, value] of Object.entries(obj)) {
+          value.forEach((msg) => {
+            const li = document.createElement("li");
+            li.innerHTML = `${key} - ${msg}`;
+            changeErrors.appendChild(li);
+          });
+        }
+      };
+      const submitForm = async () => {
+        const token = form["token"].value;
+        const email = form["email"].value;
+        const password = form["password"].value;
+        const payload = JSON.stringify({ email, password,token });
+        if (!PASSWORD_REGEX.test(password)) {
+          return (document.getElementById("change-error").innerHTML = "password not strong enough");
+        }
+        const res = await fetch("/auth/change-password", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: payload,
+        });
+        if (res.ok) {
+          return (window.location.href = "/auth/login");
+        }
+        const data = await res.json();
+        parseValidationError(data);
+      };
+      // Clear error message on refocus of form
+      form.addEventListener("focusin", () => {
+        document.getElementById("change-error").innerHTML = "";
+      });
+  </script>
+{% endblock scripts %}
