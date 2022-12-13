@@ -56,6 +56,7 @@ class Location(db.Model):
     bookings = db.relationship("Booking", backref="location")
     created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
     updated_at = db.Column(db.DateTime(timezone=True), onupdate=func.now())
+    features= db.Column(db.String, default="  ")
 
 
 class Booking(db.Model):
