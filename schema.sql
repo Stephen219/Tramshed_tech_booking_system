@@ -54,6 +54,7 @@ CREATE TABLE location (
   email  TEXT,
   phone_number  TEXT,
   checkin_instructions  TEXT NOT NULL,
+  features  TEXT,
   -- bookings relationship
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP

@@ -166,6 +166,7 @@ class Location:
             "email": data["email"],
             "phone_number": data["phone_number"],
             "checkin_instructions": data["checkin_instructions"],
+            "features": data["features"],
         }
         [conn, cur] = get_db()
         cols = ", ".join(parsed_data.keys())
