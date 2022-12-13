@@ -35,7 +35,7 @@ def use_user(func):
 @app.get("/")
 @use_user
 def homepage(user):
-    db_locations = Location.getAll()
+    db_locations = Location.getAll(featured=1)
     edited_locations = []
     for location in db_locations:
         location = dict(location)

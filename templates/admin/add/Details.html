@@ -37,7 +37,7 @@
 <script>
     function deleteLocation(id){
         var xhttp = new XMLHttpRequest();
-      xhttp.open("DELETE", '/_/locations/'+id, true); //synchronous
+      xhttp.open("DELETE", '/_/location/'+id, true); //synchronous
       xhttp.setRequestHeader("Content-type", "application/json");
       xhttp.onload = function() {
       if (xhttp.status === 200) {

@@ -156,6 +156,7 @@ class Location:
             "id": nanoid.generate(),
             "name": data["name"],
             "status": "AVAILABLE",
+            "featured": data["featured"],
             "address": data["address"],
             "main_photo": data["main_photo"],
             "additional_photos": data["additional_photos"],
@@ -180,6 +181,7 @@ class Location:
         [conn, cur] = get_db()
         cur.execute("SELECT * FROM location WHERE id=?", (id,))
         db_location = cur.fetchone()
+
         conn.close()
 
         return db_location
