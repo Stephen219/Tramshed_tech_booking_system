@@ -86,6 +86,51 @@ class CreateLocationSchema(Schema):
         unknown = EXCLUDE
 
 
+class UpdateLocationSchema(Schema):
+    name = fields.String(
+        required=False,
+    )
+    featured = fields.Integer(
+        required=False,
+        validate=[validate.Range(min=0, max=1, error="Value must be between 1 and 0")],
+    )
+    status = fields.String(required=False, validate=[validate.OneOf("AVAILABLE", "UNAVAILABLE")])
+    address = fields.String(
+        required=False,
+    )
+    main_photo = fields.String(
+        required=False,
+    )
+    additional_photos = fields.String(
+        required=False,
+    )
+    description = fields.String(
+        required=False,
+    )
+    website = fields.String(
+        required=False,
+    )
+    maps = fields.String(
+        required=False,
+    )
+    email = fields.String(
+        required=False,
+    )
+    phone_number = fields.String(
+        required=False,
+    )
+    opening_hours = fields.String(
+        required=False,
+    )
+    checkin_instructions = fields.String(
+        required=False,
+    )
+
+    class Meta:
+        # Strip unknown values from output
+        unknown = EXCLUDE
+
+
 def ensure_login(func):
     @functools.wraps(func)
     def check_login(*args, **kwargs):
@@ -136,11 +181,13 @@ def admin_view_bookings(admin):
 def admin_settings(admin):
     return render_template("admin/index.html", admin=admin, page="/settings")
 
+
 @app.get("/_/members")
 @ensure_login
 def view_members(admin):
-    db_users= User.query.all()
+    db_users = User.query.all()
     return render_template("admin/members.html", users=db_users, admin=admin)
+
 
 @app.get("/_/locations")
 @ensure_login
@@ -165,10 +212,10 @@ def add_locations(admin):
 
         db_location = Location.new(**body)  # Turn input into db object
 
-        return "/_/locations/" + db_location["id"]
+        return "/_/location/" + db_location["id"]
 
 
-@app.route("/_/locations/<id>", methods=["GET", "POST", "DELETE"])
+@app.route("/_/location/<id>", methods=["GET", "POST", "PATCH", "DELETE"])
 @ensure_login
 def confirm_details(admin, id):
     if request.method == "DELETE":
@@ -183,16 +230,26 @@ def confirm_details(admin, id):
         db_location = Location.get(id)
         return render_template("admin/add/details.html", location=db_location)
 
-@app.route("/_/reviews/<id>", methods=["GET","DELETE"])
+    if request.method == "PATCH":
+        schema = UpdateLocationSchema()
+        try:
+            body = schema.load(request.json)
+        except ValidationError as err:
+            return jsonify(err.messages), 400  # Return errors in json
+        Location.update(id, **body)
+        return "success"
+
+
+@app.route("/_/reviews/<id>", methods=["GET", "DELETE"])
 @ensure_login
-def manage_reviews(admin,id):
+def manage_reviews(admin, id):
     if request.method == "DELETE":
         db_reviews = Review.query.get(id)
         db.session.delete(db_reviews)
         db.session.commit()
         return "/_/reviews/<id>"
-    if request.method =="GET":
-        db_reviews= Review.query.all()
+    if request.method == "GET":
+        db_reviews = Review.query.all()
     return render_template("admin/reviews.html", reviews=db_reviews)
 
 
@@ -207,16 +264,19 @@ def manage_bookings(admin):
             "admin/bookings.html", page="/bookings/manage", bookings=db_bookings
         )
 
+
 @app.route("/_/bookings/manage?status=PENDING", methods=["GET"])
 @ensure_login
 def pending_bookings(admin):
     if request.method == "GET":
         return render_template("admin/bookings.html", admin=admin)
 
+
 @app.route("/_/bookings/manage?status=APPROVED", methods=["GET"])
 @ensure_login
 def approved_bookings(admin):
-        return render_template("admin/bookings.html")
+    return render_template("admin/bookings.html")
+
 
 @app.route("/_/bookings/manage?status=CANCELLED", methods=["GET"])
 @ensure_login
@@ -230,9 +290,10 @@ def cancelled_bookings(admin):
 def declined_bookings(admin):
     if request.method == "GET":
         db_bookings = Booking.query.filter_by(status="DECLINED")
-        if not request.args.get('status') == None:
+        if not request.args.get("status") == None:
             db_bookings = Booking.query.filter_by(
-                status=request.args.get('status="DECLINED"'))
+                status=request.args.get('status="DECLINED"')
+            )
         return render_template("admin/bookings.html", bookings=db_bookings)
 
 

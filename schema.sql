@@ -43,6 +43,7 @@ END;
 CREATE TABLE location (
   id TEXT PRIMARY KEY,
   name  TEXT NOT NULL,
+  featured BOOLEAN NOT NULL DEFAULT 0 CHECK (featured IN (0, 1)),
   status  TEXT NOT NULL,
   address  TEXT NOT NULL,
   main_photo  TEXT NOT NULL,
