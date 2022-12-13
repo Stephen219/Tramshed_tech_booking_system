@@ -4,7 +4,7 @@ const bgOverlay = document.querySelector("#bg-overlay");
 let navbarOpen = false;
 const toggleNavbar = () => {
   navbarOpen = !navbarOpen;
-  sideNavbar.classList.toggle("-translate-x-[16rem]");
+  sideNavbar.classList.toggle("translate-x-[16rem]");
   bgOverlay.classList.toggle("hidden");
 };
 hamburgerBtn.addEventListener("click", () => {

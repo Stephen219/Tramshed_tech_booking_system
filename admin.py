@@ -94,7 +94,9 @@ class UpdateLocationSchema(Schema):
         required=False,
         validate=[validate.Range(min=0, max=1, error="Value must be between 1 and 0")],
     )
-    status = fields.String(required=False, validate=[validate.OneOf("AVAILABLE", "UNAVAILABLE")])
+    status = fields.String(
+        required=False, validate=[validate.OneOf(["AVAILABLE", "UNAVAILABLE"])]
+    )
     address = fields.String(
         required=False,
     )
@@ -131,6 +133,16 @@ class UpdateLocationSchema(Schema):
         unknown = EXCLUDE
 
 
+class UpdateBookingSchema(Schema):
+    status = fields.String(
+        required=True, validate=[validate.OneOf(["CONFIRMED", "DECLINED"])]
+    )
+
+    class Meta:
+        # Strip unknown values from output
+        unknown = EXCLUDE
+
+
 def ensure_login(func):
     @functools.wraps(func)
     def check_login(*args, **kwargs):
@@ -155,13 +167,15 @@ def ensure_login(func):
 @ensure_login
 def admin_homepage(admin):
     db_users = User.getAll()
-    db_locations = Location.getAll()
     db_bookings = Booking.getAll()
+    db_locations = Location.getAll()
+    db_pending_bookings = Booking.getAll(status="PENDING")
     return render_template(
         "admin/index.html",
         total_users=len(db_users),
-        total_locations=len(db_locations),
-        total_bookings=len(db_bookings),
+        bookings=db_bookings,
+        locations=db_locations,
+        pending_bookings=len(db_pending_bookings),
         admin=admin,
         page="/",
     )
@@ -174,6 +188,29 @@ def admin_view_bookings(admin):
     return render_template(
         "admin/bookings table.html", admin=admin, page="/bookings", bookings=db_bookings
     )
+
+
+@app.route("/_/booking/<id>", methods=["GET", "PATCH"])
+@ensure_login
+def admin_manage_individual_booking(admin, id):
+    db_booking = Booking.get(id)
+    if db_booking == None:
+        return "Not found", 404
+    if request.method == "GET":
+        return render_template(
+            "admin/manage-booking.html",
+            admin=admin,
+            page="/bookings/manage",
+            booking=db_booking,
+        )
+    if request.method == "PATCH":
+        schema = UpdateBookingSchema()
+        try:
+            body = schema.load(request.json)
+        except ValidationError as err:
+            return jsonify(err.messages), 400  # Return errors in json
+        Booking.update(db_booking["id"], **body)
+        return "success"
 
 
 @app.get("/_/settings")
