@@ -33,6 +33,7 @@ class User(db.Model):
     first_name = db.Column(db.String, nullable=False)
     last_name = db.Column(db.String, nullable=False)
     password = db.Column(db.String, nullable=False)
+    reset_token = db.Column(db.String, nullable=True)
     bookings = db.relationship("Booking", backref="user")
     reviews = db.relationship("Review", backref="user")
     created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())

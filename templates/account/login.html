@@ -6,6 +6,7 @@
       <h1 class="text-3xl font-bold">Welcome</h1>
       <span class="text-lg font-light">Enter your credentials below</span>
     </div>
+    <a href="/member/join" class="underline">Not a member?</a>
     <form id="login-form"
           onsubmit="submitForm(); return false"
           class="relative flex flex-col w-full max-w-md space-y-4">
@@ -15,7 +16,7 @@
       <span id="login-error"
             class="absolute left-0 right-0 mx-auto text-center text-red-500 -bottom-10"></span>
     </form>
-    <a href="/member/join" class="underline">Not a member?</a>
+    <a href="/auth/reset" class="underline">Forgot password?</a>
   </main>
 {% endblock content %}
 {% block scripts %}

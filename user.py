@@ -5,6 +5,8 @@ from marshmallow import Schema, fields, validate, EXCLUDE, ValidationError
 from db import db, User, Booking, Location, Review
 from datetime import datetime
 import bcrypt
+import random
+import string
 
 # https://stackoverflow.com/a/21456918
 # Minimum eight characters, at least one letter, one number and one special character
@@ -67,7 +69,28 @@ class LoginSchema(Schema):
     class Meta:
         # Strip unknown values from output
         unknown = EXCLUDE
+class ResetPasswordSchema(Schema):
+    email= fields.Email(
+        required=True, error_messages={"requires" : "required", "invalid": "invalid"}
+    )
+    class Meta:
+        unkown = EXCLUDE
 
+class ChangePasswordSchema(Schema):
+    email = fields.Email(
+        required=True, error_messages={"required": "required", "invalid": "invalid"}
+    )
+    password = fields.String(
+        required=True,
+        error_messages={"required": "required"},
+    )
+    token = fields.String(
+        required=True,
+        error_messages={"required": "required"},
+    )
+    class Meta:
+        # Strip unknown values from output
+        unknown = EXCLUDE
 
 def ensure_login(func):
     @functools.wraps(func)
@@ -223,6 +246,52 @@ def My_bookings(user):
     print(db_bookings)
     #return render_template("my-bookings.html",data=db_bookings)
 
+@app.route("/auth/reset", methods=["GET","POST"])
+def reset_password():
+    if request.method == "GET":
+        return render_template("account/reset.html")
+    if request.method == "POST":
+        schema = ResetPasswordSchema ()
+        try:
+            body = schema.load(request.json)
+        except ValidationError as err:
+            return jsonify(err.messages), 400
+        body['email'] = body['email'].lower()
+        db_user = User.query.filter_by(email=body["email"]).first()
+        if db_user ==None:
+            return "success"
+        temp_pass = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(8))
+        # reset token could be encrypted for added security
+        db_user.reset_token = temp_pass
+        db.session.commit()
+        print("/auth/change-password?" + "email=" + body["email"])
+        print(temp_pass)
+        return redirect ("/auth/reset")
+
+@app.route("/auth/change-password", methods=["GET","POST"])
+def change_password():
+    if request.method == "GET":
+        email = request.args.get("email").lower()
+        if email == None : 
+            return "Not found", 404
+        return render_template("/account/change.html")
+    if request.method == "POST":
+        schema = ChangePasswordSchema ()
+        try:
+            body = schema.load(request.json)
+        except ValidationError as err:
+            return jsonify(err.messages), 400
+        body['email'] = body['email'].lower()
+        temp_pass = body['token']
+        db_user = User.query.filter_by(email=body["email"]).first()
+        if temp_pass != db_user.reset_token:
+            return "Invalid reset token", 401
+        db_user.reset_token = None
+        salt = bcrypt.gensalt()
+        db_user.password = bcrypt.hashpw(str("password").encode("utf-8"), salt)
+        db.session.commit()
+        return  redirect ("/auth/login")
+
 
 @app.get("/auth/logout")
 def user_logout():
@@ -262,6 +331,7 @@ def user_join():
             body = schema.load(request.json)
         except ValidationError as err:
             return jsonify(err.messages), 400  # Return errors in json
+        body['email'] = body['email'].lower()
         db_user = User.query.filter_by(email=body["email"]).first()
         if not db_user == None:  # Check if user in db already
             return jsonify({"email": ["already exists"]}), 400
