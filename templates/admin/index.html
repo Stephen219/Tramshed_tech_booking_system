@@ -364,7 +364,7 @@
         {% for location in locations %}
           <button
             onclick="window.location.href='/_/location/{{location.id}}'"
-            class="flex items-center justify-between w-full p-3 text-left border rounded-lg min-w-max border-dark-300"
+            class="flex items-center justify-between w-full p-3 overflow-x-auto text-left border rounded-lg max-w-max min-w-max border-dark-300"
           >
             <div class="flex space-x-3">
               <img
@@ -373,7 +373,7 @@
               />
               <div class="flex flex-col justify-between h-full sm:space-y-2">
                 <h3 class="font-semibold">{{location.name}}</h3>
-                <a href="{{location.maps}}" class="text-sm underline capitalize sm:text-base"
+                <a href="{{location.maps}}" target="_blank" class="text-sm underline capitalize sm:text-base"
                   >{{location.address}}</a
                 >
               </div>
