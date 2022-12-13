@@ -1,19 +1,7 @@
-{% extends "base.html" %} {% block content %}
+{% extends "admin/layout.html" %} {% block _content %}
 <main class="flex flex-col w-full pt-2 space-y-8 sm:p-10 md:pt-16">
     <div class="flex flex-row items-center justify-between w-full">
         <span class="text-3xl font-bold text-left ">Bookings</span>
-        <div class="flex justify-between space-y-2">
-            <span>
-                <select id="filter" name="selectionlist" form="filter">
-                    <option value="sort">
-                        Sort by
-                    </option>
-                    <option id="rd" value="rb">
-                        Recently booked
-                    </option>
-                </select>
-            </span>
-        </div>
     </div>
     {% for booking in bookings %}
     <div class="flex flex-row justify-between w-full p-4 border-2 rounded-lg border-black-100 ">
@@ -66,7 +54,7 @@
             </span>
             <span>
             <button
-            onclick="declineBooking('{{booking.id}}')"
+            onclick="approveBooking('{{booking.id}}')"
                 class="font-light text-white bg-black rounded w-max ">Approve</a></button>
             </span>
         </div>
@@ -88,7 +76,7 @@
       xhttp.send();
     }
 
-    function declineBooking(id){
+    function approveBooking(id){
         var xhttp = new XMLHttpRequest();
       xhttp.open("POST", '/_/booking/'+id+'/approve', true); //synchronous
       xhttp.setRequestHeader("Content-type", "application/json");
@@ -99,7 +87,5 @@
       };
       xhttp.send();
     }
-
-
 </script>
 {% endblock %}

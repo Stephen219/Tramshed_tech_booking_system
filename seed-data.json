@@ -1,5 +1,6 @@
 [{
 	"name": "Codebase",
+	"status": "AVAILABLE",
 	"address": "CodeBase Edinburgh, EH1 2EL",
 	"maps": "https://goo.gl/maps/Tq5d856YhW4NYF4u6",
 	"main_photo": "https://images.squarespace-cdn.com/content/v1/55439320e4b0f92b5d6c4c8b/1646867535415-4JI39H286BUMT26H4FHN/C36A1915.jpg?format=2500w",
@@ -12,6 +13,7 @@
 	"checkin_instructions": "Use the email address or phone number to call ahead and book a desk, let them know you're a Tramshed member"
 }, {
 	"name": "Catalyst",
+	"status": "AVAILABLE",
 	"address": "Titanic Quarter, Belfast, BT3 9DT",
 	"maps": "https://goo.gl/maps/qvaA6jcBfYh4EYut5",
 	"main_photo": "https://wearecatalyst.org/wp-content/uploads/2022/05/Catalyst03.jpg",
@@ -24,6 +26,7 @@
 	"checkin_instructions": "Use the email address or phone number to call ahead and book a desk, let them know you're a Tramshed member"
 }, {
 	"name": "C4DI",
+	"status": "AVAILABLE",
 	"address": "C4DI Campus, Hull, HU1 1UU",
 	"maps": "https://goo.gl/maps/aebTUBhCpRFczYpA6",
 	"main_photo": "https://images.squarespace-cdn.com/content/v1/5709040420c647579532dbb4/1594914119071-OWI9G22S295OCMSWL0VL/_K5L1162.jpg?format=2500w",
@@ -36,6 +39,7 @@
 	"checkin_instructions": "Use the email address or phone number to call ahead and book a desk, let them know you're a Tramshed member"
 }, {
 	"name": "Dogpatch Labs",
+	"status": "AVAILABLE",
 	"address": "Custom House Quay, Dublin, D01 Y6H7",
 	"maps": "https://goo.gl/maps/zhN3rwPhqVxhB9Bf7",
 	"main_photo": "https://dogpatchlabs.wpenginepowered.com/wp-content/uploads/2022/09/ian_browne.jpg",
@@ -48,6 +52,7 @@
 	"checkin_instructions": "Use the email address or phone number to call ahead and book a desk, let them know you're a Tramshed member"
 }, {
 	"name": "Stafion F",
+	"status": "AVAILABLE",
 	"maps": "https://goo.gl/maps/wbyUjMFLiH5DyjTa8",
 	"address": "5 Parvis Alan Turing, Paris",
 	"main_photo": "https://stationf.co/img/misc/create-zone.jpg",

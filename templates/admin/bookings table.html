@@ -6,9 +6,8 @@
         <thead class="text-base font-semibold border-b bg-gray-50">
             <tr>
                 <th scope="col" class="px-2 py-1 text-sm">Booking_Id</th>
-                <th scope="col" class="px-2 py-1 text-sm">Location_Id</th>
                 <th scope="col" class="px-2 py-1 text-sm">User_Id</th>
-                <th scope="col" class="px-2 py-1 text-sm">Name</th>
+                <th scope="col" class="px-2 py-1 text-sm">Location_name</th>
                 <th scope="col" class="px-2 py-1 text-sm">Sir_name</th>
                 <th scope="col" class="px-2 py-1 text-sm">Status</th>
                 <th scope="col" class="px-2 py-1 text-sm">Checkin</th>
@@ -21,7 +20,6 @@
             {% for booking in bookings %}
             <tr class="border-b">
                 <td class="font-light">{{booking.id}}</td>
-                <td class="font-light">{{booking.location.id}}</td>
                 <td class="font-light">{{booking.user.id}}</td>
                 <td class="font-light">{{booking.location.name}}</td>
                 <td class="font-light">{{booking.user.last_name}}</td>
