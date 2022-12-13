@@ -78,7 +78,7 @@ class CreateLocationSchema(Schema):
         required=True, error_messages={"required": "required", "invalid": "invalid"}
     )
     features = fields.String(
-        required=True, error_messages={"required": "required", "invalid": "invalid"}
+        required=False, error_messages={"required": "required", "invalid": "invalid"}
     )
 
     class Meta:
