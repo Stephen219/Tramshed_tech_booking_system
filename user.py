@@ -10,7 +10,7 @@ from flask import (
 )
 import functools
 from marshmallow import Schema, fields, validate, EXCLUDE, ValidationError
-from db import Booking, Location, User, Review
+from db import Booking, Location, User, Review, Location
 from datetime import datetime
 import bcrypt
 import random
@@ -75,12 +75,16 @@ class LoginSchema(Schema):
     class Meta:
         # Strip unknown values from output
         unknown = EXCLUDE
+
+
 class ResetPasswordSchema(Schema):
-    email= fields.Email(
-        required=True, error_messages={"requires" : "required", "invalid": "invalid"}
+    email = fields.Email(
+        required=True, error_messages={"requires": "required", "invalid": "invalid"}
     )
+
     class Meta:
         unkown = EXCLUDE
+
 
 class ChangePasswordSchema(Schema):
     email = fields.Email(
@@ -94,9 +98,11 @@ class ChangePasswordSchema(Schema):
         required=True,
         error_messages={"required": "required"},
     )
+
     class Meta:
         # Strip unknown values from output
         unknown = EXCLUDE
+
 
 def ensure_login(func):
     @functools.wraps(func)
@@ -136,9 +142,14 @@ def user_homepage(user):
 
         return jsonify({"status": "success"})
     if request.method == "GET":
+        db_locations = Location.getAll()
+        db_locations.sort(key=lambda x: x["created_at"])
+        db_locations = db_locations[:5]
         db_bookings = Booking.getAll()
+        pending_bookings = Booking.getAll(status="PENDING")
+        db_reviews = Review.getAll(user_id=user['id'])
         return render_template(
-            "account/index.html", user=user, bookings=db_bookings, page="/"
+            "account/index.html", user=user, bookings=db_bookings, locations=db_locations, total_reviews=len(db_reviews), pending_bookings=len(pending_bookings), page="/"
         )
 
 
@@ -182,7 +193,7 @@ def booking_deletion(user, id):
         if reason == None:
             return "reason required", 400
 
-        Booking.update(db_booking['id'], status="CANCELLED", cancellation_reason=reason)
+        Booking.update(db_booking["id"], status="CANCELLED", cancellation_reason=reason)
 
         return "/account/bookings"
 
@@ -254,43 +265,46 @@ def booking_confirmation(user, id):
     return render_template("booking/confirmation.html", user=user, booking=db_booking)
 
 
-@app.route("/auth/reset", methods=["GET","POST"])
+@app.route("/auth/reset", methods=["GET", "POST"])
 def reset_password():
     if request.method == "GET":
         return render_template("account/reset.html")
     if request.method == "POST":
-        schema = ResetPasswordSchema ()
+        schema = ResetPasswordSchema()
         try:
             body = schema.load(request.json)
         except ValidationError as err:
             return jsonify(err.messages), 400
-        body['email'] = body['email'].lower()
+        body["email"] = body["email"].lower()
         db_user = User.query.filter_by(email=body["email"]).first()
-        if db_user ==None:
+        if db_user == None:
             return "success"
-        temp_pass = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(8))
+        temp_pass = "".join(
+            random.choice(string.ascii_uppercase + string.digits) for _ in range(8)
+        )
         # reset token could be encrypted for added security
         db_user.reset_token = temp_pass
         db.session.commit()
         print("/auth/change-password?" + "email=" + body["email"])
         print(temp_pass)
-        return redirect ("/auth/reset")
+        return redirect("/auth/reset")
 
-@app.route("/auth/change-password", methods=["GET","POST"])
+
+@app.route("/auth/change-password", methods=["GET", "POST"])
 def change_password():
     if request.method == "GET":
         email = request.args.get("email").lower()
-        if email == None : 
+        if email == None:
             return "Not found", 404
         return render_template("/account/change.html")
     if request.method == "POST":
-        schema = ChangePasswordSchema ()
+        schema = ChangePasswordSchema()
         try:
             body = schema.load(request.json)
         except ValidationError as err:
             return jsonify(err.messages), 400
-        body['email'] = body['email'].lower()
-        temp_pass = body['token']
+        body["email"] = body["email"].lower()
+        temp_pass = body["token"]
         db_user = User.query.filter_by(email=body["email"]).first()
         if temp_pass != db_user.reset_token:
             return "Invalid reset token", 401
@@ -298,7 +312,7 @@ def change_password():
         salt = bcrypt.gensalt()
         db_user.password = bcrypt.hashpw(str("password").encode("utf-8"), salt)
         db.session.commit()
-        return  redirect ("/auth/login")
+        return redirect("/auth/login")
 
 
 @app.get("/auth/logout")
@@ -339,7 +353,7 @@ def user_join():
             body = schema.load(request.json)
         except ValidationError as err:
             return jsonify(err.messages), 400  # Return errors in json
-        body['email'] = body['email'].lower()
+        body["email"] = body["email"].lower()
         db_user = User.getAll(email=body["email"])
         if len(db_user) > 1:  # Check if user in db already
             return jsonify({"email": ["already exists"]}), 400
