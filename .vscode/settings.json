@@ -1,13 +1,4 @@
 {
     "python.linting.pylintEnabled": true,
-    "python.linting.enabled": false,
-    "sqltools.connections": [
-        {
-            "previewLimit": 50,
-            "driver": "SQLite",
-            "name": "tramshed-test",
-            "database": "${workspaceFolder:Tramshed}/db1.db"
-        }
-    ],
-    "sqltools.useNodeRuntime": true
+    "python.linting.enabled": false
 }
