@@ -77,6 +77,8 @@ class LoginSchema(Schema):
         unknown = EXCLUDE
 
 
+
+
 class ResetPasswordSchema(Schema):
     email = fields.Email(
         required=True, error_messages={"requires": "required", "invalid": "invalid"}
@@ -147,9 +149,15 @@ def user_homepage(user):
         db_locations = db_locations[:5]
         db_bookings = Booking.getAll()
         pending_bookings = Booking.getAll(status="PENDING")
-        db_reviews = Review.getAll(user_id=user['id'])
+        db_reviews = Review.getAll(user_id=user["id"])
         return render_template(
-            "account/index.html", user=user, bookings=db_bookings, locations=db_locations, total_reviews=len(db_reviews), pending_bookings=len(pending_bookings), page="/"
+            "account/index.html",
+            user=user,
+            bookings=db_bookings,
+            locations=db_locations,
+            total_reviews=len(db_reviews),
+            pending_bookings=len(pending_bookings),
+            page="/",
         )
 
 
@@ -178,24 +186,6 @@ def user_bookings(user):
         bookings=db_bookings,
         user=user,
     )
-
-
-@app.route("/booking/<id>/cancel", methods=["POST", "GET"])
-@ensure_login
-def booking_deletion(user, id):
-    db_booking = Booking.get(id)
-    if db_booking == None:
-        return "Not found", 404
-    if request.method == "GET":
-        return render_template("booking/cancel.html", user=user, booking=db_booking)
-    if request.method == "POST":
-        reason = request.form.get("reason")
-        if reason == None:
-            return "reason required", 400
-
-        Booking.update(db_booking["id"], status="CANCELLED", cancellation_reason=reason)
-
-        return "/account/bookings"
 
 
 @app.route("/location/<id>/booking", methods=["POST", "GET"])
@@ -265,7 +255,25 @@ def booking_confirmation(user, id):
     return render_template("booking/confirmation.html", user=user, booking=db_booking)
 
 
-@app.route("/auth/reset", methods=["GET", "POST"])
+@app.route("/booking/<id>/cancel", methods=["POST", "GET"])
+@ensure_login
+def booking_deletion(user, id):
+    db_booking = Booking.get(id)
+    if db_booking == None:
+        return "Not found", 404
+    if request.method == "GET":
+        return render_template("booking/cancel.html", user=user, booking=db_booking)
+    if request.method == "POST":
+        reason = request.form.get("reason")
+        if reason == None:
+            return "reason required", 400
+
+        Booking.update(db_booking["id"], status="CANCELLED", cancellation_reason=reason)
+
+        return "/account/bookings"
+
+
+@app.route("/auth/reset", methods=["GET",  "POST"])
 def reset_password():
     if request.method == "GET":
         return render_template("account/reset.html")

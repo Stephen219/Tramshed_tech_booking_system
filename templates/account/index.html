@@ -3,7 +3,7 @@
   class="grid justify-items-center w-full grid-flow-row grid-cols-1 min-[900px]:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 min-[1700px]:grid-cols-3 max-h-screen gap-12 overflow-y-aut px-6 py-16 sm:p-16"
 >
   <div
-    class="flex flex-col space-y-4 rounded-2xl p-6 w-full max-w-[30rem] h-full max-h-[30rem] bg-dark-300"
+    class="flex flex-col space-y-4 rounded-2xl p-6 w-full max-w-[30rem] min-h-[20rem] h-full max-h-[30rem] bg-dark-300"
   >
     <div class="flex justify-between w-full">
       <h2 class="text-2xl text-white">Bookings</h2>
@@ -183,25 +183,27 @@
     </div>
   </div>
   <div
-    class="flex flex-col space-y-4 rounded-2xl p-6 w-full max-w-[30rem] h-full max-h-[30rem] border border-dark-300"
+    class="flex flex-col space-y-4 rounded-2xl p-6 w-full max-w-[30rem] min-h-[20rem] h-full max-h-[30rem] border border-dark-300"
   >
     <div class="flex justify-between w-full">
       <h2 class="text-2xl">Locations</h2>
       <a class="underline" href="/locations">view all</a>
     </div>
-    {% for location in locations %}
-    <div
-      class="flex items-center justify-between w-full p-2 border rounded-lg shadow border-dark-300"
-    >
-      <a href="/location/{{location.id}}/booking" class="flex space-x-3">
-        <img src="{{location.main_photo}}" class="max-h-11 h-full w-auto rounded aspect-[4/3]" />
-        <div class="flex flex-col justify-between h-full">
-          <h3>{{location.name}}</h3>
-          <span class="text-sm line-clamp-1">{{location.address}}</span>
-        </div>
-      </a>
+    <div class="flex flex-col w-full h-full space-y-4 overflow-y-auto">
+      {% for location in locations %}
+      <div
+        class="flex items-center justify-between w-full p-2 border rounded-lg shadow border-dark-300"
+      >
+        <a href="/location/{{location.id}}/booking" class="flex space-x-3">
+          <img src="{{location.main_photo}}" class="max-h-11 h-full w-auto rounded aspect-[4/3]" />
+          <div class="flex flex-col justify-between h-full">
+            <h3>{{location.name}}</h3>
+            <span class="text-sm line-clamp-1">{{location.address}}</span>
+          </div>
+        </a>
+      </div>
+      {% endfor %}
     </div>
-    {% endfor %}
   </div>
   <div class="flex flex-col space-y-8 w-full max-w-[30rem] h-full max-h-[30rem]">
     <div class="flex items-center w-full h-full p-8 space-x-6 border rounded-2xl border-dark-300">
@@ -302,103 +304,5 @@
       </svg>
     </div>
   </div>
-  <!-- <div class="flex justify-between">
-    <div class="flex flex-wrap">
-      <div
-        class="flex flex-col items-center w-48 h-48 p-4 space-y-4 border rounded shadow border-black-300"
-      >
-        <span class="font-bold">Add Bookings</span>
-        <a href="/locations">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="64"
-            height="64"
-            viewBox="0 0 24 24"
-            fill="none"
-          >
-            <path
-              d="M6.7 18H4.15C2.72 18 2 17.28 2 15.85V4.15C2 2.72 2.72 2 4.15 2h4.3c1.43 0 2.15.72 2.15 2.15V6"
-              stroke="black"
-              stroke-width="1.5"
-              stroke-miterlimit="10"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            ></path>
-            <path
-              d="M17.37 8.42v11.16c0 1.61-.8 2.42-2.41 2.42H9.12c-1.61 0-2.42-.81-2.42-2.42V8.42C6.7 6.81 7.51 6 9.12 6h5.84c1.61 0 2.41.81 2.41 2.42Z"
-              stroke="black"
-              stroke-width="1.5"
-              stroke-miterlimit="10"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            ></path>
-            <path
-              d="M13.4 6V4.15c0-1.43.72-2.15 2.15-2.15h4.3C21.28 2 22 2.72 22 4.15v11.7c0 1.43-.72 2.15-2.15 2.15h-2.48M10 11h4M10 14h4M12 22v-3"
-              stroke="black"
-              stroke-width="1.5"
-              stroke-miterlimit="10"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            ></path>
-          </svg>
-        </a>
-      </div>
-    </div>
-    <div class="flex-wrap">
-      <div
-        class="flex flex-col items-center w-48 h-48 p-4 space-y-4 border rounded shadow border-black-300"
-      >
-        <span class="font-bold">Reviews</span>
-        <a href="bookings/review">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="64"
-            height="64"
-            viewBox="0 0 24 24"
-            fill="none"
-          >
-            <path
-              d="M22 16.74V4.67c0-1.2-.98-2.09-2.17-1.99h-.06c-2.1.18-5.29 1.25-7.07 2.37l-.17.11c-.29.18-.77.18-1.06 0l-.25-.15C9.44 3.9 6.26 2.84 4.16 2.67 2.97 2.57 2 3.47 2 4.66v12.08c0 .96.78 1.86 1.74 1.98l.29.04c2.17.29 5.52 1.39 7.44 2.44l.04.02c.27.15.7.15.96 0 1.92-1.06 5.28-2.17 7.46-2.46l.33-.04c.96-.12 1.74-1.02 1.74-1.98ZM12 5.49v15M7.75 8.49H5.5M8.5 11.49h-3"
-              stroke="black"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            ></path>
-          </svg>
-        </a>
-      </div>
-    </div>
-    <div class="flex-wrap">
-      <div
-        class="flex flex-col items-center w-48 h-48 space-y-4 border rounded shadow items center border-black-300"
-      >
-        <span class="font-bold">Manage My Bookings</span>
-        <a href="account/bookings">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="64"
-            height="64"
-            viewBox="0 0 24 24"
-            fill="none"
-          >
-            <path
-              d="M22 12c0 5.52-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2s10 4.48 10 10Z"
-              stroke="black"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            ></path>
-            <path
-              d="m15.71 15.18-3.1-1.85c-.54-.32-.98-1.09-.98-1.72v-4.1"
-              stroke="black"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            ></path>
-          </svg>
-        </a>
-      </div>
-    </div>
-  </div> -->
 </main>
 {% endblock _content %}

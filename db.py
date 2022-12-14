@@ -156,6 +156,7 @@ class Location:
             "id": nanoid.generate(),
             "name": data["name"],
             "status": "AVAILABLE",
+            "opening_hours": data["opening_hours"],
             "featured": data["featured"],
             "address": data["address"],
             "main_photo": data["main_photo"],
@@ -166,8 +167,9 @@ class Location:
             "email": data["email"],
             "phone_number": data["phone_number"],
             "checkin_instructions": data["checkin_instructions"],
-            "features": data["features"],
         }
+        if "features" in data:
+            parsed_data["features"] = data["features"]
         [conn, cur] = get_db()
         cols = ", ".join(parsed_data.keys())
         placeholders = ":" + ", :".join(parsed_data.keys())
@@ -374,3 +376,10 @@ class Review:
         conn.close()
 
         return joined_reviews
+    
+    def delete(id: str):
+        [conn, cur] = get_db()
+        sql = "DELETE FROM review WHERE id=?"
+        cur.execute(sql, (id,))
+        conn.commit()
+        conn.close()
