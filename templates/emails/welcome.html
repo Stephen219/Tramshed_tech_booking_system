@@ -1,0 +1,29 @@
+{% extends "base.html" %} {% block content %}
+<div class="flex flex-col min-h-full">
+    <div class="flex flex-col justify-between">
+        {{ macros.logo(class="h-20") }}
+    </div>
+    <div class="flex flex-col justify-between">
+        <h1 class="text-lg font-bold">Welcome</h1>
+        <p class="font-light">Welcome to our family !!<span class="font-bold">{{user.first_name}}</span> <span
+                class="font-bold">{{user.last_name}}</span></p>
+        <span class="text-base font-bold">CONFORMATION EMAIL</span>
+        <span class="font-light">confirmation of user {{user.first_name}} of email <span
+                class="font-bold">{{user.email}}</span> has joined our Tramshed-Tech Family!!</span>
+        <div class="items-center">
+            <p class="font-light">please note that this is your unique<span class="font-bold">user_id{{user.id}}</span></p>
+            <p class="font-light">To access your account visit our website.</p>
+            <p class="font-light">click the <span class="font-bold">login button</span> where you will be redirected to
+                our login page.</p>
+            <p class="font-light">enter your email and password and you are ready to go!!.</p>
+            <p class="font-light">To book our facilities:
+                click the add bookings button on the dashboard where you will be directed to the bookings page.</p>
+            <p class="font-light">To view your bookings, click the manage button where you will be redirected to the
+                booking-management page.
+                here you can cancel your bookings.
+            </p>
+            For any queries and information,visit our site where you will any additional assistance.
+        </div>
+    </div>
+</div>
+{% endblock %}

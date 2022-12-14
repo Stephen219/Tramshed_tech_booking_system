@@ -59,7 +59,6 @@ def location_page(user):
     db_locations = Location.getAll(status='AVAILABLE')
     return render_template("locations.html", user=user, data=db_locations)
 
-
 import user
 import admin
 
