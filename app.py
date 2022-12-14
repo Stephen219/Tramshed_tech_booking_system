@@ -59,12 +59,6 @@ def location_page(user):
     db_locations = Location.getAll(status='AVAILABLE')
     return render_template("locations.html", user=user, data=db_locations)
 
-@app.get("/emails/<id>")
-@use_user
-def email(user,id):
-    db_booking=Booking.get(id)
-    return render_template("emails/approve.html", booking=db_booking, user=user)
-
 import user
 import admin
 
