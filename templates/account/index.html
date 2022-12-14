@@ -143,10 +143,7 @@
               <span class="text-sm">{{booking.checkin_date.strftime('%d-%m-%Y')}}</span>
             </div>
           </div>
-          <span
-            class="font-light lowercase rounded {% if booking.status=='PENDING' %}bg-[#F7CBCB]{% elif booking.status=='APPROVED' %}bg-[#CBF7D5]{%elif booking.status=='DECLINED' %} bg-[#f47373]{%elif booking.status=='CANCELLED' %} bg-[#ba68c8]{% endif %}"
-            >{{booking.status}}</span
-          >
+          {{ macros.BookingStatus(booking.status) }}
         </div>
         {% endfor %} {% if bookings|length == 0 %}
         <div class="flex flex-col items-center pt-6 space-y-8">
