@@ -349,8 +349,8 @@ def manage_reviews(admin, id):
 @app.get("/_/members")
 @ensure_login
 def view_members(admin):
-    db_users = User.query.all()
-    return render_template("admin/members.html", users=db_users, admin=admin)
+    db_users = User.getAll()
+    return render_template("admin/members.html", page='/members', users=db_users, admin=admin)
 
 
 @app.get("/_/settings")
