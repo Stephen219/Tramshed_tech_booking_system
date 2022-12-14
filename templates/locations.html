@@ -1,119 +1,201 @@
-{% extends "layout.html" %}
-{% block _content %}
-  <div class="pb-16 mx-6 md:pt-4 xl:pt-8 lg:pt-12">
-    <h1 class="mb-6 text-4xl font-bold text-center sm:text-5xl sm:mb-8 xl:mb-16">Locations</h1>
-    <div class="flex flex-col items-center mx-auto space-y-8">
-      {% for location in data %}
-        <div id="{{ location.name }}"
-             class="flex min-[1366px]:justify-between max-[1366px]:max-w-4xl min-[1366px]:w-full p-4 min-[320px]:p-8 md:p-12 xl:p-14 min-[1366px]:p-12 space-x-8 bg-white border rounded-lg shadow-md border-black-100">
-          <div class="flex flex-col justify-between min-h-full space-y-6">
-            <div class="flex flex-col space-y-8">
-              <div class="flex flex-col space-y-2">
-                <div class ="flex flex-row justify-between">
-                  <div class="text-3xl font-semibold">{{ location.name }}</div>
-                  <div class="flex justify-end p-2 text-lg font-semibold text-lowercase rounded-lg {% if location.tatus=='Available' %}bg-[#CBF7D5]{% elif location.tatus=='Unavailable' %} bg-[#f47373]{% endif %}">
-                    {{ location.status }}
-                  </div>
-                </div>
-                <div class="flex flex-wrap items-center gap-3">
-                  <a class="flex items-center px-2 py-1 space-x-2 text-xs border rounded focus-ring border-dark-200"
-                     href="{{ location.maps }}"
-                     target="_blank">
-                    <svg width="12"
-                         height="12"
-                         viewBox="0 0 12 12"
-                         fill="none"
-                         xmlns="http://www.w3.org/2000/svg">
-                      <path
-                      d="M5.99994 6.715C6.2048 6.715 6.40766 6.67465 6.59693 6.59625C6.7862 6.51786 6.95817 6.40295 7.10303 6.25809C7.24789 6.11323 7.3628 5.94126 7.44119 5.75199C7.51959 5.56272 7.55994 5.35986 7.55994 5.155C7.55994 4.95014 7.51959 4.74728 7.44119 4.55802C7.3628 4.36875 7.24789 4.19677 7.10303 4.05191C6.95817 3.90706 6.7862 3.79215 6.59693 3.71375C6.40766 3.63535 6.2048 3.595 5.99994 3.595C5.5862 3.595 5.18941 3.75936 4.89685 4.05191C4.6043 4.34447 4.43994 4.74126 4.43994 5.155C4.43994 5.56874 4.6043 5.96553 4.89685 6.25809C5.18941 6.55064 5.5862 6.715 5.99994 6.715V6.715Z"
-                      stroke="#2C2C2C"
-                      />
-                      <path
-                      d="M1.80985 4.245C2.79485 -0.0849988 9.20986 -0.0799987 10.1899 4.25C10.7649 6.79 9.18486 8.94 7.79986 10.27C7.31589 10.7368 6.66973 10.9976 5.99736 10.9976C5.32498 10.9976 4.67882 10.7368 4.19486 10.27C2.81485 8.94 1.23485 6.785 1.80985 4.245V4.245Z"
-                      stroke="#2C2C2C"
-                      />
-                    </svg>
-                    <span class="whitespace-nowrap">{{ location.address }}</span>
-                  </a>
-                  <a class="flex items-center px-2 py-1 space-x-2 text-xs underline border rounded focus-ring border-dark-300"
-                     href="{{ location.website }}"
-                     target="_blank">
-                    <svg width="12"
-                         height="12"
-                         viewBox="0 0 12 12"
-                         fill="none"
-                         xmlns="http://www.w3.org/2000/svg">
-                      <g clip-path="url(#clip0_3_629)">
-                      <path
+{% extends "layout.html" %} {% block _content %}
+<div class="pb-16 mx-6 md:pt-4 xl:pt-8 lg:pt-12">
+  <h1 class="mb-6 text-4xl font-bold text-center sm:text-5xl sm:mb-8 xl:mb-16">Locations</h1>
+  <div class="flex flex-col items-center mx-auto space-y-8">
+    {% for location in data %}
+    <div
+      id="{{ location.name }}"
+      class="flex min-[1366px]:justify-between max-[1366px]:max-w-4xl min-[1366px]:w-full p-4 min-[320px]:p-8 md:p-12 xl:p-14 min-[1366px]:p-12 space-x-8 bg-white border rounded-lg shadow-md border-black-100"
+    >
+      <div class="flex flex-col justify-between min-h-full space-y-6">
+        <div class="flex flex-col space-y-8">
+          <div class="flex flex-col space-y-2">
+            <span class="text-3xl font-semibold">{{ location.name }}</span>
+            <div class="flex flex-wrap items-center gap-3">
+              <a
+                class="flex items-center px-2 py-1 space-x-2 text-xs border rounded focus-ring border-dark-200"
+                href="{{ location.maps }}"
+                target="_blank"
+              >
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 12 12"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M5.99994 6.715C6.2048 6.715 6.40766 6.67465 6.59693 6.59625C6.7862 6.51786 6.95817 6.40295 7.10303 6.25809C7.24789 6.11323 7.3628 5.94126 7.44119 5.75199C7.51959 5.56272 7.55994 5.35986 7.55994 5.155C7.55994 4.95014 7.51959 4.74728 7.44119 4.55802C7.3628 4.36875 7.24789 4.19677 7.10303 4.05191C6.95817 3.90706 6.7862 3.79215 6.59693 3.71375C6.40766 3.63535 6.2048 3.595 5.99994 3.595C5.5862 3.595 5.18941 3.75936 4.89685 4.05191C4.6043 4.34447 4.43994 4.74126 4.43994 5.155C4.43994 5.56874 4.6043 5.96553 4.89685 6.25809C5.18941 6.55064 5.5862 6.715 5.99994 6.715V6.715Z"
+                    stroke="#2C2C2C"
+                  />
+                  <path
+                    d="M1.80985 4.245C2.79485 -0.0849988 9.20986 -0.0799987 10.1899 4.25C10.7649 6.79 9.18486 8.94 7.79986 10.27C7.31589 10.7368 6.66973 10.9976 5.99736 10.9976C5.32498 10.9976 4.67882 10.7368 4.19486 10.27C2.81485 8.94 1.23485 6.785 1.80985 4.245V4.245Z"
+                    stroke="#2C2C2C"
+                  />
+                </svg>
+                <span class="whitespace-nowrap">{{ location.address }}</span>
+              </a>
+              <a
+                class="flex items-center px-2 py-1 space-x-2 text-xs underline border rounded focus-ring border-dark-300"
+                href="{{ location.website }}"
+                target="_blank"
+              >
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 12 12"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <g clip-path="url(#clip0_3_629)">
+                    <path
                       d="M6 11C8.7615 11 11 8.7615 11 6C11 3.2385 8.7615 1 6 1C3.2385 1 1 3.2385 1 6C1 8.7615 3.2385 11 6 11Z"
                       stroke="#2C2C2C"
                       stroke-linecap="round"
                       stroke-linejoin="round"
-                      />
-                      <path
+                    />
+                    <path
                       d="M3.99979 1.5H4.49979C3.52481 4.42078 3.52481 7.57922 4.49979 10.5H3.99979M7.49979 1.5C8.47478 4.42078 8.47478 7.57922 7.49979 10.5"
                       stroke="#2C2C2C"
                       stroke-linecap="round"
                       stroke-linejoin="round"
-                      />
-                      <path
+                    />
+                    <path
                       d="M1.5 8.00004V7.50004C4.42078 8.47502 7.57922 8.47502 10.5 7.50004V8.00004M1.5 4.50004C4.42078 3.52505 7.57922 3.52505 10.5 4.50004"
                       stroke="#2C2C2C"
                       stroke-linecap="round"
                       stroke-linejoin="round"
-                      />
-                      </g>
-                      <defs>
-                      <clipPath id="clip0_3_629">
+                    />
+                  </g>
+                  <defs>
+                    <clipPath id="clip0_3_629">
                       <rect width="12" height="12" fill="white" />
-                      </clipPath>
-                      </defs>
-                    </svg>
-                    <span class="whitespace-nowrap">{{ location.website.replace("https://", "").replace("http://", "")}}</span>
-                  </a>
-                  <dt class="sr-only">
-                    Reviews
-                  </dt>
-                </div>
-              </div>
-              <p class="text-lg">{{ location.description }}</p>
-              <div class="flex flex-row space-x-12 p">
-                <div class="flex flex-col space-y-2 font-light">
-                
-                  <span>Opening Hours: {{ location.opening_hours }}</span>
-                {% if location.email %}
-                  <span>
-                    Email: <a href="mailto:{{ location.email }}" class="underline">{{ location.email }}</a>
-                  </span>
-                {% endif %}
-                {% if location.phone_number %}
-                  <span>
-                    Tel:
-                    <a href="tel:{{ location.phone_number }}" class="underline"> {{ location.phone_number }} </a
-                      >
-                    </span>{% endif %}
-                    
-                  </div>
-                <span class="flex flex-col pl-4">
-                  <span>Features:</span>
-                  <span>.{{ location.features }}
-                    
-                  </span>   
-                </span> 
-                </div>
-                <img alt=" {{ location.name }} main photo"
-                     src=" {{ location.main_photo }}"
-                     class="object-cover w-full h-auto rounded aspect-video min-[1366px]:hidden"/>
-              </div>
-              <a href="/location/{{ location.id }}/booking"
-                 class="flex items-center h-10 px-8 py-1 font-semibold text-white rounded bg-dark w-max">Book now</a
+                    </clipPath>
+                  </defs>
+                </svg>
+                <span class="whitespace-nowrap"
+                  >{{ location.website.replace("https://", "").replace("http://", "")}}</span
                 >
-              </div>
-              <img alt="{{ location.name }} main photo"
-                   src="{{ location.main_photo }}"
-                   class="object-cover w-auto h-full max-h-[29rem] rounded aspect-[4/3] min-[1366px]:block hidden"/>
+              </a>
+              <dt class="sr-only">Reviews</dt>
             </div>
-          {% endfor %}
+          </div>
+          <div class="flex flex-col space-y-4">
+            <p class="text-lg">{{ location.description }}</p>
+            <div class="flex flex-col space-y-1 font-light">
+              <span>Opening Hours: {{ location.opening_hours }}</span>
+              {% if location.email %}
+              <span>
+                Email:
+                <a href="mailto:{{ location.email }}" class="underline">{{ location.email }}</a>
+              </span>
+              {% endif %} {% if location.phone_number %}
+              <span>
+                Tel:
+                <a href="tel:{{ location.phone_number }}" class="underline">
+                  {{ location.phone_number }}
+                </a> </span
+              >{% endif %}
+            </div>
+            <div class="flex flex-wrap gap-3">
+              {% if location.features != None %} {% set features = location.features.split(',') %}
+              {% for feature in features %}
+              <div class="px-3 py-1 bg-[#F5F5F5] h-max rounded flex items-center space-x-2">
+                {% if 'wifi' in feature %}
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 12 12"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <g clip-path="url(#clip0_3_451)">
+                    <path
+                      d="M3 4.98002C4.815 3.57502 7.185 3.57502 9 4.98002M3.8 6.52502C5.135 5.49502 6.87 5.49502 8.205 6.52502M4.9 8.07002C5.565 7.55502 6.435 7.55502 7.1 8.07002"
+                      stroke="black"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M4.5 11H7.5C10 11 11 10 11 7.5V4.5C11 2 10 1 7.5 1H4.5C2 1 1 2 1 4.5V7.5C1 10 2 11 4.5 11Z"
+                      stroke="black"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </g>
+                  <defs>
+                    <clipPath id="clip0_3_451">
+                      <rect width="12" height="12" fill="white" />
+                    </clipPath>
+                  </defs>
+                </svg>
+                {% elif 'coffee' in feature|lower %}
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 12 12"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <g clip-path="url(#clip0_3_456)">
+                    <path
+                      d="M2.75 2V1.125M4.75 2V1.125M6.75 2V1.125M1 6H8.755M8.895 5.235V8.895C8.895 9.45328 8.67322 9.9887 8.27846 10.3835C7.8837 10.7782 7.34828 11 6.79 11H3.105C1.945 11 1 10.055 1 8.895V5.235C1 4.67672 1.22178 4.1413 1.61654 3.74654C2.0113 3.35178 2.54672 3.13 3.105 3.13H6.79C7.95 3.13 8.895 4.075 8.895 5.235V5.235ZM11 6.58C11 7.74 10.055 8.685 8.895 8.685V4.475C9.17143 4.475 9.44516 4.52945 9.70055 4.63523C9.95594 4.74102 10.188 4.89607 10.3835 5.09154C10.5789 5.28701 10.734 5.51906 10.8398 5.77445C10.9456 6.02984 11 6.30357 11 6.58V6.58Z"
+                      stroke="black"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </g>
+                  <defs>
+                    <clipPath id="clip0_3_456">
+                      <rect width="12" height="12" fill="white" />
+                    </clipPath>
+                  </defs>
+                </svg>
+                {% elif 'vending' in feature %}
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 12 12"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <g clip-path="url(#clip0_3_460)">
+                    <path
+                      d="M0 4.5C0 3.67266 0.672656 3 1.5 3H1.5375C1.71094 2.14453 2.46797 1.5 3.375 1.5C3.72656 1.5 4.05469 1.59609 4.33359 1.7625C4.64531 1.1625 5.27578 0.75 6 0.75C6.72422 0.75 7.35469 1.1625 7.66641 1.7625C7.94531 1.59609 8.27344 1.5 8.625 1.5C9.53203 1.5 10.2891 2.14453 10.4625 3H10.5C11.3273 3 12 3.67266 12 4.5C12 4.77422 11.9273 5.02969 11.7984 5.25H0.201563C0.0726563 5.02969 0 4.77422 0 4.5ZM0 6.64219C0 6.28828 0.288281 6 0.642187 6H11.3578C11.7117 6 12 6.28828 12 6.64219C12 8.29453 10.9594 9.70547 9.49922 10.2539L9.45703 10.5938C9.41016 10.9688 9.09141 11.25 8.71172 11.25H3.28594C2.90859 11.25 2.5875 10.9688 2.54063 10.5938L2.49844 10.2563C1.04062 9.70547 0 8.29453 0 6.64219Z"
+                      fill="black"
+                    />
+                  </g>
+                  <defs>
+                    <clipPath id="clip0_3_460">
+                      <rect width="12" height="12" fill="white" />
+                    </clipPath>
+                  </defs>
+                </svg>
+                {% endif %}
+                <span class="text-sm">{{feature}}</span>
+              </div>
+              {% endfor %} {% endif %}
+            </div>
+          </div>
+          <img
+            alt=" {{ location.name }} main photo"
+            src=" {{ location.main_photo }}"
+            class="object-cover w-full h-auto rounded aspect-video min-[1366px]:hidden"
+          />
         </div>
+        <a
+          href="/location/{{ location.id }}/booking"
+          class="flex items-center h-10 px-8 py-1 font-semibold text-white rounded bg-dark w-max"
+          >Book now</a
+        >
       </div>
-    {% endblock %}
+      <img
+        alt="{{ location.name }} main photo"
+        src="{{ location.main_photo }}"
+        class="object-cover w-auto h-full max-h-[29rem] rounded aspect-[4/3] min-[1366px]:block hidden"
+      />
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

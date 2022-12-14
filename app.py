@@ -35,7 +35,7 @@ def use_user(func):
 @app.get("/")
 @use_user
 def homepage(user):
-    db_locations = Location.getAll(featured=1)
+    db_locations = Location.getAll(featured=1, status='AVAILABLE')
     edited_locations = []
     for location in db_locations:
         location = dict(location)
@@ -56,7 +56,7 @@ def homepage(user):
 @app.get("/locations")
 @use_user
 def location_page(user):
-    db_locations = Location.getAll()
+    db_locations = Location.getAll(status='AVAILABLE')
     return render_template("locations.html", user=user, data=db_locations)
 
 

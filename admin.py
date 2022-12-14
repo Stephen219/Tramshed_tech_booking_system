@@ -100,6 +100,9 @@ class UpdateLocationSchema(Schema):
     address = fields.String(
         required=False,
     )
+    features = fields.String(
+        required=False,
+    )
     main_photo = fields.String(
         required=False,
     )
@@ -349,7 +352,8 @@ def view_members(admin):
 @app.get("/_/settings")
 @ensure_login
 def admin_settings(admin):
-    return render_template("admin/index.html", admin=admin, page="/settings")
+    return redirect('/_/')
+    # return render_template("admin/index.html", admin=admin, page="/settings")
 
 
 @app.get("/_/auth/logout")
