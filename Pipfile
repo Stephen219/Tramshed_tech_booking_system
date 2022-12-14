@@ -13,7 +13,6 @@ flask-session = "*"
 [dev-packages]
 black = "*"
 pylint = "*"
-djlint = "*"
 
 [requires]
 python_version = "3.11"

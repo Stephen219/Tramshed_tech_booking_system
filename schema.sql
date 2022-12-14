@@ -44,16 +44,19 @@ END;
 CREATE TABLE location (
   id TEXT PRIMARY KEY,
   name  TEXT NOT NULL,
+  featured BOOLEAN NOT NULL DEFAULT 0 CHECK (featured IN (0, 1)),
   status  TEXT NOT NULL,
   address  TEXT NOT NULL,
   main_photo  TEXT NOT NULL,
   additional_photos  TEXT NOT NULL,
+  opening_hours  TEXT NOT NULL,
   description  TEXT NOT NULL,
   website  TEXT NOT NULL,
   maps  TEXT NOT NULL,
   email  TEXT,
   phone_number  TEXT,
   checkin_instructions  TEXT NOT NULL,
+  features  TEXT,
   -- bookings relationship
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP

@@ -1,8 +1,8 @@
 {% extends "base.html" %} {% block content %}
 <div class="flex w-full">
-  <div class="h-screen absolute w-full bg-[rgba(0,0,0,0.25)] hidden" id="bg-overlay"></div>
+  <div class="h-full absolute w-full bg-[rgba(0,0,0,0.25)] hidden" id="bg-overlay"></div>
   <aside
-    class="absolute lg:relative z-50 transition-transform ease-in -translate-x-[16rem] lg:translate-x-0 h-screen bg-[#F3F1EF] flex flex-col justify-between w-full max-w-[16rem] py-16 rounded-r-2xl"
+    class="absolute lg:relative z-50 transition-transform ease-in -left-[16rem] lg:left-0 h-screen bg-[#F3F1EF] flex flex-col justify-between w-full max-w-[16rem] py-16 rounded-r-2xl"
     id="side-navbar"
   >
     <div class="flex flex-col space-y-16">
@@ -31,7 +31,7 @@
       </div>
       <div class="flex flex-col items-center space-y-3">
         <img alt="user profile picture" src="{{ user.avatar }}" class="w-auto h-28" />
-        <span class="text-xl font-semibold">{{ user.first_name }} {{ user.last_name }}</span>
+        <span class="text-xl font-semibold capitalize">{{ user.first_name }} {{ user.last_name }}</span>
       </div>
       <div class="flex flex-col w-48 mx-auto space-y-3 transition-colors">
         <a

@@ -5,7 +5,7 @@ from marshmallow import Schema, fields, validate, EXCLUDE, ValidationError
 from user import PASSWORD_REGEX
 
 # from db import db, Admin, Location, Booking , User
-from db import Admin, Location, Booking, User , Review
+from db import Admin, Location, Booking, User, Review
 import bcrypt
 
 # Schema validation from https://stackoverflow.com/a/61648076
@@ -78,7 +78,67 @@ class CreateLocationSchema(Schema):
         required=True, error_messages={"required": "required", "invalid": "invalid"}
     )
     features = fields.String(
-        required=True, error_messages={"required": "required", "invalid": "invalid"}
+        required=False, error_messages={"required": "required", "invalid": "invalid"}
+    )
+
+    class Meta:
+        # Strip unknown values from output
+        unknown = EXCLUDE
+
+
+class UpdateLocationSchema(Schema):
+    name = fields.String(
+        required=False,
+    )
+    featured = fields.Integer(
+        required=False,
+        validate=[validate.Range(min=0, max=1, error="Value must be between 1 and 0")],
+    )
+    status = fields.String(
+        required=False, validate=[validate.OneOf(["AVAILABLE", "UNAVAILABLE"])]
+    )
+    address = fields.String(
+        required=False,
+    )
+    features = fields.String(
+        required=False,
+    )
+    main_photo = fields.String(
+        required=False,
+    )
+    additional_photos = fields.String(
+        required=False,
+    )
+    description = fields.String(
+        required=False,
+    )
+    website = fields.String(
+        required=False,
+    )
+    maps = fields.String(
+        required=False,
+    )
+    email = fields.String(
+        required=False,
+    )
+    phone_number = fields.String(
+        required=False,
+    )
+    opening_hours = fields.String(
+        required=False,
+    )
+    checkin_instructions = fields.String(
+        required=False,
+    )
+
+    class Meta:
+        # Strip unknown values from output
+        unknown = EXCLUDE
+
+
+class UpdateBookingSchema(Schema):
+    status = fields.String(
+        required=True, validate=[validate.OneOf(["CONFIRMED", "DECLINED"])]
     )
 
     class Meta:
@@ -110,52 +170,85 @@ def ensure_login(func):
 @ensure_login
 def admin_homepage(admin):
     db_users = User.getAll()
-    db_locations = Location.getAll()
     db_bookings = Booking.getAll()
+    db_locations = Location.getAll()
+    db_pending_bookings = Booking.getAll(status="PENDING")
     return render_template(
         "admin/index.html",
         total_users=len(db_users),
-        total_locations=len(db_locations),
-        total_bookings=len(db_bookings),
+        bookings=db_bookings,
+        locations=db_locations,
+        pending_bookings=len(db_pending_bookings),
         admin=admin,
         page="/",
     )
 
 
-@app.get("/_/bookings")
-@ensure_login
-def admin_view_bookings(admin):
-    db_bookings = Booking.getAll()
-    return render_template(
-        "admin/bookings table.html", admin=admin, page="/bookings", bookings=db_bookings
-    )
-
-
-@app.get("/_/settings")
-@ensure_login
-def admin_settings(admin):
-    return render_template("admin/index.html", admin=admin, page="/settings")
-
-@app.get("/_/members")
-@ensure_login
-def view_members(admin):
-    db_users= User.getAll()
-    return render_template("admin/members.html", users=db_users, admin=admin)
-
 @app.get("/_/locations")
 @ensure_login
 def admin_view_locations(admin):
     db_locations = Location.getAll()
+    joined_locations = []
+    for location in db_locations:
+        joined_location = dict(location)
+        bookings = Booking.getAll(location_id=location["id"])
+        reviews = [i for i in bookings if not (i["review"] == None)]
+        joined_location["avg_rating"] = 0
+        if len(reviews) > 0:
+            joined_location["avg_rating"] = sum(
+                review["rating"] for review in reviews
+            ) / len(reviews)
+        joined_location["total_bookings"] = len(bookings)
+        joined_locations.append(joined_location)
     return render_template(
-        "admin/locations.html", admin=admin, page="/locations", locations=db_locations
+        "admin/locations/index.html",
+        admin=admin,
+        page="/locations",
+        locations=joined_locations,
     )
+
+
+@app.route("/_/location/<id>", methods=["GET", "POST", "PATCH", "DELETE"])
+@ensure_login
+def confirm_details(admin, id):
+    if request.method == "DELETE":
+        db_location = Location.get(id)
+        if db_location == None:
+            return "Not found", 404
+        Location.delete(db_location["id"])
+
+        return "success"
+
+    if request.method == "GET":
+        db_location = Location.get(id)
+        db_bookings = Booking.getAll(location_id=db_location["id"])
+        reviews = [
+            booking["review"]
+            for booking in db_bookings
+            if not (booking["review"] == None)
+        ]
+        return render_template(
+            "admin/locations/id.html",
+            page="/locations",
+            location=db_location,
+            reviews=reviews,
+        )
+
+    if request.method == "PATCH":
+        schema = UpdateLocationSchema()
+        try:
+            body = schema.load(request.json)
+        except ValidationError as err:
+            return jsonify(err.messages), 400  # Return errors in json
+        Location.update(id, **body)
+        return "success"
 
 
 @app.route("/_/locations/add", methods=["GET", "POST"])
 @ensure_login
 def add_locations(admin):
     if request.method == "GET":
-        return render_template("admin/add/location.html")
+        return render_template("admin/locations/add.html")
     if request.method == "POST":
         schema = CreateLocationSchema()
         try:
@@ -165,109 +258,102 @@ def add_locations(admin):
 
         db_location = Location.new(**body)  # Turn input into db object
 
-        return "/_/locations/" + db_location["id"]
+        return "/_/location/" + db_location["id"]
 
 
-@app.route("/_/locations/<id>", methods=["GET", "POST", "DELETE"])
+@app.route("/_/bookings", methods=["GET"])
 @ensure_login
-def confirm_details(admin, id):
-    if request.method == "DELETE":
-        db_location = Location.get(id)
-        if db_location == None:
-            return "Not found", 404
-        Location.delete(db_location["id"])
-
-        return "/_/locations"
-
+def admin_all_bookings(admin):
     if request.method == "GET":
-        db_location = Location.get(id)
-        return render_template("admin/add/details.html", location=db_location)
+        sort_by = request.args.get("sort_by")
+        status = request.args.get("status")
+        if status != None:
+            db_bookings = Booking.getAll(status=status.upper())
+        else:
+            db_bookings = Booking.getAll()
+        if sort_by == "location_atoz":
+            db_bookings.sort(key=lambda x: x["location"]["name"])
+        elif sort_by == "location_ztoa":
+            db_bookings.sort(key=lambda x: x["location"]["name"], reverse=True)
+        if sort_by == "created_at_asc":
+            db_bookings.sort(key=lambda x: x["location"]["created_at_asc"])
+        elif sort_by == "created_at_desc":
+            db_bookings.sort(
+                key=lambda x: x["location"]["created_at_desc"], reverse=True
+            )
 
-@app.route("/_/reviews/<id>", methods=["GET","DELETE"])
-@ensure_login
-def manage_reviews(admin,id):
-    if request.method == "DELETE":
-        db_reviews = Review.get(id)
-        if db_reviews == None:
-            return "Not found", 404
-        Review.delete(db_reviews["id"])
-    
-        return "/_/reviews/<id>"
-    if request.method =="GET":
-        db_reviews= Review.getAll()
-    return render_template("admin/reviews.html", reviews=db_reviews)
+        edited_bookings = []
+        for booking in db_bookings:
+            edited_booking = dict(booking)
+            if edited_booking["review"] == None:
+                edited_booking["review"] = {"rating": 0}
 
+            edited_bookings.append(edited_booking)
 
-@app.route("/_/bookings/manage", methods=["GET"])
-@ensure_login
-def manage_bookings(admin):
-    if request.method == "GET":
-        db_bookings = Booking.getAll()
-        if not request.args.get("status") == None:
-            db_bookings = Booking.getAll(status=request.args.get("status"))
         return render_template(
-            "admin/bookings.html", page="/bookings/manage", bookings=db_bookings
+            "admin/bookings/index.html", page="/bookings", bookings=edited_bookings
         )
 
-@app.route("/_/bookings/manage?status=PENDING", methods=["GET"])
+
+@app.route("/_/booking/<id>", methods=["GET", "PATCH"])
 @ensure_login
-def pending_bookings(admin):
+def admin_manage_individual_booking(admin, id):
+    db_booking = Booking.get(id)
+    if db_booking == None:
+        return "Not found", 404
     if request.method == "GET":
-        return render_template("admin/bookings.html", admin=admin)
+        return render_template(
+            "admin/bookings/id.html",
+            admin=admin,
+            page="/bookings",
+            booking=db_booking,
+        )
+    if request.method == "PATCH":
+        schema = UpdateBookingSchema()
+        try:
+            body = schema.load(request.json)
+        except ValidationError as err:
+            return jsonify(err.messages), 400  # Return errors in json
+        Booking.update(db_booking["id"], **body)
+        return "success"
 
-@app.route("/_/bookings/manage?status=APPROVED", methods=["GET"])
+
+@app.get("/_/bookings/table")
 @ensure_login
-def approved_bookings(admin):
-        return render_template("admin/bookings.html")
+def admin_bookings_table(admin):
+    db_bookings = Booking.getAll()
+    return render_template(
+        "admin/bookings/table.html",
+        admin=admin,
+        page="/bookings/table",
+        bookings=db_bookings,
+    )
 
-@app.route("/_/bookings/manage?status=CANCELLED", methods=["GET"])
+
+@app.route("/_/review/<id>", methods=["DELETE"])
 @ensure_login
-def cancelled_bookings(admin):
-    if request.method == "GET":
-        return render_template("admin/bookings.html")
+def manage_reviews(admin, id):
+    db_review = Review.get(id)
+    if db_review == None:
+        return "Not found", 404
+    if request.method == "DELETE":
+        Review.delete(id)
+
+        return "success"
 
 
-@app.route("/_/bookings/declined", methods=["GET"])
+@app.get("/_/members")
 @ensure_login
-def declined_bookings(admin):
-    if request.method == "GET":
-        db_bookings = Booking.getAll(status="DECLINED")
-        if not request.args.get('status') == None:
-            db_bookings = Booking.getAll(
-                status=request.args.get('status="DECLINED"'))
-        return render_template("admin/bookings.html", bookings=db_bookings)
+def view_members(admin):
+    db_users = User.query.all()
+    return render_template("admin/members.html", users=db_users, admin=admin)
 
 
-@app.route("/_/booking/<id>/approve", methods=["POST"])
+@app.get("/_/settings")
 @ensure_login
-def approve_booking(admin, id):
-    if request.method == "POST":
-        Booking.update(id, status="APPROVED")
-        return "/_/bookings/manage"
-
-
-@app.route("/_/booking/<id>/decline", methods=["POST"])
-@ensure_login
-def decline_booking(admin, id):
-    if request.method == "POST":
-        Booking.update(id, status="DECLINED")
-        return "/_/bookings/manage"
-
-
-@app.route("/_/location/<id>/unavailable", methods=["POST"])
-@ensure_login
-def unavailable(admin, id):
-    if request.method == "POST":
-        Location.update(id, status="UNAVAILABLE")
-        return "/_/locations"
-
-
-@app.route("/_/booking/<id>/available", methods=["POST"])
-@ensure_login
-def available(admin, id):
-    if request.method == "POST":
-        Location.update(id, status="AVAILABLE")
-        return "/_/locations"
+def admin_settings(admin):
+    return redirect('/_/')
+    # return render_template("admin/index.html", admin=admin, page="/settings")
 
 
 @app.get("/_/auth/logout")

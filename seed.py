@@ -1,6 +1,6 @@
 import json
 import sqlite3
-import nanoid
+from db import Location
 import argparse
 
 
@@ -33,28 +33,8 @@ def seed_locations():
                 print("Skipping " + location["name"] + " as it already exists")
                 continue
             print("Adding " + location["name"] + " to the db")
-            # schema = CreateLocationSchema()
-            raw = location
-            values = (
-                nanoid.generate(),
-                raw["name"],
-                "AVAILABLE",
-                raw["address"],
-                raw["main_photo"],
-                raw["additional_photos"],
-                raw["description"],
-                raw["website"],
-                raw["maps"],
-                raw["email"],
-                raw["phone_number"],
-                raw["checkin_instructions"],
-            )
-            cur.execute(
-                "INSERT INTO location (id,name,status,address,main_photo,additional_photos,description,website,maps,email,phone_number,checkin_instructions) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
-                values,
-            )
-            conn.commit()
-    conn.close()
+            del location['featured']
+            Location.new(**location, featured=1)
 
 
 if __name__ == "__main__":
