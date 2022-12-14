@@ -79,8 +79,6 @@ class LoginSchema(Schema):
         unknown = EXCLUDE
 
 
-
-
 class ResetPasswordSchema(Schema):
     email = fields.Email(
         required=True, error_messages={"requires": "required", "invalid": "invalid"}
@@ -149,8 +147,8 @@ def user_homepage(user):
         db_locations = Location.getAll()
         db_locations.sort(key=lambda x: x["created_at"])
         db_locations = db_locations[:5]
-        db_bookings = Booking.getAll(user_id=user['id'])
-        pending_bookings = Booking.getAll(user_id=user['id'], status="PENDING")
+        db_bookings = Booking.getAll(user_id=user["id"])
+        pending_bookings = Booking.getAll(user_id=user["id"], status="PENDING")
         db_reviews = Review.getAll(user_id=user["id"])
         return render_template(
             "account/index.html",
@@ -185,7 +183,7 @@ def user_bookings(user):
 
     return render_template(
         "account/bookings.html",
-        page='/bookings',
+        page="/bookings",
         bookings=db_bookings,
         user=user,
     )
@@ -198,14 +196,12 @@ def location_booking(user, id):
     if db_location == None:
         return "Not found", 404
     if request.method == "GET":
-        unreviewd_bookings = Booking.getAll(user_id=user["id"], location_id=id)
         all_bookings = Booking.getAll(location_id=id)
         return render_template(
             "location/booking.html",
             user=user,
             location=db_location,
             all_bookings=all_bookings,
-            unreviewd_bookings=unreviewd_bookings,
             title="Book now",
         )
     if request.method == "POST":
@@ -227,7 +223,8 @@ def location_booking(user, id):
 @app.get("/bookings/review")
 @ensure_login
 def bookings_review(user):
-    unreviewd_bookings = Booking.getAll(user_id=user["id"], review=None)
+    db_bookings = Booking.getAll(user_id=user["id"])
+    unreviewd_bookings = [i for i in db_bookings if (i["review"] == None)]
 
     return render_template(
         "location/review.html", user=user, unreviewd_bookings=unreviewd_bookings
@@ -276,7 +273,7 @@ def booking_deletion(user, id):
         return "/account/bookings"
 
 
-@app.route("/auth/reset", methods=["GET",  "POST"])
+@app.route("/auth/reset", methods=["GET", "POST"])
 def reset_password():
     if request.method == "GET":
         return render_template("account/reset.html")
@@ -286,15 +283,16 @@ def reset_password():
             body = schema.load(request.json)
         except ValidationError as err:
             return jsonify(err.messages), 400
-        body['email'] = body['email'].lower()
+        body["email"] = body["email"].lower()
         db_user = User.getAll(email=body["email"])
         if len(db_user) < 1:
             return "success"
         db_user = db_user[0]
-        temp_pass = ''.join(random.choice(
-            string.ascii_uppercase + string.digits) for _ in range(8))
+        temp_pass = "".join(
+            random.choice(string.ascii_uppercase + string.digits) for _ in range(8)
+        )
         # reset token could be encrypted for added security
-        User.update(db_user['id'], reset_token=temp_pass)
+        User.update(db_user["id"], reset_token=temp_pass)
         print("/auth/change-password?" + "email=" + body["email"])
         print(temp_pass)
         return "success"
@@ -313,18 +311,17 @@ def change_password():
             body = schema.load(request.json)
         except ValidationError as err:
             return jsonify(err.messages), 400
-        body['email'] = body['email'].lower()
-        temp_pass = body['token']
+        body["email"] = body["email"].lower()
+        temp_pass = body["token"]
         db_user = User.getAll(email=body["email"])
         if len(db_user) < 1:
-            return 'user not found', 404
+            return "user not found", 404
         db_user = db_user[0]
-        if temp_pass != db_user['reset_token']:
+        if temp_pass != db_user["reset_token"]:
             return "Invalid reset token", 401
         salt = bcrypt.gensalt()
-        body['password'] = bcrypt.hashpw(
-            str(body['password']).encode("utf-8"), salt)
-        User.update(db_user['id'], reset_token=None, password=body['password'])
+        body["password"] = bcrypt.hashpw(str(body["password"]).encode("utf-8"), salt)
+        User.update(db_user["id"], reset_token=None, password=body["password"])
         return redirect("/auth/login")
 
 
@@ -371,8 +368,7 @@ def user_join():
         if len(db_user) > 1:  # Check if user in db already
             return jsonify({"email": ["already exists"]}), 400
         salt = bcrypt.gensalt()
-        body["password"] = bcrypt.hashpw(
-            str(body["password"]).encode("utf-8"), salt)
+        body["password"] = bcrypt.hashpw(str(body["password"]).encode("utf-8"), salt)
         body[
             "avatar"
         ] = "https://source.boringavatars.com/marble/120/{}%20{}?colors=FAD089,FF9C5B,F5634A,ED303C,3B8183".format(
