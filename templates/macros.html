@@ -110,13 +110,13 @@
 {%- endmacro %}
 {% macro BookingStatus(status) -%}
 <span
-class="font-light lowercase rounded px-3 {% if status=='PENDING' %}bg-[#F7CBCB]{% elif status=='CONFIRMED' %}bg-[#CBF7D5]{%elif status=='DECLINED' %} bg-[#f47373]{%elif status=='CANCELLED' %} bg-[#ba68c8]{% endif %}">
+class="font-light w-max lowercase rounded px-3 {% if status=='PENDING' %}bg-[#F7CBCB]{% elif status=='CONFIRMED' %}bg-[#CBF7D5]{%elif status=='DECLINED' %} bg-[#f47373]{%elif status=='CANCELLED' %} bg-[#ba68c8]{% endif %}">
 {{status}}
 </span>
 {%- endmacro %}
 {% macro LocationStatus(status) -%}
 <span
-class="font-light lowercase rounded px-3 {% if status=='UNAVAILABLE' %}bg-[#F7CBCB]{% elif status=='AVAILABLE' %}bg-[#CBF7D5]{% endif %}">
+class="font-light w-max lowercase rounded px-3 {% if status=='UNAVAILABLE' %}bg-[#F7CBCB]{% elif status=='AVAILABLE' %}bg-[#CBF7D5]{% endif %}">
 {{status}}
 </span>
 {%- endmacro %}

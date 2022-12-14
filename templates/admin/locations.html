@@ -1,6 +1,93 @@
-{% extends "admin/layout.html" %}
-{% block _content %}
-  <div class="w-full pb-16 mx-6 md:pt-4 xl:pt-8 lg:pt-12">
+{% extends "admin/layout.html" %} {% block _content %}
+<main
+  class="flex flex-col items-center w-full max-h-screen px-6 py-8 space-y-8 overflow-y-auto sm:py-16 justify-items-center md:p-16"
+>
+  <div class="flex flex-col items-center justify-between w-full space-y-4 sm:space-y-0 sm:flex-row">
+    <h1 class="text-3xl font-bold sm:text-4xl">Locations</h1>
+    <a
+      class="flex items-center h-10 px-4 space-x-4 border rounded sm:h-12 focus-ring border-dark"
+      href="/_/locations/add"
+    >
+      <span class="text-sm sm:text-base">Add location</span>
+      <svg
+        width="22"
+        height="22"
+        viewBox="0 0 22 22"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M6 11.0001H16.6667M11.3333 16.3334V5.66675"
+          stroke="#2C2C2C"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </a>
+  </div>
+  <div class="flex flex-col items-center w-full space-y-8">
+    {% for location in locations %}
+    <a href="/_/location/{{location.id}}" class="flex w-full p-3 space-x-6 overflow-hidden border shadow-md sm:p-5 focus-ring rounded-xl border-dark-200">
+      <img
+        src="{{location.main_photo}}"
+        alt="{{location.name}} main picture"
+        class="rounded-lg w-auto h-full max-h-20 sm:max-h-40 aspect-[4/3]"
+      />
+      <div class="flex flex-col justify-between h-full">
+        <div class="flex flex-col space-y-3">
+          <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+            <h2 class="text-xl font-bold sm:text-4xl line-clamp-1">{{location.name}}</h2>
+            {{ macros.LocationStatus(location.status) }}
+            {% if location.featured == 1 %}
+              <span class="px-3 bg-[#A6CFD5] font-light rounded">featured</span>
+            {% endif %}
+          </div>
+          <div
+            class="items-center hidden px-2 py-1 space-x-2 text-xs border rounded sm:flex w-max focus-ring border-dark-200"
+          >
+            <svg
+              width="12"
+              height="12"
+              viewBox="0 0 12 12"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M5.99994 6.715C6.2048 6.715 6.40766 6.67465 6.59693 6.59625C6.7862 6.51786 6.95817 6.40295 7.10303 6.25809C7.24789 6.11323 7.3628 5.94126 7.44119 5.75199C7.51959 5.56272 7.55994 5.35986 7.55994 5.155C7.55994 4.95014 7.51959 4.74728 7.44119 4.55802C7.3628 4.36875 7.24789 4.19677 7.10303 4.05191C6.95817 3.90706 6.7862 3.79215 6.59693 3.71375C6.40766 3.63535 6.2048 3.595 5.99994 3.595C5.5862 3.595 5.18941 3.75936 4.89685 4.05191C4.6043 4.34447 4.43994 4.74126 4.43994 5.155C4.43994 5.56874 4.6043 5.96553 4.89685 6.25809C5.18941 6.55064 5.5862 6.715 5.99994 6.715V6.715Z"
+                stroke="#2C2C2C"
+              />
+              <path
+                d="M1.80985 4.245C2.79485 -0.0849988 9.20986 -0.0799987 10.1899 4.25C10.7649 6.79 9.18486 8.94 7.79986 10.27C7.31589 10.7368 6.66973 10.9976 5.99736 10.9976C5.32498 10.9976 4.67882 10.7368 4.19486 10.27C2.81485 8.94 1.23485 6.785 1.80985 4.245V4.245Z"
+                stroke="#2C2C2C"
+              />
+            </svg>
+            <span class="line-clamp-1">{{ location.address }}</span>
+          </div>
+        </div>
+        <div class="items-center hidden space-x-4 sm:flex">
+          <div class="flex flex-col items-center space-y-1 w-max">
+            <span>Created At</span>
+            <span>{{location.created_at.strftime('%d-%m-%Y')}}</span>
+          </div>
+          <div class="flex flex-col items-center space-y-1 w-max">
+            <span>Bookings</span>
+            <span>{{location.total_bookings}}</span>
+          </div>
+          <div class="flex-col items-center hidden space-y-1 md:flex w-max">
+            <span>Avg Rating</span>
+            <div class="flex items-center space-x-2">
+              <span>({{ '%0.1f'| format(location.avg_rating|float) }})</span>
+              {{macros.RatingStarDisplay(location.avg_rating)}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+</main>
+<!-- <div class="w-full pb-16 mx-6 md:pt-4 xl:pt-8 lg:pt-12">
     <h1 class="mb-6 text-4xl font-bold text-center sm:text-5xl sm:mb-8 xl:mb-16">Locations</h1>
     <a href="/_/locations/add"
        class="flex items-center h-10 px-8 py-1 font-semibold text-white rounded bg-dark w-max">ADD Location</a
@@ -253,7 +340,8 @@
     </div>
     {% endfor %}
   </div>
-</div>
+</div> -->
+{% endblock _content %} {% block scripts %} {{ super() }}
 <script>
   function changeFeatured(elem) {
     const checked = elem.checked;
@@ -292,6 +380,5 @@
     };
     xhttp.send();
   }
-
 </script>
 {% endblock %}

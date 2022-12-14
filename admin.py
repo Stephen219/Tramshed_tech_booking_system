@@ -230,8 +230,23 @@ def view_members(admin):
 @ensure_login
 def admin_view_locations(admin):
     db_locations = Location.getAll()
+    joined_locations = []
+    for location in db_locations:
+        joined_location = dict(location)
+        bookings = Booking.getAll(location_id=location["id"])
+        reviews = [i for i in bookings if not (i["review"] == None)]
+        joined_location["avg_rating"] = 0
+        if len(reviews) > 0:
+            joined_location["avg_rating"] = sum(
+                review["rating"] for review in reviews
+            ) / len(reviews)
+        joined_location["total_bookings"] = len(bookings)
+        joined_locations.append(joined_location)
     return render_template(
-        "admin/locations.html", admin=admin, page="/locations", locations=db_locations
+        "admin/locations.html",
+        admin=admin,
+        page="/locations",
+        locations=joined_locations,
     )
 
 

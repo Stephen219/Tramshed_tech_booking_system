@@ -12,7 +12,7 @@
                 <div class ="flex flex-row justify-between">
                   <div class="text-3xl font-semibold">{{ location.name }}</div>
                   <div class="flex justify-end p-2 text-lg font-semibold text-lowercase rounded-lg {% if location.tatus=='Available' %}bg-[#CBF7D5]{% elif location.tatus=='Unavailable' %} bg-[#f47373]{% endif %}">
-                    {{ location.tatus }}
+                    {{ location.status }}
                   </div>
                 </div>
                 <div class="flex flex-wrap items-center gap-3">
