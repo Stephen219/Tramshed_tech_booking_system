@@ -1,75 +1,82 @@
-{% extends "layout.html" %}
-{% block _content %}
-<div class="flex flex-col ">
-    <span class="text-2xl font-bold ">Confirm Cancellation</span>
-    <div class="flex flex-row pl-3 space-x-4">
-        <div class="flex flex-col space-y-4">
-            <p class="flex-row text-base ">
-                Confirm cancellation of booking id <span class=" bg-black-100">{{ booking.id }}</span>
-            </p>
-            <p class="text-base">The following are the details of your cancelled item:</p>
-            <div class="flex flex-col space-y-2">
-                Location Name:
-                <span class="font-bold">{{ booking.location.name }}</span>
-                </br>
-                Location Address:
-                <span class="font-bold">{{ booking.location.address }}</span>
+{% extends "layout.html" %} {% block _content %}
+<form
+  onsubmit="deleteBooking(); return false"
+  id="delete-form"
+  class="flex flex-col items-center lg:mx-6 lg:mt-[15vh]"
+>
+  <div class="flex flex-col items-center gap-8 lg:flex-row max-w-7xl">
+    <div
+      class="flex flex-col items-center justify-between max-w-2xl min-h-full mx-6 space-y-8 lg:max-w-none lg:items-start"
+    >
+      <div class="flex flex-col items-center space-y-4 lg:items-start">
+        <h2 class="text-4xl font-semibold">Cancel - {{booking.location.name}}</h2>
+        <div class="flex flex-col items-center space-y-8 lg:items-start">
+          <p class="text-lg text-center lg:text-left">
+            We are so sad to hear you want to cancel your booking. Would you please let us know why
+            you are cancelling your booking.
+          </p>
+          <div class="flex flex-col space-y-2 w-[18.5rem] font-light">
+            <div class="flex items-center justify-between min-w-full">
+              <span>Booking id</span>
+              <span class="py-2 text-sm text-center rounded bg-black-100 w-52">{{booking.id}}</span>
             </div>
-            <div class="flex flex-col space-y-2">
-                <span=class"font-light">Checkin date:<span class=" bg-black-100 whitespace-nowrap">{{
-                        booking.checkin_date.strftime('%Y-%m-%d') }}</span></span>
-                    </br>
-                    </br>
-                    Checkout date:<span class="bg-black-100">{{ booking.checkout_date.strftime('%Y-%m-%d') }}</span>
+            <div class="flex items-center justify-between min-w-full">
+              <span>Check in</span>
+              <span class="py-2 text-sm text-center rounded bg-black-100 w-52"
+                >{{booking.checkin_date}}</span
+              >
             </div>
-            <div>
-                Booked on:
-                <span class="bg-black-100">{{ booking.created_at.strftime('%Y-%m-%d') }}</span>
+            <div class="flex items-center justify-between min-w-full">
+              <span>Check out</span>
+              <span class="py-2 text-sm text-center rounded bg-black-100 w-52"
+                >{{booking.checkout_date}}</span
+              >
             </div>
-            <form onsubmit="deleteBooking(); return false" id="myForm" method="POST">
-                <div>
-                    <span>We would like to know why you are cancelling your booking
-                        <br />
-                    </span>
-                    <span class="border-dark-500"><textarea class="resize-none" id="reason"
-                            placeholder="Enter a comment here." name="textbox" rows="4" cols="39"
-                            autofocus></textarea></span>
-                </div>
-                <div class="flex flex-row space-x-9">
-                    <a href="/account"
-                        class="flex items-center h-10 px-8 py-1 font-semibold text-white rounded bg-dark w-max">Back</a>
-                    <button type="button" onclick="deleteBooking()"
-                        class="flex items-center h-10 px-8 py-1 font-semibold text-white rounded bg-dark w-max">
-                        Cancel
-                    </button>
-                </div>
-            </form>
+          </div>
+          <div class="flex flex-col w-full col-span-2 space-y-1 sm:col-span-1">
+            <label for="description" class="text-sm">Cancellation reason (optional)</label>
+            <textarea
+              id="reason"
+              name="reason"
+              placeholder="Enter your reason here"
+              class="h-40 p-4 border rounded disabled:cursor-not-allowed disabled:opacity-80 border-dark-300 placeholder:font-light placeholder:text-dark-200 placeholder:text-sm focus-ring"
+            ></textarea>
+          </div>
         </div>
-        <div class="flex ">
-            <img alt="{{ booking.location.name }} main photo" src="{{ booking.location.main_photo }}"
-                class="object-cover w-auto h-full max-h-[29rem] rounded aspect-[4/3] min-[1366px]:block " />
-        </div>
+      </div>
+      <div class="flex flex-col items-center gap-4 lg:flex-row">
+        <button
+          type="submit"
+          onclick="deleteBooking()"
+          class="flex items-center h-10 px-8 py-1 font-semibold text-white rounded bg-dark w-max"
+        >
+          Cancel
+        </button>
+        <a href="/account" class="underline">go back</a>
+      </div>
     </div>
-</div>
-{% endblock _content %}
-{% block scripts %}
-{{ super() }}
+    <img
+      alt="{{booking.location.name}} main photo"
+      src="{{booking.location.main_photo}}"
+      class="order-first lg:order-last w-full lg:w-[50%] xl:w-[60%] lg:max-w-2xl lg:rounded object-cover h-auto aspect-video lg:aspect-[4/3]"
+    />
+  </div>
+</form>
+{% endblock _content %} {% block scripts %} {{ super() }}
 <script>
-    function deleteBooking() {
-        var reason = document.forms["myForm"]["reason"].value;
-        params = 'reason=' + reason
-        var xhttp = new XMLHttpRequest();
-        xhttp.open("POST", '/booking/{{booking.id}}/cancel', true); //synchronous
-        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xhttp.onload = function () {
-            if (xhttp.status === 200) {
-                window.location.href = xhttp.responseText;
-
-
-            }
-        };
-        xhttp.send(params);
-        console.log(reason)
-    }
+  function deleteBooking() {
+    var reason = document.forms["delete-form"]["reason"].value;
+    params = "reason=" + reason;
+    var xhttp = new XMLHttpRequest();
+    xhttp.open("POST", "/booking/{{booking.id}}/cancel", true); //synchronous
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.onload = function () {
+      if (xhttp.status === 200) {
+        window.location.href = xhttp.responseText;
+      }
+    };
+    xhttp.send(params);
+    console.log(reason);
+  }
 </script>
 {% endblock scripts %}

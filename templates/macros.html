@@ -110,7 +110,7 @@
 {%- endmacro %}
 {% macro BookingStatus(status) -%}
 <span
-class="font-light w-max lowercase rounded px-3 {% if status=='PENDING' %}bg-[#F7CBCB]{% elif status=='CONFIRMED' %}bg-[#CBF7D5]{%elif status=='DECLINED' %} bg-[#f47373]{%elif status=='CANCELLED' %} bg-[#ba68c8]{% endif %}">
+class="font-light w-max lowercase rounded px-3 {% if status=='PENDING' %}bg-[#F7CBCB]{% elif status=='CONFIRMED' %}bg-[#CBF7D5]{%elif status=='DECLINED' %} bg-[#f47373]{%elif status=='CANCELLED' %} bg-dark text-white{% endif %}">
 {{status}}
 </span>
 {%- endmacro %}
