@@ -183,6 +183,7 @@ def user_bookings(user):
 
     return render_template(
         "account/bookings.html",
+        page='/bookings',
         bookings=db_bookings,
         user=user,
     )

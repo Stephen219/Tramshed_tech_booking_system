@@ -31,7 +31,9 @@
       </div>
       <div class="flex flex-col items-center space-y-3">
         <img alt="user profile picture" src="{{ user.avatar }}" class="w-auto h-28" />
-        <span class="text-xl font-semibold capitalize">{{ user.first_name }} {{ user.last_name }}</span>
+        <span class="text-xl font-semibold capitalize"
+          >{{ user.first_name }} {{ user.last_name }}</span
+        >
       </div>
       <div class="flex flex-col w-48 mx-auto space-y-3 transition-colors">
         <a
@@ -60,6 +62,59 @@
             </defs>
           </svg>
           <span class="font-light">Dashboard</span>
+        </a>
+        <a
+          href="/account/bookings"
+          class="flex items-center w-full px-4 py-2 space-x-3 {% if page == '/bookings' %}bg-white{% endif %} hover:bg-white rounded focus-ring"
+        >
+          <svg
+            width="12"
+            height="12"
+            viewBox="0 0 12 12"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <g clip-path="url(#clip0_8_355)">
+              <path
+                d="M11 6C11 8.76 8.76 11 6 11C3.24 11 1 8.76 1 6C1 3.24 3.24 1 6 1C8.76 1 11 3.24 11 6Z"
+                stroke="black"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M7.85494 7.59001L6.30494 6.66501C6.03494 6.50501 5.81494 6.12 5.81494 5.805V3.755"
+                stroke="black"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </g>
+            <defs>
+              <clipPath id="clip0_8_355">
+                <rect width="12" height="12" fill="white" />
+              </clipPath>
+            </defs>
+          </svg>
+          <span class="font-light">Bookings</span>
+        </a>
+        <a
+          href="/bookings/review"
+          class="flex items-center w-full px-4 py-2 space-x-3 {% if page == '/reviews' %}bg-white{% endif %} hover:bg-white rounded focus-ring"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="12"
+            height="12"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              stroke="#000000"
+              stroke-linecap="round"
+              stroke-width="1.5"
+              d="M21.47 19V5c0-2-1-3-3-3h-4c-2 0-3 1-3 3v14c0 2 1 3 3 3h4c2 0 3-1 3-3zM11.47 6h5M11.47 18h4M11.47 13.95l5 .05M11.47 10h3M5.49 2C3.86 2 2.53 3.33 2.53 4.95v12.96c0 .45.19 1.13.42 1.52l.82 1.36c.94 1.57 2.49 1.57 3.43 0l.82-1.36c.23-.39.42-1.07.42-1.52V4.95C8.44 3.33 7.11 2 5.49 2zM8.44 7H2.53"
+            ></path>
+          </svg>
+          <span class="font-light">Reviews</span>
         </a>
         <a
           href="https://www.tramshedtech.co.uk/contact/"
@@ -175,7 +230,6 @@
   </button>
   {% block _content %} {% endblock _content %}
 </div>
-{% endblock %} 
-{% block scripts %}
+{% endblock %} {% block scripts %}
 <script src="{{url_for('static', filename='hamburger-menu.js')}}"></script>
 {% endblock %}
