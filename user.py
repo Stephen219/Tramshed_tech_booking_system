@@ -21,6 +21,8 @@ import string
 PASSWORD_REGEX = "^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$"
 
 # Schema validation from https://stackoverflow.com/a/61648076
+
+
 class NewMemberSchema(Schema):
     first_name = fields.String(
         required=True,
@@ -75,12 +77,16 @@ class LoginSchema(Schema):
     class Meta:
         # Strip unknown values from output
         unknown = EXCLUDE
+
+
 class ResetPasswordSchema(Schema):
-    email= fields.Email(
-        required=True, error_messages={"requires" : "required", "invalid": "invalid"}
+    email = fields.Email(
+        required=True, error_messages={"requires": "required", "invalid": "invalid"}
     )
+
     class Meta:
         unkown = EXCLUDE
+
 
 class ChangePasswordSchema(Schema):
     email = fields.Email(
@@ -94,9 +100,11 @@ class ChangePasswordSchema(Schema):
         required=True,
         error_messages={"required": "required"},
     )
+
     class Meta:
         # Strip unknown values from output
         unknown = EXCLUDE
+
 
 def ensure_login(func):
     @functools.wraps(func)
@@ -182,7 +190,8 @@ def booking_deletion(user, id):
         if reason == None:
             return "reason required", 400
 
-        Booking.update(db_booking['id'], status="CANCELLED", cancellation_reason=reason)
+        Booking.update(
+            db_booking['id'], status="CANCELLED", cancellation_reason=reason)
 
         return "/account/bookings"
 
@@ -254,51 +263,56 @@ def booking_confirmation(user, id):
     return render_template("booking/confirmation.html", user=user, booking=db_booking)
 
 
-@app.route("/auth/reset", methods=["GET","POST"])
+@app.route("/auth/reset", methods=["GET", "POST"])
 def reset_password():
     if request.method == "GET":
         return render_template("account/reset.html")
     if request.method == "POST":
-        schema = ResetPasswordSchema ()
+        schema = ResetPasswordSchema()
         try:
             body = schema.load(request.json)
         except ValidationError as err:
             return jsonify(err.messages), 400
         body['email'] = body['email'].lower()
-        db_user = User.query.filter_by(email=body["email"]).first()
-        if db_user ==None:
+        db_user = User.getAll(email=body["email"])
+        if len(db_user) < 1:
             return "success"
-        temp_pass = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(8))
+        db_user = db_user[0]
+        temp_pass = ''.join(random.choice(
+            string.ascii_uppercase + string.digits) for _ in range(8))
         # reset token could be encrypted for added security
-        db_user.reset_token = temp_pass
-        db.session.commit()
+        User.update(db_user['id'], reset_token=temp_pass)
         print("/auth/change-password?" + "email=" + body["email"])
         print(temp_pass)
-        return redirect ("/auth/reset")
+        return "success"
 
-@app.route("/auth/change-password", methods=["GET","POST"])
+
+@app.route("/auth/change-password", methods=["GET", "POST"])
 def change_password():
     if request.method == "GET":
         email = request.args.get("email").lower()
-        if email == None : 
+        if email == None:
             return "Not found", 404
         return render_template("/account/change.html")
     if request.method == "POST":
-        schema = ChangePasswordSchema ()
+        schema = ChangePasswordSchema()
         try:
             body = schema.load(request.json)
         except ValidationError as err:
             return jsonify(err.messages), 400
         body['email'] = body['email'].lower()
         temp_pass = body['token']
-        db_user = User.query.filter_by(email=body["email"]).first()
-        if temp_pass != db_user.reset_token:
+        db_user = User.getAll(email=body["email"])
+        if len(db_user) < 1:
+            return 'user not found', 404
+        db_user = db_user[0]
+        if temp_pass != db_user['reset_token']:
             return "Invalid reset token", 401
-        db_user.reset_token = None
         salt = bcrypt.gensalt()
-        db_user.password = bcrypt.hashpw(str("password").encode("utf-8"), salt)
-        db.session.commit()
-        return  redirect ("/auth/login")
+        body['password'] = bcrypt.hashpw(
+            str(body['password']).encode("utf-8"), salt)
+        User.update(db_user['id'], reset_token=None, password=body['password'])
+        return redirect("/auth/login")
 
 
 @app.get("/auth/logout")
@@ -344,7 +358,8 @@ def user_join():
         if len(db_user) > 1:  # Check if user in db already
             return jsonify({"email": ["already exists"]}), 400
         salt = bcrypt.gensalt()
-        body["password"] = bcrypt.hashpw(str(body["password"]).encode("utf-8"), salt)
+        body["password"] = bcrypt.hashpw(
+            str(body["password"]).encode("utf-8"), salt)
         body[
             "avatar"
         ] = "https://source.boringavatars.com/marble/120/{}%20{}?colors=FAD089,FF9C5B,F5634A,ED303C,3B8183".format(

@@ -29,6 +29,7 @@ CREATE TABLE user (
   first_name  TEXT NOT NULL,
   last_name  TEXT NOT NULL,
   password  TEXT NOT NULL,
+  reset_token TEXT,
   -- bookings relationship
   -- reviews relationship
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,

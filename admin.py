@@ -5,7 +5,7 @@ from marshmallow import Schema, fields, validate, EXCLUDE, ValidationError
 from user import PASSWORD_REGEX
 
 # from db import db, Admin, Location, Booking , User
-from db import Admin, Location, Booking, User
+from db import Admin, Location, Booking, User , Review
 import bcrypt
 
 # Schema validation from https://stackoverflow.com/a/61648076
@@ -139,7 +139,7 @@ def admin_settings(admin):
 @app.get("/_/members")
 @ensure_login
 def view_members(admin):
-    db_users= User.query.all()
+    db_users= User.getAll()
     return render_template("admin/members.html", users=db_users, admin=admin)
 
 @app.get("/_/locations")
@@ -187,12 +187,14 @@ def confirm_details(admin, id):
 @ensure_login
 def manage_reviews(admin,id):
     if request.method == "DELETE":
-        db_reviews = Review.query.get(id)
-        db.session.delete(db_reviews)
-        db.session.commit()
+        db_reviews = Review.get(id)
+        if db_reviews == None:
+            return "Not found", 404
+        Review.delete(db_reviews["id"])
+    
         return "/_/reviews/<id>"
     if request.method =="GET":
-        db_reviews= Review.query.all()
+        db_reviews= Review.getAll()
     return render_template("admin/reviews.html", reviews=db_reviews)
 
 
@@ -229,9 +231,9 @@ def cancelled_bookings(admin):
 @ensure_login
 def declined_bookings(admin):
     if request.method == "GET":
-        db_bookings = Booking.query.filter_by(status="DECLINED")
+        db_bookings = Booking.getAll(status="DECLINED")
         if not request.args.get('status') == None:
-            db_bookings = Booking.query.filter_by(
+            db_bookings = Booking.getAll(
                 status=request.args.get('status="DECLINED"'))
         return render_template("admin/bookings.html", bookings=db_bookings)
 
@@ -294,6 +296,7 @@ def admin_login(admin):
             str(body["password"]).encode("utf-8"), db_admin[0]["password"]
         ):  # Check if user in db and also if password matches
             return ({"status": "error", "message": "Invalid credentials"}), 401
+        db_admin = db_admin[0]
         session["admin_id"] = db_admin["id"]
 
         return jsonify({"status": "success"})

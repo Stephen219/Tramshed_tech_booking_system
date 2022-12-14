@@ -10,7 +10,7 @@
           class="relative flex flex-col w-full max-w-md space-y-4">
       {{ macros.textInput(type='email', placeholder='Email', name="email", id="email", required=true) }}
       {{ macros.button("Submit", type='submit') }}
-      <span id="login-error"
+      <span id="reset-error"
             class="absolute left-0 right-0 mx-auto text-center text-red-500 -bottom-10"></span>
     </form>
   </main>
@@ -26,12 +26,8 @@
         },
         body: payload
       })
-      if (res.ok) {
-        return window.location.href = "/auth/reset";
-      }
-      let errmsg = 'Invalid Credentials'
-      if (res.status !== 401) errmsg = 'Something went wrong'
-      document.getElementById("reset-error").innerHTML = errmsg;
+      let msg = await res.text()
+      document.getElementById("reset-error").innerHTML = msg;
     };
     // Clear error message on refocus of form
     form.addEventListener('focusin', () => {
