@@ -5,7 +5,7 @@ from marshmallow import Schema, fields, validate, EXCLUDE, ValidationError
 from user import PASSWORD_REGEX
 
 # from db import db, Admin, Location, Booking , User
-from db import Admin, Location, Booking, User
+from db import Admin, Location, Booking, User, Review
 import bcrypt
 
 # Schema validation from https://stackoverflow.com/a/61648076
@@ -276,11 +276,22 @@ def confirm_details(admin, id):
             return "Not found", 404
         Location.delete(db_location["id"])
 
-        return "/_/locations"
+        return "success"
 
     if request.method == "GET":
         db_location = Location.get(id)
-        return render_template("admin/location.html", page='/locations', location=db_location)
+        db_bookings = Booking.getAll(location_id=db_location["id"])
+        reviews = [
+            booking["review"]
+            for booking in db_bookings
+            if not (booking["review"] == None)
+        ]
+        return render_template(
+            "admin/location.html",
+            page="/locations",
+            location=db_location,
+            reviews=reviews,
+        )
 
     if request.method == "PATCH":
         schema = UpdateLocationSchema()
@@ -292,17 +303,16 @@ def confirm_details(admin, id):
         return "success"
 
 
-@app.route("/_/reviews/<id>", methods=["GET", "DELETE"])
+@app.route("/_/review/<id>", methods=["DELETE"])
 @ensure_login
 def manage_reviews(admin, id):
+    db_review = Review.get(id)
+    if db_review == None:
+        return "Not found", 404
     if request.method == "DELETE":
-        db_reviews = Review.query.get(id)
-        db.session.delete(db_reviews)
-        db.session.commit()
-        return "/_/reviews/<id>"
-    if request.method == "GET":
-        db_reviews = Review.query.all()
-    return render_template("admin/reviews.html", reviews=db_reviews)
+        Review.delete(id)
+
+        return "success"
 
 
 @app.route("/_/bookings/manage", methods=["GET"])

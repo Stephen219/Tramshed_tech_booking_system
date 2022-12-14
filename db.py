@@ -376,3 +376,10 @@ class Review:
         conn.close()
 
         return joined_reviews
+    
+    def delete(id: str):
+        [conn, cur] = get_db()
+        sql = "DELETE FROM review WHERE id=?"
+        cur.execute(sql, (id,))
+        conn.commit()
+        conn.close()
