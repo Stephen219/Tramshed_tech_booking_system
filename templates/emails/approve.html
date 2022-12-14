@@ -1,0 +1,54 @@
+{% extends "base.html" %} {% block content %}
+<div class="flex flex-col items-center lg:mx-6 lg:mt-[15vh]">
+    <div class="flex flex-col items-center gap-8 lg:flex-row max-w-7xl">
+      <div class="flex flex-col items-center justify-between max-w-2xl min-h-full mx-6 space-y-8 lg:max-w-none lg:items-start">
+        <div class="flex flex-col items-center space-y-4 lg:items-start">
+          <div class="flex items-center space-x-4">
+            <div class="flex flex-col justify-between">
+                {{ macros.logo(class="h-20") }}
+            </div>
+            <h2 class="text-4xl font-semibold">{{booking.location.name}}</h2>
+            <svg
+              width="36"
+              height="36"
+              viewBox="0 0 36 36"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M24.285 3H11.715C6.255 3 3 6.255 3 11.715V24.27C3 29.745 6.255 33 11.715 33H24.27C29.73 33 32.985 29.745 32.985 24.285V11.715C33 6.255 29.745 3 24.285 3ZM25.17 14.55L16.665 23.055C16.4541 23.2657 16.1681 23.384 15.87 23.384C15.5719 23.384 15.2859 23.2657 15.075 23.055L10.83 18.81C10.6208 18.5983 10.5034 18.3126 10.5034 18.015C10.5034 17.7174 10.6208 17.4317 10.83 17.22C11.265 16.785 11.985 16.785 12.42 17.22L15.87 20.67L23.58 12.96C24.015 12.525 24.735 12.525 25.17 12.96C25.605 13.395 25.605 14.1 25.17 14.55V14.55Z"
+                fill="#2C2C2C"
+              />
+            </svg>
+          </div>
+          <div class="flex flex-col items-center space-y-8 lg:items-start">
+            <p class="text-lg text-center lg:text-left">
+              <span class="font-bold">Thank you!</span>your booking has successfully been <span class="font-bold">Approved</span>
+              <br />
+              <span class="font-light">The following are the details of the Approved item</span>
+            </p>
+            <div class="flex flex-col space-y-2 w-[18.5rem] font-light">
+              <div class="flex items-center justify-between min-w-full">
+                <span>Booking id</span>
+                <span class="py-2 text-sm text-center rounded bg-black-100 w-52">{{booking.id}}</span>
+              </div>
+              <div class="flex items-center justify-between min-w-full">
+                <span>Check in</span>
+                <span class="py-2 text-sm text-center rounded bg-black-100 w-52">{{booking.checkin_date}}</span>
+              </div>
+              <div class="flex items-center justify-between min-w-full">
+                <span>Check out</span>
+                <span class="py-2 text-sm text-center rounded bg-black-100 w-52">{{booking.checkout_date}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <img
+        alt="{{booking.location.name}} main photo"
+        src="{{booking.location.main_photo}}"
+        class="order-first lg:order-last w-full lg:w-[50%] xl:w-[60%] lg:max-w-2xl lg:rounded object-cover h-auto aspect-video lg:aspect-[4/3]"
+      />
+    </div>
+  </div>
+{% endblock %}

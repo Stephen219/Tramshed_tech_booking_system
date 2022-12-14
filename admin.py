@@ -382,6 +382,7 @@ def admin_login(admin):
             str(body["password"]).encode("utf-8"), db_admin[0]["password"]
         ):  # Check if user in db and also if password matches
             return ({"status": "error", "message": "Invalid credentials"}), 401
+        db_admin = db_admin[0]
         session["admin_id"] = db_admin["id"]
 
         return jsonify({"status": "success"})
