@@ -1,99 +1,110 @@
-{% extends "base.html" %} {% block content %}
-<div class="flex justify-center mx-auto">
-    <div class="flex flex-col justify-between min-h-full space-y-4">
-        <form name="Add new" id="location-add-form" onsubmit="submitForm(); return false">
-            <div class="flex flex-col space-y-3">
-                <span class="text-2xl font-bold text-left">ADD NEW LOCATION</span>
-                <span class="text-xl font-semibold text-left">LOCATION DETAILS</span>
-                <div class="flex flex-col space-y-2">
-                    <span class="text-base font-light">Name</span>
-                    <input type="text" class="px-4 py-5 border rounded form-input" id="name" placeholder="Name">
-                    <span class="text-base font-light">Address</span>
-                    <input type="textarea" class="px-4 py-5 border rounded form-input" placeholder="Address" id="address">
-                    <span class="text-base font-light">Location</span>
-                    <input Class="px-4 py-5 border rounded form-input" id="location" placeholder="location">
-                </div>
-                <div class="flex flex-col">
-                    <span class="text-base font-light">Description</span>
-                    <textarea class="border rounded resize-none form-input" id="description" placeholder=" Description"
-                        name="textbox" rows="5" cols="30"></textarea>
-                </div>
-                <div class="flex flex-col">
-                    <span class="text-base font-light">Checkin_Instructions</span>
-                    <textarea class="border rounded resize-none form-input" id="checkin_instruction"
-                        placeholder="Checkin instructions" name="textbox" rows="3" cols="30"></textarea>
-                </div>
-                <div class="flex flex-col">
-                    <span class="text-base font-light">Features</span>
-                    <textarea class="border rounded resize-none form-input" id="features" placeholder=" Features (seperate using a comma)"
-                        name="textbox" rows="5" cols="30"></textarea>
-                </div>
-                <div class="flex flex-col space-y-2">
-                    <span class="text-base font-light">Opening_Hours</span>
-                    <input type="text" class="border rounded time required:'true'"id="opening_hours">
-                </div>
-            </div>
-            <div class="flex flex-col space-y-2">
-                <span class="text-xl text-left">CONTACT DETAILS</span>
-                <div class="flex flex-col space-y-2">
-                    <span class="text-base font-light"> Email:</span>
-                    <input type="email" class="px-4 py-5 border rounded form-input" placeholder="email" id="email">
-                    <span class="text-base font-light">Tel:</span>
-                    <input type=" phone number" class="px-4 py-5 border rounded form-input" id="tel"
-                        placeholder="0712345678">
-                </div>
-                <div class="flex flex-col">
-                    <span class="text-base font-light">Website:</span>
-                    <input type="url" class="px-4 py-5 border rounded form-input" placeholder="website"id="website">
-                </div>
-            </div>
-            <div class="flex flex-col space-y-3">
-                <span class="text-xl text-left"> LOCATION IMAGES</span>
-                <div class="flex justify-between">
-                    <span class="text-base font-light">Main photo</span>
-                    <input type="url" class="px-3 py-4 border rounded form-input" id="main">
-                    <span class="text-base font-normal">Additional photos</span>
-                    <input type="url" class="px-3 py-4 border rounded form-input" id="additional">
-                </div>
-            </div>
-            <button type="submit" class="text-white rounded w-max bg-dark">Continue</button>
-        </form>
+{% extends "admin/layout.html" %} {% block _content %}
+<form
+  class="flex flex-col items-center w-full max-h-screen px-6 py-8 space-y-8 overflow-y-auto sm:py-16 justify-items-center md:p-16"
+  onsubmit="saveUpdate(); return false"
+  id="location-form"
+>
+  <div class="flex flex-col items-center justify-between w-full space-y-4 sm:space-y-0 sm:flex-row">
+    <h1 class="text-3xl font-bold sm:text-4xl">Add a new location</h1>
+    <div class="flex flex-wrap items-center justify-center gap-4">
+      {{ macros.button('Save', type='submit', class='w-max px-7')}} {{ macros.button('
+      <div class="flex items-center space-x-3">
+        <span>Cancel</span>
+      </div>
+      ', type='button', variant='outline', class='text-red-500 w-max px-7',
+      onclick='deleteLocation()') }}
     </div>
-</div>
-
-
+  </div>
+  <div class="grid w-full max-w-5xl grid-flow-row grid-cols-2 gap-6">
+    <div class="flex flex-col col-span-2 space-y-1 sm:col-span-1">
+      <label for="name" class="text-sm">Name</label>
+      {{ macros.textInput(name="name", id="name", required=true)}}
+    </div>
+    <div class="flex items-center justify-center h-full col-span-2 space-x-3 sm:col-span-1">
+      <input type="checkbox" name="featured" />
+      <label for="featured" class="text-lg">Featured</label>
+    </div>
+    <div class="flex flex-col col-span-2 space-y-1 sm:col-span-1">
+      <label for="address" class="text-sm">Address</label>
+      {{ macros.textInput(name="address", id="address", required=true)}}
+    </div>
+    <div class="flex flex-col col-span-2 space-y-1 sm:col-span-1">
+      <label for="status" class="text-sm">Status</label>
+      <select name="status" id="status" class="h-12 px-4 border rounded border-dark-300">
+          <option value="UNAVAILABLE">unavailable</option>
+        <option value="AVAILABLE">available</option>
+      </select>
+    </div>
+    <div class="flex flex-col col-span-2 space-y-1 sm:col-span-1">
+      <label for="opening_hours" class="text-sm">Opening Hours</label>
+      {{ macros.textInput(name="opening_hours", id="opening_hours", required=true)}}
+    </div>
+    <div class="flex flex-col col-span-2 space-y-1 sm:col-span-1">
+      <label for="features" class="text-sm">Features (separated by a , )</label>
+      {{ macros.textInput(name="features", id="features")}}
+    </div>
+    <div class="flex flex-col col-span-2 space-y-1 sm:col-span-1">
+      <label for="description" class="text-sm">Description</label>
+      <textarea
+        id="description"
+        name="description"
+        class="h-40 p-4 border rounded disabled:cursor-not-allowed disabled:opacity-80 border-dark-300 placeholder:font-light placeholder:text-dark-200 placeholder:text-sm focus-ring"
+        required
+      ></textarea
+      >
+    </div>
+    <div class="flex flex-col col-span-2 space-y-1 sm:col-span-1">
+      <label for="checkin_instructions" class="text-sm">Checkin Instructions</label>
+      <textarea
+        id="checkin_instructions"
+        name="checkin_instructions"
+        class="h-40 p-4 border rounded disabled:cursor-not-allowed disabled:opacity-80 border-dark-300 placeholder:font-light placeholder:text-dark-200 placeholder:text-sm focus-ring"
+        required
+      ></textarea
+      >
+    </div>
+    <div class="flex flex-col col-span-2 space-y-1 sm:col-span-1">
+      <label for="main_photo" class="text-sm">Main Photo</label>
+      {{ macros.textInput(type='url', name="main_photo", id="main_photo", required=true)}}
+    </div>
+    <div class="flex flex-col col-span-2 space-y-1 sm:col-span-1">
+      <label for="additional_photo" class="text-sm">Additional Photo</label>
+      {{ macros.textInput(type='url', name="additional_photos", id="additional_photos", required=true)}}
+    </div>
+    <div class="flex flex-col col-span-2 space-y-1 sm:col-span-1">
+      <label for="maps" class="text-sm">Google maps link</label>
+      {{ macros.textInput(type='url', name="maps", id="maps", required=true)}}
+    </div>
+    <div class="flex flex-col col-span-2 space-y-1 sm:col-span-1">
+      <label for="phone_number" class="text-sm">Phone Number</label>
+      {{ macros.textInput(type='tel', name="phone_number", id="phone_number")}}
+    </div>
+    <div class="flex flex-col col-span-2 space-y-1 sm:col-span-1">
+      <label for="email" class="text-sm">Email</label>
+      {{ macros.textInput(type='email', name="email", id="email")}}
+    </div>
+    <div class="flex flex-col col-span-2 space-y-1 sm:col-span-1">
+      <label for="website" class="text-sm">Website</label>
+      {{ macros.textInput(type='url', name="website", id="website", required=true)}}
+    </div>
+  </div>
+</form>
+{% endblock _content %} {% block scripts %} {{ super() }}
 <script>
-
-    const form = document.getElementById("location-add-form")
-    async function submitForm() {
-        var name = form["name"].value;
-        var address = form["address"].value;
-        var maps = form["location"].value;
-        var description = form["description"].value;
-        var checkin_instructions = form["checkin_instruction"].value;
-        var features = form["features"].value;
-        var opening_hours = form["opening_hours"].value;
-        var email = form["email"].value;
-        var phone_number= form["tel"].value;
-        var website= form["website"].value;
-        var main_photo= form["main"].value;
-        var additional_photos= form["additional"].value
-   
-        const payload = JSON.stringify({ name, address, maps, description, checkin_instructions, features, opening_hours, email, phone_number, website, main_photo, additional_photos })
-        console.log(payload)
-        var xhttp = new XMLHttpRequest();
-        xhttp.open("POST", '/_/locations/add', true); //synchronous
-        xhttp.setRequestHeader("Content-type", "application/json");
-        xhttp.onload = function() {
-        if (xhttp.status === 200) {
-            window.location.href = xhttp.responseText;
-            return;
-        }
-        };
-        xhttp.send(payload);
-        return false
-        // xhttp.send(JSON.stringify({ name, address, location, details, checkin_instructions, opening_hours, email }));
-    }
-
+  const form = document.getElementById("location-form");
+  function saveUpdate() {
+    var xhttp = new XMLHttpRequest();
+    var formData = new FormData(form);
+    formData.set("featured", form["featured"].checked ? 1 : 0);
+    var payload = JSON.stringify(Object.fromEntries(formData));
+    xhttp.open("POST", "/_/locations/add", true); //synchronous
+    xhttp.setRequestHeader("Content-type", "application/json");
+    xhttp.onload = function () {
+      if (xhttp.status === 200) {
+        window.location.href = xhttp.responseText;
+      }
+    };
+    xhttp.send(payload);
+  }
 </script>
 {% endblock %}

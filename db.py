@@ -160,7 +160,6 @@ class Location:
             "featured": data["featured"],
             "address": data["address"],
             "main_photo": data["main_photo"],
-            "additional_photos": data["additional_photos"],
             "description": data["description"],
             "website": data["website"],
             "maps": data["maps"],
@@ -170,6 +169,9 @@ class Location:
         }
         if "features" in data:
             parsed_data["features"] = data["features"]
+        if "additional_photos" in data:
+            parsed_data["additional_photos"] = data["additional_photos"]
+
         [conn, cur] = get_db()
         cols = ", ".join(parsed_data.keys())
         placeholders = ":" + ", :".join(parsed_data.keys())

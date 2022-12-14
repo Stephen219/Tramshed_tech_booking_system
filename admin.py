@@ -50,6 +50,10 @@ class CreateLocationSchema(Schema):
     address = fields.String(
         required=True, error_messages={"required": "required", "invalid": "invalid"}
     )
+    featured = fields.Integer(
+        required=False,
+        validate=[validate.Range(min=0, max=1, error="Value must be between 1 and 0")],
+    )
     main_photo = fields.String(
         required=True, error_messages={"required": "required", "invalid": "invalid"}
     )
@@ -248,7 +252,7 @@ def confirm_details(admin, id):
 @ensure_login
 def add_locations(admin):
     if request.method == "GET":
-        return render_template("admin/locations/add.html")
+        return render_template("admin/locations/add.html", page="/locations")
     if request.method == "POST":
         schema = CreateLocationSchema()
         try:
@@ -352,7 +356,7 @@ def view_members(admin):
 @app.get("/_/settings")
 @ensure_login
 def admin_settings(admin):
-    return redirect('/_/')
+    return redirect("/_/")
     # return render_template("admin/index.html", admin=admin, page="/settings")
 
 
