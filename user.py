@@ -149,8 +149,8 @@ def user_homepage(user):
         db_locations = Location.getAll()
         db_locations.sort(key=lambda x: x["created_at"])
         db_locations = db_locations[:5]
-        db_bookings = Booking.getAll()
-        pending_bookings = Booking.getAll(status="PENDING")
+        db_bookings = Booking.getAll(user_id=user['id'])
+        pending_bookings = Booking.getAll(user_id=user['id'], status="PENDING")
         db_reviews = Review.getAll(user_id=user["id"])
         return render_template(
             "account/index.html",
