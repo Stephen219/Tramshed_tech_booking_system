@@ -6,7 +6,7 @@
 >
   <div class="flex flex-col items-center justify-between w-full space-y-4 sm:space-y-0 sm:flex-row">
     <h1 class="text-3xl font-bold sm:text-4xl">{{location.name}}</h1>
-    <div class="flex items-center space-x-4">
+    <div class="flex flex-wrap items-center justify-center gap-4">
       {{ macros.button('Save', type='submit', class='w-max px-7')}} {{
       macros.button('
       <div class="flex items-center space-x-3">
@@ -35,6 +35,15 @@
       <label for="name" class="text-sm">Name</label>
       {{ macros.textInput(value=location.name, name="name", id="name", required=true)}}
     </div>
+    <div class="flex items-center justify-center h-full col-span-2 space-x-3 sm:col-span-1">
+      <input
+      type="checkbox"
+      name="featured"
+      {% if location.featured == 1 %}checked{% endif %}
+      onchange="changeFeatured(this)"
+      />
+      <label for="featured" class="text-lg">Featured</label>
+    </div>
     <div class="flex flex-col col-span-2 space-y-1 sm:col-span-1">
       <label for="address" class="text-sm">Address</label>
       {{ macros.textInput(value=location.address, name="address", id="address", required=true)}}
@@ -45,15 +54,6 @@
         <option value="AVAILABLE" {% if location.status == "AVAILABLE" %}selected{% endif %}>available</option>
         <option value="UNAVAILABLE" {% if location.status == "UNAVAILABLE" %}selected{% endif %}>unavailable</option>
       </select>
-    </div>
-    <div class="flex items-center justify-center h-full col-span-2 space-x-3 sm:col-span-1">
-      <input
-      type="checkbox"
-      name="featured"
-      {% if location.featured == 1 %}checked{% endif %}
-      onchange="changeFeatured(this)"
-      />
-      <label for="featured" class="text-lg">Featured</label>
     </div>
     <div class="flex flex-col col-span-2 space-y-1 sm:col-span-1">
       <label for="opening_hours" class="text-sm">Opening Hours</label>
