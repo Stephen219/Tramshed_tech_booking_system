@@ -181,51 +181,6 @@ def admin_homepage(admin):
     )
 
 
-@app.get("/_/bookings")
-@ensure_login
-def admin_view_bookings(admin):
-    db_bookings = Booking.getAll()
-    return render_template(
-        "admin/bookings table.html", admin=admin, page="/bookings", bookings=db_bookings
-    )
-
-
-@app.route("/_/booking/<id>", methods=["GET", "PATCH"])
-@ensure_login
-def admin_manage_individual_booking(admin, id):
-    db_booking = Booking.get(id)
-    if db_booking == None:
-        return "Not found", 404
-    if request.method == "GET":
-        return render_template(
-            "admin/manage-booking.html",
-            admin=admin,
-            page="/bookings/manage",
-            booking=db_booking,
-        )
-    if request.method == "PATCH":
-        schema = UpdateBookingSchema()
-        try:
-            body = schema.load(request.json)
-        except ValidationError as err:
-            return jsonify(err.messages), 400  # Return errors in json
-        Booking.update(db_booking["id"], **body)
-        return "success"
-
-
-@app.get("/_/settings")
-@ensure_login
-def admin_settings(admin):
-    return render_template("admin/index.html", admin=admin, page="/settings")
-
-
-@app.get("/_/members")
-@ensure_login
-def view_members(admin):
-    db_users = User.query.all()
-    return render_template("admin/members.html", users=db_users, admin=admin)
-
-
 @app.get("/_/locations")
 @ensure_login
 def admin_view_locations(admin):
@@ -243,7 +198,7 @@ def admin_view_locations(admin):
         joined_location["total_bookings"] = len(bookings)
         joined_locations.append(joined_location)
     return render_template(
-        "admin/locations.html",
+        "admin/locations/index.html",
         admin=admin,
         page="/locations",
         locations=joined_locations,
@@ -254,7 +209,7 @@ def admin_view_locations(admin):
 @ensure_login
 def add_locations(admin):
     if request.method == "GET":
-        return render_template("admin/add/location.html")
+        return render_template("admin/locations/add.html")
     if request.method == "POST":
         schema = CreateLocationSchema()
         try:
@@ -287,7 +242,7 @@ def confirm_details(admin, id):
             if not (booking["review"] == None)
         ]
         return render_template(
-            "admin/location.html",
+            "admin/locations/id.html",
             page="/locations",
             location=db_location,
             reviews=reviews,
@@ -303,6 +258,63 @@ def confirm_details(admin, id):
         return "success"
 
 
+@app.get("/_/bookings/table")
+@ensure_login
+def admin_bookings_table(admin):
+    db_bookings = Booking.getAll()
+    return render_template(
+        "admin/bookings/table.html", admin=admin, page="/bookings/table", bookings=db_bookings
+    )
+
+
+@app.route("/_/booking/<id>", methods=["GET", "PATCH"])
+@ensure_login
+def admin_manage_individual_booking(admin, id):
+    db_booking = Booking.get(id)
+    if db_booking == None:
+        return "Not found", 404
+    if request.method == "GET":
+        return render_template(
+            "admin/bookings/id.html",
+            admin=admin,
+            page="/bookings",
+            booking=db_booking,
+        )
+    if request.method == "PATCH":
+        schema = UpdateBookingSchema()
+        try:
+            body = schema.load(request.json)
+        except ValidationError as err:
+            return jsonify(err.messages), 400  # Return errors in json
+        Booking.update(db_booking["id"], **body)
+        return "success"
+
+
+@app.route("/_/bookings", methods=["GET"])
+@ensure_login
+def admin_all_bookings(admin):
+    if request.method == "GET":
+        db_bookings = Booking.getAll()
+        if not request.args.get("status") == None:
+            db_bookings = Booking.getAll(status=request.args.get("status"))
+        return render_template(
+            "admin/bookings/index.html", page="/bookings", bookings=db_bookings
+        )
+
+
+@app.get("/_/members")
+@ensure_login
+def view_members(admin):
+    db_users = User.query.all()
+    return render_template("admin/members.html", users=db_users, admin=admin)
+
+
+@app.get("/_/settings")
+@ensure_login
+def admin_settings(admin):
+    return render_template("admin/index.html", admin=admin, page="/settings")
+
+
 @app.route("/_/review/<id>", methods=["DELETE"])
 @ensure_login
 def manage_reviews(admin, id):
@@ -313,82 +325,6 @@ def manage_reviews(admin, id):
         Review.delete(id)
 
         return "success"
-
-
-@app.route("/_/bookings/manage", methods=["GET"])
-@ensure_login
-def manage_bookings(admin):
-    if request.method == "GET":
-        db_bookings = Booking.getAll()
-        if not request.args.get("status") == None:
-            db_bookings = Booking.getAll(status=request.args.get("status"))
-        return render_template(
-            "admin/bookings.html", page="/bookings/manage", bookings=db_bookings
-        )
-
-
-@app.route("/_/bookings/manage?status=PENDING", methods=["GET"])
-@ensure_login
-def pending_bookings(admin):
-    if request.method == "GET":
-        return render_template("admin/bookings.html", admin=admin)
-
-
-@app.route("/_/bookings/manage?status=APPROVED", methods=["GET"])
-@ensure_login
-def approved_bookings(admin):
-    return render_template("admin/bookings.html")
-
-
-@app.route("/_/bookings/manage?status=CANCELLED", methods=["GET"])
-@ensure_login
-def cancelled_bookings(admin):
-    if request.method == "GET":
-        return render_template("admin/bookings.html")
-
-
-@app.route("/_/bookings/declined", methods=["GET"])
-@ensure_login
-def declined_bookings(admin):
-    if request.method == "GET":
-        db_bookings = Booking.query.filter_by(status="DECLINED")
-        if not request.args.get("status") == None:
-            db_bookings = Booking.query.filter_by(
-                status=request.args.get('status="DECLINED"')
-            )
-        return render_template("admin/bookings.html", bookings=db_bookings)
-
-
-@app.route("/_/booking/<id>/approve", methods=["POST"])
-@ensure_login
-def approve_booking(admin, id):
-    if request.method == "POST":
-        Booking.update(id, status="APPROVED")
-        return "/_/bookings/manage"
-
-
-@app.route("/_/booking/<id>/decline", methods=["POST"])
-@ensure_login
-def decline_booking(admin, id):
-    if request.method == "POST":
-        Booking.update(id, status="DECLINED")
-        return "/_/bookings/manage"
-
-
-@app.route("/_/location/<id>/unavailable", methods=["POST"])
-@ensure_login
-def unavailable(admin, id):
-    if request.method == "POST":
-        Location.update(id, status="UNAVAILABLE")
-        return "/_/locations"
-
-
-@app.route("/_/booking/<id>/available", methods=["POST"])
-@ensure_login
-def available(admin, id):
-    if request.method == "POST":
-        Location.update(id, status="AVAILABLE")
-        return "/_/locations"
 
 
 @app.get("/_/auth/logout")
