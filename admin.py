@@ -196,7 +196,7 @@ def admin_view_locations(admin):
     for location in db_locations:
         joined_location = dict(location)
         bookings = Booking.getAll(location_id=location["id"])
-        reviews = [i for i in bookings if not (i["review"] == None)]
+        reviews = [i['review'] for i in bookings if not (i["review"] == None)]
         joined_location["avg_rating"] = 0
         if len(reviews) > 0:
             joined_location["avg_rating"] = sum(
