@@ -280,10 +280,10 @@ def admin_all_bookings(admin):
         elif sort_by == "location_ztoa":
             db_bookings.sort(key=lambda x: x["location"]["name"], reverse=True)
         if sort_by == "created_at_asc":
-            db_bookings.sort(key=lambda x: x["location"]["created_at_asc"])
+            db_bookings.sort(key=lambda x: x["location"]["created_at"])
         elif sort_by == "created_at_desc":
             db_bookings.sort(
-                key=lambda x: x["location"]["created_at_desc"], reverse=True
+                key=lambda x: x["location"]["created_at"], reverse=True
             )
 
         edited_bookings = []
