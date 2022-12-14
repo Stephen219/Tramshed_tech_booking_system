@@ -205,23 +205,6 @@ def admin_view_locations(admin):
     )
 
 
-@app.route("/_/locations/add", methods=["GET", "POST"])
-@ensure_login
-def add_locations(admin):
-    if request.method == "GET":
-        return render_template("admin/locations/add.html")
-    if request.method == "POST":
-        schema = CreateLocationSchema()
-        try:
-            body = schema.load(request.json)
-        except ValidationError as err:
-            return jsonify(err.messages), 400  # Return errors in json
-
-        db_location = Location.new(**body)  # Turn input into db object
-
-        return "/_/location/" + db_location["id"]
-
-
 @app.route("/_/location/<id>", methods=["GET", "POST", "PATCH", "DELETE"])
 @ensure_login
 def confirm_details(admin, id):
@@ -258,13 +241,55 @@ def confirm_details(admin, id):
         return "success"
 
 
-@app.get("/_/bookings/table")
+@app.route("/_/locations/add", methods=["GET", "POST"])
 @ensure_login
-def admin_bookings_table(admin):
-    db_bookings = Booking.getAll()
-    return render_template(
-        "admin/bookings/table.html", admin=admin, page="/bookings/table", bookings=db_bookings
-    )
+def add_locations(admin):
+    if request.method == "GET":
+        return render_template("admin/locations/add.html")
+    if request.method == "POST":
+        schema = CreateLocationSchema()
+        try:
+            body = schema.load(request.json)
+        except ValidationError as err:
+            return jsonify(err.messages), 400  # Return errors in json
+
+        db_location = Location.new(**body)  # Turn input into db object
+
+        return "/_/location/" + db_location["id"]
+
+
+@app.route("/_/bookings", methods=["GET"])
+@ensure_login
+def admin_all_bookings(admin):
+    if request.method == "GET":
+        sort_by = request.args.get("sort_by")
+        status = request.args.get("status")
+        if status != None:
+            db_bookings = Booking.getAll(status=status.upper())
+        else:
+            db_bookings = Booking.getAll()
+        if sort_by == "location_atoz":
+            db_bookings.sort(key=lambda x: x["location"]["name"])
+        elif sort_by == "location_ztoa":
+            db_bookings.sort(key=lambda x: x["location"]["name"], reverse=True)
+        if sort_by == "created_at_asc":
+            db_bookings.sort(key=lambda x: x["location"]["created_at_asc"])
+        elif sort_by == "created_at_desc":
+            db_bookings.sort(
+                key=lambda x: x["location"]["created_at_desc"], reverse=True
+            )
+
+        edited_bookings = []
+        for booking in db_bookings:
+            edited_booking = dict(booking)
+            if edited_booking["review"] == None:
+                edited_booking["review"] = {"rating": 0}
+
+            edited_bookings.append(edited_booking)
+
+        return render_template(
+            "admin/bookings/index.html", page="/bookings", bookings=edited_bookings
+        )
 
 
 @app.route("/_/booking/<id>", methods=["GET", "PATCH"])
@@ -290,16 +315,28 @@ def admin_manage_individual_booking(admin, id):
         return "success"
 
 
-@app.route("/_/bookings", methods=["GET"])
+@app.get("/_/bookings/table")
 @ensure_login
-def admin_all_bookings(admin):
-    if request.method == "GET":
-        db_bookings = Booking.getAll()
-        if not request.args.get("status") == None:
-            db_bookings = Booking.getAll(status=request.args.get("status"))
-        return render_template(
-            "admin/bookings/index.html", page="/bookings", bookings=db_bookings
-        )
+def admin_bookings_table(admin):
+    db_bookings = Booking.getAll()
+    return render_template(
+        "admin/bookings/table.html",
+        admin=admin,
+        page="/bookings/table",
+        bookings=db_bookings,
+    )
+
+
+@app.route("/_/review/<id>", methods=["DELETE"])
+@ensure_login
+def manage_reviews(admin, id):
+    db_review = Review.get(id)
+    if db_review == None:
+        return "Not found", 404
+    if request.method == "DELETE":
+        Review.delete(id)
+
+        return "success"
 
 
 @app.get("/_/members")
@@ -313,18 +350,6 @@ def view_members(admin):
 @ensure_login
 def admin_settings(admin):
     return render_template("admin/index.html", admin=admin, page="/settings")
-
-
-@app.route("/_/review/<id>", methods=["DELETE"])
-@ensure_login
-def manage_reviews(admin, id):
-    db_review = Review.get(id)
-    if db_review == None:
-        return "Not found", 404
-    if request.method == "DELETE":
-        Review.delete(id)
-
-        return "success"
 
 
 @app.get("/_/auth/logout")
