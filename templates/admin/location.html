@@ -1,0 +1,166 @@
+{% extends "admin/layout.html" %} {% block _content %}
+<form
+  class="flex flex-col items-center w-full max-h-screen px-6 py-8 space-y-8 overflow-y-auto sm:py-16 justify-items-center md:p-16"
+  onsubmit="saveUpdate(); return false"
+  id="location-form"
+>
+  <div class="flex flex-col items-center justify-between w-full space-y-4 sm:space-y-0 sm:flex-row">
+    <h1 class="text-3xl font-bold sm:text-4xl">{{location.name}}</h1>
+    <div class="flex items-center space-x-4">
+      {{ macros.button('Save', type='submit', class='w-max px-7')}} {{
+      macros.button('
+      <div class="flex items-center space-x-3">
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 16 16"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M14 3.98671C11.78 3.76671 9.54667 3.65337 7.32 3.65337C6 3.65337 4.68 3.72004 3.36 3.85337L2 3.98671M5.66667 3.31337L5.81333 2.44004C5.92 1.80671 6 1.33337 7.12667 1.33337H8.87333C10 1.33337 10.0867 1.83337 10.1867 2.44671L10.3333 3.31337M12.5667 6.09337L12.1333 12.8067C12.06 13.8534 12 14.6667 10.14 14.6667H5.86C4 14.6667 3.94 13.8534 3.86667 12.8067L3.43333 6.09337M6.88667 11H9.10667M6.33333 8.33337H9.66667"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+        <span>Delete location</span>
+      </div>
+      ', type='button', variant='outline', class='text-red-500 w-max px-7',
+      onclick='deleteLocation()') }}
+    </div>
+  </div>
+  <div class="grid w-full max-w-5xl grid-flow-row grid-cols-2 gap-6">
+    <div class="flex flex-col col-span-2 space-y-1 sm:col-span-1">
+      <label for="name" class="text-sm">Name</label>
+      {{ macros.textInput(value=location.name, name="name", id="name", required=true)}}
+    </div>
+    <div class="flex flex-col col-span-2 space-y-1 sm:col-span-1">
+      <label for="address" class="text-sm">Address</label>
+      {{ macros.textInput(value=location.address, name="address", id="address", required=true)}}
+    </div>
+    <div class="flex flex-col col-span-2 space-y-1 sm:col-span-1">
+      <label for="status" class="text-sm">Status</label>
+      <select name="status" id="status" class="h-12 px-4 border rounded border-dark-300">
+        <option value="AVAILABLE" {% if location.status == "AVAILABLE" %}selected{% endif %}>available</option>
+        <option value="UNAVAILABLE" {% if location.status == "UNAVAILABLE" %}selected{% endif %}>unavailable</option>
+      </select>
+    </div>
+    <div class="flex items-center justify-center h-full col-span-2 space-x-3 sm:col-span-1">
+      <input
+      type="checkbox"
+      name="featured"
+      {% if location.featured == 1 %}checked{% endif %}
+      onchange="changeFeatured(this)"
+      />
+      <label for="featured" class="text-lg">Featured</label>
+    </div>
+    <div class="flex flex-col col-span-2 space-y-1 sm:col-span-1">
+      <label for="opening_hours" class="text-sm">Opening Hours</label>
+      {{ macros.textInput(value=location.opening_hours, name="opening_hours", id="opening_hours", required=true)}}
+    </div>
+    <div class="flex flex-col col-span-2 space-y-1 sm:col-span-1">
+      <label for="features" class="text-sm">Features (separated by a , )</label>
+      {{ macros.textInput(value=location.features, name="features", id="features")}}
+    </div>
+    <div class="flex flex-col col-span-2 space-y-1 sm:col-span-1">
+      <label for="description" class="text-sm">Description</label>
+      <textarea
+        id="description"
+        name="description"
+        class="h-40 p-4 border rounded disabled:cursor-not-allowed disabled:opacity-80 border-dark-300 placeholder:font-light placeholder:text-dark-200 placeholder:text-sm focus-ring"
+        required
+      >{{location.description}}</textarea>
+    </div>
+    <div class="flex flex-col col-span-2 space-y-1 sm:col-span-1">
+      <label for="checkin_instructions" class="text-sm">Checkin Instructions</label>
+      <textarea
+        id="checkin_instructions"
+        name="checkin_instructions"
+        class="h-40 p-4 border rounded disabled:cursor-not-allowed disabled:opacity-80 border-dark-300 placeholder:font-light placeholder:text-dark-200 placeholder:text-sm focus-ring"
+        required
+      >{{location.checkin_instructions}}</textarea>
+    </div>
+    <div class="flex flex-col col-span-2 space-y-1 sm:col-span-1">
+      <label for="main_photo" class="text-sm">Main Photo</label>
+      {{ macros.textInput(type='url',value=location.main_photo, name="main_photo", id="main_photo", required=true)}}
+    </div>
+    <div class="flex flex-col col-span-2 space-y-1 sm:col-span-1">
+      <label for="additional_photo" class="text-sm">Additional Photo</label>
+      {{ macros.textInput(type='url',value=location.additional_photo, name="additional_photo", id="additional_photo")}}
+    </div>
+    <div class="flex flex-col col-span-2 space-y-1 sm:col-span-1">
+      <label for="maps" class="text-sm">Google maps link</label>
+      {{ macros.textInput(type='url',value=location.maps, name="maps", id="maps", required=true)}}
+    </div>
+    <div class="flex flex-col col-span-2 space-y-1 sm:col-span-1">
+      <label for="phone_number" class="text-sm">Phone Number</label>
+      {{ macros.textInput(type='tel',value=location.phone_number, name="phone_number", id="phone_number")}}
+    </div>
+    <div class="flex flex-col col-span-2 space-y-1 sm:col-span-1">
+      <label for="email" class="text-sm">Email</label>
+      {{ macros.textInput(type='email',value=location.email, name="email", id="email")}}
+    </div>
+    <div class="flex flex-col col-span-2 space-y-1 sm:col-span-1">
+      <label for="website" class="text-sm">Website</label>
+      {{ macros.textInput(type='url',value=location.website, name="website", id="website", required=true)}}
+    </div>
+  </div>
+</form>
+{% endblock _content %} {% block scripts %} {{ super() }}
+<script>
+  const form = document.getElementById("location-form");
+  function saveUpdate() {
+    var xhttp = new XMLHttpRequest();
+    var formData = new FormData(form)
+    formData.set('featured', form['featured'].checked ? 1 : 0)
+    var payload = JSON.stringify(Object.fromEntries(formData));
+    xhttp.open("PATCH", "/_/location/{{location.id}}", true); //synchronous
+    xhttp.setRequestHeader("Content-type", "application/json");
+    xhttp.onload = function () {
+      if (xhttp.status === 200) {
+        window.location.href = '/_/locations';
+      }
+    };
+    xhttp.send(payload);
+  }
+
+
+  function changeFeatured(elem) {
+    const checked = elem.checked;
+    var xhttp = new XMLHttpRequest();
+    xhttp.open("PATCH", "/_/location/{{location.id}}", true); //synchronous
+    xhttp.setRequestHeader("Content-type", "application/json");
+    xhttp.onload = function () {
+      if (xhttp.status === 200) {
+        return;
+      }
+    };
+    xhttp.send(JSON.stringify({ featured: checked ? 1 : 0 }));
+  }
+
+  function setStatus(status) {
+    var xhttp = new XMLHttpRequest();
+    xhttp.open("PATCH", "/_/location/{{location.id}}", true); //synchronous
+    xhttp.setRequestHeader("Content-type", "application/json");
+    xhttp.onload = function () {
+      if (xhttp.status === 200) {
+        window.location.href = xhttp.responseText;
+      }
+    };
+    xhttp.send(JSON.stringify({ status }));
+  }
+
+  function deleteLocation() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.open("DELETE", "/_/location/{{location.id}}", true); //synchronous
+    xhttp.setRequestHeader("Content-type", "application/json");
+    xhttp.onload = function () {
+      if (xhttp.status === 200) {
+        window.location.href = '/_/locations';
+      }
+    };
+    xhttp.send();
+  }
+</script>
+{% endblock %}

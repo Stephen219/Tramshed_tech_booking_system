@@ -341,44 +341,4 @@
     {% endfor %}
   </div>
 </div> -->
-{% endblock _content %} {% block scripts %} {{ super() }}
-<script>
-  function changeFeatured(elem) {
-    const checked = elem.checked;
-    const id = elem.id.split("-featured")[0];
-    var xhttp = new XMLHttpRequest();
-    xhttp.open("PATCH", "/_/location/" + id, true); //synchronous
-    xhttp.setRequestHeader("Content-type", "application/json");
-    xhttp.onload = function () {
-      if (xhttp.status === 200) {
-        return;
-      }
-    };
-    xhttp.send(JSON.stringify({ featured: checked ? 1 : 0 }));
-  }
-
-  function setStatus(id, status) {
-    var xhttp = new XMLHttpRequest();
-    xhttp.open("PATCH", "/_/location/" + id, true); //synchronous
-    xhttp.setRequestHeader("Content-type", "application/json");
-    xhttp.onload = function () {
-      if (xhttp.status === 200) {
-        window.location.href = xhttp.responseText;
-      }
-    };
-    xhttp.send(JSON.stringify({ status }));
-  }
-
-  function deleteLocation(id) {
-    var xhttp = new XMLHttpRequest();
-    xhttp.open("DELETE", "/_/location/" + id, true); //synchronous
-    xhttp.setRequestHeader("Content-type", "application/json");
-    xhttp.onload = function () {
-      if (xhttp.status === 200) {
-        window.location.href = xhttp.responseText;
-      }
-    };
-    xhttp.send();
-  }
-</script>
-{% endblock %}
+{% endblock _content %}

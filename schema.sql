@@ -48,6 +48,7 @@ CREATE TABLE location (
   address  TEXT NOT NULL,
   main_photo  TEXT NOT NULL,
   additional_photos  TEXT NOT NULL,
+  opening_hours  TEXT NOT NULL,
   description  TEXT NOT NULL,
   website  TEXT NOT NULL,
   maps  TEXT NOT NULL,

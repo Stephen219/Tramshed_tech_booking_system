@@ -280,7 +280,7 @@ def confirm_details(admin, id):
 
     if request.method == "GET":
         db_location = Location.get(id)
-        return render_template("admin/add/details.html", location=db_location)
+        return render_template("admin/location.html", page='/locations', location=db_location)
 
     if request.method == "PATCH":
         schema = UpdateLocationSchema()

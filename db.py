@@ -156,6 +156,7 @@ class Location:
             "id": nanoid.generate(),
             "name": data["name"],
             "status": "AVAILABLE",
+            "opening_hours": data["opening_hours"],
             "featured": data["featured"],
             "address": data["address"],
             "main_photo": data["main_photo"],
